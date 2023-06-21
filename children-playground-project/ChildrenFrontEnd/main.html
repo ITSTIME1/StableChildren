@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- 약 1회의 4장씩 249번 뽑을 수 있음 1usd -->
+    <!-- 249번 뽑는다면 하루에 20장을 맥스로 잡고 5번정도 뽑는다는거니까 -->
+    <!-- 1. 시작화면을 표시하고 시작 버튼을 누르면 문이 열리는 것 처럼 화면 안쪽으로 들어감-->
+    <!-- 2. 메인 화면에는 사진을 받을 4개의 div 박스가 존재하고 밑에 단어 입력 버튼을 클릭 -->
+    <!-- 3. 단어 입력 버튼을 통해서 아이들이 말했던 단어나, 문장등을 선택, 중요도를 표시하여 해당 단어에 중요도를 표시함 -->
+    <!-- 4. 단어 입력 완료 버튼을 누른뒤 마인드 맵 처럼 여러 갈래로 단어들이 퍼져나감 그 중에 아이들이 원하는 단어들을 손으로 끌어서 항아리 같은 곳에 집어 넣음-->
+    <!-- 5. 항아리의 단어 게이지 수를 표시해주고, 일정 이상의 단어가 찼다면 꿀 모양의 항아리 이미지로 변환 -->
+    <!-- 6. 꿀단지를 보낼게! 하면 서버로 프롬포트를 가공하고 서버에서는 프롬포트 가공을 통해 이미지를 생성 -->
+    <!-- 7. 4장의 이미지가 나오게 된다면 4개의 화면에 표시해주고 그림을 확인하고 아이들과 함께 만든것을 강조하여 해당 이미지를 가지고
+        책을 만들거나, 스케치를 할 수 있게 변환하여 색칠을 해보거나, AI의 생각을 읽어보기 위해서 우리가 만들었던 단어들을 가지고 동화를 만들어 확인해보는 활동을 할 수 있음.-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
+    <title>Children-PlayGround</title>
+</head>
+
+<body>
+    <div class="main-content">
+        <!-- 제목영역 -->
+        <div class="top-title-section">
+            <!-- 제목 -->
+            <div class="title">
+                <h2>Children-PlayGround</h2>
+            </div>
+        </div>
+
+        <!-- 이미지 영역 -->
+        <div class="image-title-section">
+            <!-- 이미지 박스 영역-->
+            <div class="four-image-section">    
+
+                <div class="image-box" id="box1">
+                    <div class="gusian" id="g1">
+                        <h2>완료!</h2>
+                    </div>                    
+                </div>
+
+                <div class="image-box" id="box2">
+                    <div class="gusian" id="g2">
+                        <h2>완료!</h2>
+                    </div>
+                </div>
+
+                <div class="image-box" id="box3">
+                    <div class="gusian" id="g3">
+                        <h2>완료!</h2>
+                    </div>
+                </div>
+
+                <div class="image-box" id="box4">
+                    <div class="gusian" id="g4">
+                        <h2>완료!</h2>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 채팅창 영역-->
+        <div class="footer-section">
+            <div class="form-section">
+                <form class="word-form">
+                    <textarea name="word" rows="5" cols="40" wrap="on" placeholder="원하는 단어를 입력해봐!"></textarea>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>

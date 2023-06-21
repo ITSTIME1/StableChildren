@@ -1,0 +1,157 @@
+/* init */
+* {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+}
+/* 메인 영역 */
+div[class=main-content] {
+    position:relative;
+    background-color: navy;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 제목 영역 */
+div[class=top-title-section] {
+    width: 100vw;
+    height: 5vh;
+    background-color: rgb(246, 246, 195);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; 
+}
+
+/* 제목 영역 -> 제목 */
+div[class=top-title-section] > div[class="title"] {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    font-size: 5em;
+}
+
+/* 이미지 영역 */
+div[class=image-title-section] {
+    width: 100vw;
+    height: 85vh;
+    background-color: rgb(242, 242, 218);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이미지 영역의 이미지 박스 영역 */
+div[class=image-title-section] > div[class="four-image-section"]{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(243, 220, 127);
+    display:flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    perspective: 400px;
+}
+
+/* 이미지 박스 */
+div[class~=image-box] {
+    margin: 50px;
+    width: 50%;
+    height: 70%;
+    border: 2px solid black;
+    border-radius: 4.5%;
+    background-color: rgb(255, 255, 255);
+    /* animation-name: image-box; */
+    animation-duration: 4.5s, 4s;
+    animation-fill-mode: both;
+    position: relative;
+}
+/* 박스 애니메이션 */
+@keyframes image-box {
+    from{
+        border-radius: 0%;
+        width: 0%;
+        height: 0;
+    }
+    to {
+        border-radius: 4.5%;
+        width: 50%;
+        height: 70%;
+    }
+}
+
+/* 이미지 박스 가우시안 */
+div[class~=image-box] > div[class="gusian"]{
+    position: absolute;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 3%;
+    background-color: rgba(27, 27, 27, 0.944);
+}
+
+/* 가우시안 텍스트 */
+div[class="gusian"] h2{
+    position: absolute;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 20%;
+    color: white;
+}
+
+/* 이미지 박스 가우시안 마우스 올려졌을 때*/
+div[class~=image-box] > div[class="gusian"]:hover{
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 4%;
+    background-color: rgba(29, 29, 29, 0.889);
+}
+
+
+/* 푸터 영역 */
+div[class=footer-section] {
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(243, 220, 127);
+    position: relative;
+}
+
+
+
+/* 푸터 영역 */
+div[class=footer-section] > div[class="form-section"]{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+    margin-bottom: 80px;
+    background-color: rgb(243, 220, 127);
+    
+}
+/* 푸터 영역의 text-area */
+form[class="word-form"] > textarea {
+    border: 3px solid rgb(35, 48, 163);
+    background-color: rgb(251, 251, 251);
+    font-size: 2em;
+}
+
+
+
+
+
