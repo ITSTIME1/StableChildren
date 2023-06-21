@@ -1,0 +1,330 @@
+@import url("https://fonts.googleapis.com/css?family=Pacifico");
+body {
+  background-color: #a0e1ff;
+  overflow: hidden;
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  font-family: "Pacifico", cursive;
+}
+
+.title {
+  padding: 10px 20px;
+}
+.title span {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.ice {
+  width: 105vmin;
+  height: 84vmin;
+  -webkit-clip-path: polygon(12% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 2%);
+          clip-path: polygon(2% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 72%);
+  position: absolute;
+  background: linear-gradient(#dde 30%, #eee 60%);
+  z-index: -10;
+  top: 15%;
+  left: 50%;
+  transform: translatex(-50%);
+  -webkit-animation: ice 20s infinite;
+          animation: ice 20s infinite;
+}
+
+.ice-bottom {
+  -webkit-clip-path: polygon(2% 44%, 46% 33%, 80% 36%, 100% 53%, 100% 63%, 81% 84%, 48% 79%, 34% 82%, 12% 79%, 0% 82%, 0% 72%, 2% 54%);
+          clip-path: polygon(2% 44%, 46% 33%, 80% 36%, 100% 53%, 100% 63%, 81% 84%, 48% 79%, 34% 82%, 12% 79%, 0% 82%, 0% 72%, 2% 54%);
+  width: 105vmin;
+  height: 84vmin;
+  position: absolute;
+  background: white;
+  z-index: -11;
+  top: 15%;
+  left: 50%;
+  transform: translatex(-50%);
+  -webkit-animation: ice 20s infinite;
+          animation: ice 20s infinite;
+}
+
+.shadow {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translatex(-50%);
+  box-shadow: 0 0 21vmin 21vmin rgba(0, 0, 0, 0.05);
+}
+
+.bear-cub {
+  width: 70vmin;
+  height: 70vmin;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translatex(-50%);
+}
+
+.body {
+  position: absolute;
+  background: radial-gradient(#fff 30%, #e0e0e0 100%);
+  border-radius: 30% 30% 60% 60%/70% 70% 50% 50%;
+  width: 50%;
+  height: 40%;
+  top: 22%;
+  left: 25%;
+}
+
+.leg {
+  position: absolute;
+  background: radial-gradient(#fff 30%, #f2f2f2 100%);
+  border-radius: 40% 40% 30% 30%;
+  width: 30%;
+  height: 120%;
+  top: 20%;
+}
+
+.leg-left {
+  left: 5%;
+  transform: rotatez(5deg);
+}
+
+.leg-right {
+  right: 5%;
+  transform: rotatez(-5deg);
+}
+
+.leg-left-behind {
+  z-index: -2;
+  left: 0%;
+  height: 100%;
+  transform: rotatez(15deg);
+  background: radial-gradient(#fff 30%, #bfbfbf 100%);
+}
+
+.leg-right-behind {
+  z-index: -2;
+  right: 0%;
+  height: 100%;
+  transform: rotatez(-15deg);
+  background: radial-gradient(#fff 30%, #bfbfbf 100%);
+}
+
+.head {
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  left: 30%;
+  background: radial-gradient(#fff 30%, #f2f2f2 100%);
+  border-radius: 50%;
+}
+
+.nose {
+  position: absolute;
+  width: 25%;
+  height: 17%;
+  background-color: black;
+  border-radius: 100%;
+  top: 55%;
+  left: 50%;
+  transform: translatex(-50%);
+}
+
+.eye {
+  position: absolute;
+  background: #eee;
+  width: 10%;
+  height: 10%;
+  border-radius: 100%;
+  -webkit-animation: eyes 5s infinite;
+          animation: eyes 5s infinite;
+}
+.eye::before {
+  content: "";
+  display: block;
+  position: relative;
+  top: 15%;
+  left: 5%;
+  background: black;
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+}
+
+.eye-left {
+  top: 40%;
+  left: 27%;
+  -webkit-animation-delay: 0.05s;
+          animation-delay: 0.05s;
+}
+
+.eye-right {
+  top: 40%;
+  right: 27%;
+}
+
+.ear {
+  position: absolute;
+  background: #fff;
+  width: 30%;
+  height: 30%;
+  border-radius: 100%;
+  z-index: -1;
+}
+.ear::before {
+  content: "";
+  display: block;
+  position: relative;
+  top: 30%;
+  left: 30%;
+  background: rgba(0, 0, 0, 0.1);
+  width: 40%;
+  height: 40%;
+  border-radius: 100%;
+}
+
+.ear-left {
+  left: 0;
+  top: 0;
+}
+
+.ear-right {
+  right: 0;
+  top: 0;
+  transform-origin: 80% 100%;
+  -webkit-animation: ears 11s infinite;
+          animation: ears 11s infinite;
+}
+
+.mouth {
+  box-sizing: border-box;
+  position: absolute;
+  width: 25%;
+  height: 5%;
+  border-radius: 0.01vmin 0.01vmin 80% 80%;
+  background: #a90e0e;
+  top: 78%;
+  left: 50%;
+  -webkit-animation: mouth 7s infinite;
+          animation: mouth 7s infinite;
+  transform-origin: 50% 20%;
+}
+
+
+.bottom {
+  top: 3%;
+  left: 48%;
+  width: 60px;
+  position: absolute;
+  border-radius: 5%;
+  animation-name: word; 
+  animation-duration: 2s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.bottom button{
+  width: 70px;
+  height: 50px;
+  background-color: white;
+  border: 1px solid #a0e1ff;
+  border-radius: 30%;
+  transition-property: width, height;
+  transition-duration: 2s, 1s;
+}
+
+.bottom button:hover{
+  width: 200px;
+  height: 50px;
+  background-color: white;
+  border: 1px solid #a0e1ff; 
+}
+
+.copyright {
+  font-size: 10px;
+  margin-left: 20px;
+  color: #676464;
+}
+
+@keyframes word {
+  from { 
+    transform: translateY(0px);
+  }
+  to{
+    transform: translateY(20px);
+  }
+}
+
+
+
+@-webkit-keyframes eyes {
+  0%, 90% {
+    transform: scaley(1);
+  }
+  95% {
+    transform: scaley(0.05);
+  }
+}
+
+@keyframes eyes {
+  0%, 90% {
+    transform: scaley(1);
+  }
+  95% {
+    transform: scaley(0.05);
+  }
+}
+@-webkit-keyframes mouth {
+  0%, 100% {
+    transform: translatex(-50%) scaley(2) scalex(1.5);
+  }
+  20%, 80% {
+    transform: translatex(-50%) scaley(1) scalex(1);
+  }
+}
+@keyframes mouth {
+  0%, 100% {
+    transform: translatex(-50%) scaley(2) scalex(1.1);
+  }
+  20%, 80% {
+    transform: translatex(-50%) scaley(3) scalex(1.2);
+  }
+}
+@-webkit-keyframes ears {
+  0%, 48%, 52%, 100% {
+    transform: rotatex(0);
+  }
+  50% {
+    transform: rotatex(50deg);
+  }
+}
+@keyframes ears {
+  0%, 48%, 52%, 100% {
+    transform: rotatex(0);
+  }
+  50% {
+    transform: rotatex(50deg);
+  }
+}
+@-webkit-keyframes ice {
+  0%, 100% {
+    transform: translatex(-50%) rotate(2deg);
+  }
+  50% {
+    transform: translatex(-50%) rotate(-2deg);
+  }
+}
+@keyframes ice {
+  0%, 100% {
+    transform: translatex(-50%) rotate(2deg);
+  }
+  50% {
+    transform: translatex(-50%) rotate(-2deg);
+  }
+}
