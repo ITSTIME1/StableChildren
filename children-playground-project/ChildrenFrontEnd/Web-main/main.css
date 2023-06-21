@@ -14,6 +14,7 @@ div[class=main-content] {
     height: 100vh;
 }
 
+
 /* 제목 영역 */
 div[class=top-title-section] {
     width: 100vw;
@@ -36,7 +37,7 @@ div[class=top-title-section] > div[class="title"] {
 }
 
 /* 이미지 영역 */
-div[class=image-title-section] {
+div[class=image-section] {
     width: 100vw;
     height: 85vh;
     background-color: rgb(242, 242, 218);
@@ -46,8 +47,26 @@ div[class=image-title-section] {
     align-items: center;
 }
 
+/* 폴리곤 이미지 영역 */
+/* div[class=four-image-section] > div[class=polygon-ice] {
+    display: flex;
+    width: 30%;
+    height: 30%;
+    background-color: rgb(178, 84, 84);
+    width: 100vmin;
+    height: 84vmin;
+    -webkit-clip-path: polygon(12% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 2%);
+    clip-path: polygon(2% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 72%);
+    position: absolute;
+    background: linear-gradient(#dde 30%, #eee 60%);
+    top: 2%;
+    left: 50%;
+    transform: translatex(-50%);
+
+} */
+
 /* 이미지 영역의 이미지 박스 영역 */
-div[class=image-title-section] > div[class="four-image-section"]{
+div[class=image-section] > div[class="four-image-section"]{
     width: 100%;
     height: 100%;
     background-color: #a0e1ff;
@@ -63,20 +82,20 @@ div[class~=image-box] {
     margin: 50px;
     width: 50%;
     height: 70%;
-    border: 2px solid black;
-    border-radius: 4.5%;
-    background-color: rgb(255, 255, 255);
-    /* animation-name: image-box; */
-    animation-duration: 4.5s, 4s;
+    border-radius: 10px;
+    background-color: #ffffff;
+    animation-name: image-box;
+    animation-delay: 1.2s;
+    animation-duration: 2s, 2s;
+    animation-timing-function: cubic-bezier(0.47, 0, 0.745, 0.715);
     animation-fill-mode: both;
     position: relative;
 }
 /* 박스 애니메이션 */
 @keyframes image-box {
     from{
-        border-radius: 0%;
-        width: 0%;
-        height: 0;
+        width: 0px;
+        height: 0px;
     }
     to {
         border-radius: 4.5%;
@@ -86,7 +105,7 @@ div[class~=image-box] {
 }
 
 /* 이미지 박스 가우시안 */
-div[class~=image-box] > div[class="gusian"]{
+div[class~=image-box] > div[class="gausian"]{
     position: absolute;
     display: flex;
     text-align: center;
@@ -94,12 +113,36 @@ div[class~=image-box] > div[class="gusian"]{
     align-items: center;
     width: 100%;
     height: 100%;
-    border-radius: 3%;
-    background-color: rgba(27, 27, 27, 0.801);
+    border-radius: 5px;
+    /* box-shadow: 2px -1px 2px 0.5px rgb(196, 214, 246); */
+    background-color: rgb(88, 190, 223);
+}
+
+
+/* 이미지 박스 가우시안 마우스 올려졌을 때*/
+div[class~=image-box] > div[class="gausian"]:hover{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: rgba(29, 29, 29, 0);
+    animation-name: gausian;
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+    animation-direction: alternate;
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes gausian {
+    0% {
+        background-color: rgb(88, 190, 223);
+    }
+    100% {
+        background-color: rgb(255, 255, 255);
+    }
 }
 
 /* 가우시안 텍스트 */
-div[class="gusian"] h2{
+div[class="gausian"] h2{
     position: absolute;
     display: flex;
     text-align: center;
@@ -110,14 +153,7 @@ div[class="gusian"] h2{
     color: white;
 }
 
-/* 이미지 박스 가우시안 마우스 올려졌을 때*/
-div[class~=image-box] > div[class="gusian"]:hover{
-    display: none;
-    width: 100%;
-    height: 100%;
-    border-radius: 4%;
-    background-color: rgba(29, 29, 29, 0.759);
-}
+
 
 
 /* 푸터 영역 */
@@ -150,6 +186,7 @@ form[class="word-form"] > textarea {
     border: 3px solid rgb(35, 48, 163);
     background-color: rgb(251, 251, 251);
     font-size: 2em;
+    resize: none;
 }
 
 

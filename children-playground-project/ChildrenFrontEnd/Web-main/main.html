@@ -21,6 +21,7 @@
 
 <body>
     <div class="main-content">
+    
         <!-- 제목영역 -->
         <div class="top-title-section">
             <!-- 제목 -->
@@ -30,41 +31,43 @@
         </div>
 
         <!-- 이미지 영역 -->
-        <div class="image-title-section">
+        <div class="image-section">
             <!-- 이미지 박스 영역-->
-            <div class="four-image-section">    
+            <div class="four-image-section"> 
+                <!-- ice poly-gon-section -->
+                <!-- <div class="polygon-ice"></div>    -->
                 <!-- 이미지를 표시하기 위한 박스 -->
                 <div class="image-box" id="box1">
-                    <div class="gusian" id="g1">
-                        <img src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 50px; height: 50px; filter: drop-shadow(10px 6px 5px #636161);">
+                    <div class="gausian" id="g1">
+                        <img id="bear-image1" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>                    
                 </div>
 
                 <div class="image-box" id="box2">
-                    <div class="gusian" id="g2">
-                        <img src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 50px; height: 50px; filter: drop-shadow(10px 6px 5px #636161);">
+                    <div class="gausian" id="g2">
+                        <img id="bear-image2" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
 
                 <div class="image-box" id="box3">
-                    <div class="gusian" id="g3">
-                        <img src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 50px; height: 50px; filter: drop-shadow(10px 6px 5px #636161);">
+                    <div class="gausian" id="g3">
+                        <img id="bear-image3" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
 
                 <div class="image-box" id="box4">
-                    <div class="gusian" id="g4">
-                        <img src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 50px; height: 50px; filter: drop-shadow(10px 6px 5px #636161);">
+                    <div class="gausian" id="g4">
+                        <img id="bear-image4" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
-
             </div>
         </div>
 
         <!-- 채팅창 영역-->
         <div class="footer-section">
             <div class="form-section">
-                <form class="word-form">
+                <form class="word-form" name="prompt-form">
+                    <!-- TODO textarea에서 명령어를 입력하면 리스트로 만드는 기능 테스트해보자 -->
                     <textarea name="word" rows="5" cols="40" wrap="on" placeholder="원하는 단어를 입력해봐!"></textarea>
                 </form>
             </div>
