@@ -4,7 +4,6 @@
     padding: 0;
     width: 100%;
     height: 100%;
-    font-size: 15px;
 }
 /* 메인 영역 */
 div[class=main-content] {
@@ -33,7 +32,7 @@ div[class=top-title-section] > div[class="title"] {
     position: absolute;
     width: 50%;
     height: 50%;
-    font-size: 5em;
+    font-size: 1rem;
 }
 
 /* 이미지 영역 */
@@ -94,11 +93,10 @@ div[class~=image-box] {
 /* 박스 애니메이션 */
 @keyframes image-box {
     from{
-        width: 0px;
-        height: 0px;
+        width: 0%;
+        height: 0%;
     }
     to {
-        border-radius: 4.5%;
         width: 50%;
         height: 70%;
     }
@@ -113,7 +111,7 @@ div[class~=image-box] > div[class="gausian"]{
     align-items: center;
     width: 100%;
     height: 100%;
-    border-radius: 5px;
+    border-radius: 10px;
     /* box-shadow: 2px -1px 2px 0.5px rgb(196, 214, 246); */
     background-color: rgb(88, 190, 223);
 }
@@ -129,14 +127,17 @@ div[class~=image-box] > div[class="gausian"]:hover{
     animation-fill-mode: forwards;
     animation-duration: 2s;
     animation-direction: alternate;
+    animation-iteration-count: 1;
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes gausian {
     0% {
+        border-radius: 10px;
         background-color: rgb(88, 190, 223);
     }
     100% {
+        border-radius: 10px;
         background-color: rgb(255, 255, 255);
     }
 }
@@ -166,30 +167,65 @@ div[class=footer-section] {
     background-color: #a0e1ff;
     position: relative;
 }
-
-
-
-/* 푸터 영역 */
-div[class=footer-section] > div[class="form-section"]{
+div[class=footer-section] > div[class=form-section] {
     position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 50%;
     height: 50%;
-    margin-bottom: 80px;
-    background-color: rgb(243, 220, 127);
-    
 }
-/* 푸터 영역의 text-area */
-form[class="word-form"] > textarea {
-    border: 3px solid rgb(35, 48, 163);
-    background-color: rgb(251, 251, 251);
-    font-size: 2em;
+
+div[class=form-section] > textarea {
+    font-size: 2rem;
+    border-radius: 10px;
     resize: none;
+    white-space: nowrap;
+}
+
+
+div[class=gausian-toggle-section] {
+    display: flex;
+    position: absolute;
+    width: 30%;
+    height: 10%;
+    border-radius: 10px;
+    top: 3%;
+    left: 2.5%;
 }
 
 
 
 
+.toggleSwitch {
+    width: 100px;
+    height: 50px;
+    display: block;
+    position: relative;
+    border-radius: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+    cursor: pointer;
+}
+  
+/* 토글 버튼 */
+.toggleSwitch .toggleButton {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #f03d3d;
+}
+/* 체크박스가 체크되면 변경 이벤트 */
+#toggle:checked ~ .toggleSwitch {
+    background: #f03d3d;
+}
+  
+#toggle:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 44px);
+  background: #fff;
+}
 
+.toggleSwitch, .toggleButton {
+  transition: all 0.2s ease-in;
+}

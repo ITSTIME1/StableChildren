@@ -15,7 +15,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
-    <script src="index.js"></script>
     <title>Children-PlayGround</title>
 </head>
 
@@ -30,12 +29,23 @@
             </div>
         </div>
 
+
         <!-- 이미지 영역 -->
         <div class="image-section">
             <!-- 이미지 박스 영역-->
             <div class="four-image-section"> 
                 <!-- ice poly-gon-section -->
                 <!-- <div class="polygon-ice"></div>    -->
+                
+                <!-- 토글 버튼 -->
+                <!-- 토글 버튼이 활성화 되면 모든 가우시안 및 로딩 이미지 효과를 제거 -->
+                <div class="gausian-toggle-section">
+                    <input type="checkbox" id="toggle" hidden> 
+                    <label for="toggle" class="toggleSwitch">
+                        <span class="toggleButton"></span>
+                    </label>
+                </div>
+
                 <!-- 이미지를 표시하기 위한 박스 -->
                 <div class="image-box" id="box1">
                     <div class="gausian" id="g1">
@@ -66,15 +76,13 @@
         <!-- 채팅창 영역-->
         <div class="footer-section">
             <div class="form-section">
-                <form class="word-form" name="prompt-form">
-                    <!-- TODO textarea에서 명령어를 입력하면 리스트로 만드는 기능 테스트해보자 -->
-                    <textarea name="word" rows="5" cols="40" wrap="on" placeholder="원하는 단어를 입력해봐!"></textarea>
-                </form>
+                <textarea id="word-area" name="word" rows="5" cols="40" placeholder="원하는 단어를 입력해봐!"></textarea>
             </div>
         </div>
 
 
     </div>
+    <script src="index.js"></script>
 </body>
 
 </html>
