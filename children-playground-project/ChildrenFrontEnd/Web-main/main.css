@@ -8,13 +8,14 @@
 /* 메인 영역 */
 div[class=main-content] {
     position:relative;
-    background-color: navy;
+    background-color: rgb(116, 116, 210);
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 
-/* 제목 영역 */
+/* 제목 영역
 div[class=top-title-section] {
     width: 100vw;
     height: 5vh;
@@ -25,20 +26,20 @@ div[class=top-title-section] {
     justify-content: center;
     align-items: center;
     text-align: center; 
-}
+} */
 
 /* 제목 영역 -> 제목 */
-div[class=top-title-section] > div[class="title"] {
+/* div[class=top-title-section] > div[class="title"] {
     position: absolute;
     width: 50%;
     height: 50%;
     font-size: 1rem;
-}
+} */
 
 /* 이미지 영역 */
 div[class=image-section] {
     width: 100vw;
-    height: 85vh;
+    height: 80vh;
     background-color: rgb(242, 242, 218);
     position: relative;
     display: flex;
@@ -82,21 +83,23 @@ div[class~=image-box] {
     width: 50%;
     height: 70%;
     border-radius: 10px;
+    border: 2px solid #4a8cab;
+    /* box-shadow: 0px 5px 10px 0.4px #969f9f;; */
     background-color: #ffffff;
-    animation-name: image-box;
+    /* animation-name: image-box; */
     animation-delay: 1.2s;
-    animation-duration: 2s, 2s;
-    animation-timing-function: cubic-bezier(0.47, 0, 0.745, 0.715);
+    animation-duration: 2s, 0.2s;
+    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
     animation-fill-mode: both;
     position: relative;
 }
 /* 박스 애니메이션 */
 @keyframes image-box {
-    from{
+    0%{
         width: 0%;
         height: 0%;
     }
-    to {
+    100% {
         width: 50%;
         height: 70%;
     }
@@ -111,10 +114,12 @@ div[class~=image-box] > div[class="gausian"]{
     align-items: center;
     width: 100%;
     height: 100%;
-    border-radius: 10px;
+    border-radius: 8px;
     /* box-shadow: 2px -1px 2px 0.5px rgb(196, 214, 246); */
-    background-color: rgb(88, 190, 223);
+    background-color: rgba(88, 190, 223, 1);
+
 }
+
 
 
 /* 이미지 박스 가우시안 마우스 올려졌을 때*/
@@ -142,6 +147,7 @@ div[class~=image-box] > div[class="gausian"]:hover{
     }
 }
 
+
 /* 가우시안 텍스트 */
 div[class="gausian"] h2{
     position: absolute;
@@ -155,32 +161,67 @@ div[class="gausian"] h2{
 }
 
 
-
-
-/* 푸터 영역 */
-div[class=footer-section] {
-    width: 100vw;
-    height: 10vh;
+/* 푸터영역 */
+div[class="main-content"] > div[class="footer-section"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 20vh;
     background-color: #a0e1ff;
     position: relative;
 }
-div[class=footer-section] > div[class=form-section] {
+
+/* complete-section */
+div[class="form-section"] > div[class="complete-button-section"] {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 30%;
+    background-color: #a0e1ff;
+}
+
+/* 버튼영역 */
+div[class="complete-button-section"] > button{
+    width: 15%;
+    height: 100%;
+    background-color: rgb(88, 190, 223);
+    border-radius: 10px;
+    box-shadow: 4px 1px 2px 1px #5d9dba;;
+}
+
+
+
+/* text-area-section */
+div[class="form-section"] > div[class="text-area-section"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40%;
+    background-color: #a0e1ff;;
+    position: relative;
+}
+
+
+/* textArea */
+div[class="text-area-section"] > textarea {
     position: absolute;
+    align-items: center;
+    text-align: center;
     width: 50%;
     height: 50%;
-}
-
-div[class=form-section] > textarea {
-    font-size: 2rem;
-    border-radius: 10px;
     resize: none;
-    white-space: nowrap;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 2px solid #31a6dc;
+    top: 20px;
 }
 
 
+
+
+/* gausian 토글 버튼 영역 */
 div[class=gausian-toggle-section] {
     display: flex;
     position: absolute;
@@ -192,8 +233,7 @@ div[class=gausian-toggle-section] {
 }
 
 
-
-
+/* 토글 스위치 */
 .toggleSwitch {
     width: 100px;
     height: 50px;

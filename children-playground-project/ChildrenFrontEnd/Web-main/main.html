@@ -15,21 +15,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <script async src="index.js"></script>
     <title>Children-PlayGround</title>
 </head>
 
 <body>
     <div class="main-content">
     
-        <!-- 제목영역 -->
-        <div class="top-title-section">
-            <!-- 제목 -->
-            <div class="title">
-                <h2>Children-PlayGround</h2>
-            </div>
-        </div>
-
-
         <!-- 이미지 영역 -->
         <div class="image-section">
             <!-- 이미지 박스 영역-->
@@ -49,25 +41,25 @@
                 <!-- 이미지를 표시하기 위한 박스 -->
                 <div class="image-box" id="box1">
                     <div class="gausian" id="g1">
-                        <img id="bear-image1" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                        <img id="bear-image" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>                    
                 </div>
 
                 <div class="image-box" id="box2">
                     <div class="gausian" id="g2">
-                        <img id="bear-image2" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                        <img id="bear-image" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
 
                 <div class="image-box" id="box3">
                     <div class="gausian" id="g3">
-                        <img id="bear-image3" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                        <img id="bear-image" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
 
                 <div class="image-box" id="box4">
                     <div class="gausian" id="g4">
-                        <img id="bear-image4" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                        <img id="bear-image" src="../src/images/polar.png" alt="베어로딩아이콘" style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
             </div>
@@ -76,13 +68,20 @@
         <!-- 채팅창 영역-->
         <div class="footer-section">
             <div class="form-section">
-                <textarea id="word-area" name="word" rows="5" cols="40" placeholder="원하는 단어를 입력해봐!"></textarea>
+                <div class="complete-button-section">
+                    <button type="submit">GO!</button>
+                </div>
+
+                <div class="text-area-section">
+                    <textarea id="word-area" name="word" rows="5" cols="40" placeholder="원하는 단어를 입력해봐!"></textarea>
+                </div>
+                
             </div>
         </div>
 
 
     </div>
-    <script src="index.js"></script>
+    
 </body>
 
 </html>

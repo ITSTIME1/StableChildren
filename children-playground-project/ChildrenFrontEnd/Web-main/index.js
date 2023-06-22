@@ -1,5 +1,7 @@
 // textarea enter 입력시 해당 단어를 전부 가지고 와서 리스트에 추가
 const wordArea = document.getElementById("word-area");
+const toggleBtn = document.getElementById("toggle");
+const gausianScreen = document.querySelectorAll(".gausian");
 
 // wordList
 let wordList = [];
@@ -8,13 +10,15 @@ let wordList = [];
 // onKeyPress: ASCII 값 - 한/영, Shift, Backsapce 등 인식 불가
 wordArea.addEventListener("keydown", (event) => {
     if (event.key == "Enter") {
+        let whitespaceRegex = /^\s*$/;
         let word = wordArea.value;
 
-        // false이면 음절이 딸려오는 문제가 있기 때문에
-        // 자음과 모음을 합치는 과정에서 종료되지 않으면 음절이 짤리거나 제대로 가져오지 않는다.
-        // 처음에 false 입력중이면 true이기 때문에
-        // false인 상태에서 입력을 받아야하고
-
+        // 공백 문자가 들어오는 경우 리스트에 추가되지 않도록
+        if (whitespaceRegex.test(word)) {
+            event.preventDefault();
+            return;
+        }
+        
         // shift + enter조합막기
         if(event.shiftKey === true && event.key === "Enter") {
             event.preventDefault();
@@ -35,4 +39,25 @@ wordArea.addEventListener("keydown", (event) => {
 
 
 
+// Document.querySelector()는 제공한 선택자 또는 선택자 뭉치와 일치하는 문서 내 첫 번째 Element를 반환합니다. 일치하는 요소가 없으면 null을 반환합니다.(MDN)
+// Document.getElementById() 메서드는 주어진 문자열과 일치하는 id 속성을 가진 요소를 찾고, 이를 나타내는 Element 객체를 반환합니다. ID는 문서 내에서 유일해야 하기 때문에 특정 요소를 빠르게 찾을 때 유용합니다.(MDN)
+
 // 토글 버튼 클릭시 gausian & image icon 삭제
+toggleBtn.addEventListener("click", () => {
+    // 만약 토글 버튼이 체크되었다면
+    // 가우시안 페이지를 전부 걷어냄 이미지와 함께
+    if (toggleBtn.checked == true) {
+        // console.log(toggleBtn.checked);
+        for (let i = 0; i < gausianScreen.length; i++) {
+            gausianScreen[i].style.visibility = "hidden";
+        }   
+    } else {
+        // console.log(toggleBtn.checked);
+        for (let i = 0; i < gausianScreen.length; i++) {
+            gausianScreen[i].style.visibility = "visible";
+        }
+    }
+});
+
+// 완료 버튼 누를시 화면을 새로운 걸로 바꾸고
+// 
