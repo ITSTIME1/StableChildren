@@ -16,11 +16,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
     <script async src="index.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
     <title>Children-PlayGround</title>
 </head>
 
 <body>
     <div class="main-content">
+
+        <div class="nav-section">
+            <div class="title-section">
+                <h2>Children PlayGround</h2>
+            </div>
+            <div class="toggle-section">
+                <button id="toggle-btn" type="sumit">숨기기</button>
+            </div>
+        </div>
     
         <!-- 이미지 영역 -->
         <div class="image-section">
@@ -31,12 +41,12 @@
                 
                 <!-- 토글 버튼 -->
                 <!-- 토글 버튼이 활성화 되면 모든 가우시안 및 로딩 이미지 효과를 제거 -->
-                <div class="gausian-toggle-section">
+                <!-- <div class="gausian-toggle-section">
                     <input type="checkbox" id="toggle" hidden> 
                     <label for="toggle" class="toggleSwitch">
                         <span class="toggleButton"></span>
                     </label>
-                </div>
+                </div> -->
 
                 <!-- 이미지를 표시하기 위한 박스 -->
                 <div class="image-box" id="box1">
@@ -69,7 +79,7 @@
         <div class="footer-section">
             <div class="form-section">
                 <div class="complete-button-section">
-                    <button type="submit">GO!</button>
+                    <button id = "complete-btn" type="submit">GO!</button>
                 </div>
 
                 <div class="text-area-section">

@@ -14,6 +14,45 @@ div[class=main-content] {
     overflow: hidden;
 }
 
+/* 타이틀 섹션 */
+div[class="main-content"] > div[class="nav-section"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 8vh;
+    background-color: #88d5f8;
+    position: relative;
+}
+
+/* 타이틀 */
+div[class="nav-section"] > div[class="title-section"] {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    color: white;
+    margin-left: 10%;
+}
+
+/* 토글버튼 */
+div[class="toggle-section"] button{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #a0e1ff;
+    
+    border-radius: 10px;
+
+}
+/* 토글영역 */
+div[class="nav-section"] > div[class="toggle-section"] {
+    position: absolute;
+    width: 10%;
+    height: 60%;
+    border-radius: 10px;
+    background-color: #f03d3d;
+}
+
 
 /* 제목 영역
 div[class=top-title-section] {
@@ -39,7 +78,7 @@ div[class=top-title-section] {
 /* 이미지 영역 */
 div[class=image-section] {
     width: 100vw;
-    height: 80vh;
+    height: 70vh;
     background-color: rgb(242, 242, 218);
     position: relative;
     display: flex;
@@ -79,6 +118,7 @@ div[class=image-section] > div[class="four-image-section"]{
 
 /* 이미지 박스 */
 div[class~=image-box] {
+    box-sizing: border-box;
     margin: 50px;
     width: 50%;
     height: 70%;
@@ -167,7 +207,7 @@ div[class="main-content"] > div[class="footer-section"] {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 20vh;
+    height: 30vh;
     background-color: #a0e1ff;
     position: relative;
 }
@@ -183,6 +223,7 @@ div[class="form-section"] > div[class="complete-button-section"] {
 
 /* 버튼영역 */
 div[class="complete-button-section"] > button{
+    visibility: hidden;
     width: 15%;
     height: 100%;
     background-color: rgb(88, 190, 223);
@@ -219,53 +260,66 @@ div[class="text-area-section"] > textarea {
 }
 
 
+/* circle anime */
+.anime-circle {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.4rem;
+    text-align: center;
+    white-space: normal;
+   
+}
+
 
 
 /* gausian 토글 버튼 영역 */
-div[class=gausian-toggle-section] {
+/* div[class=gausian-toggle-section] {
     display: flex;
     position: absolute;
     width: 30%;
     height: 10%;
     border-radius: 10px;
-    top: 3%;
-    left: 2.5%;
-}
+    top: 1%;
+    left: 4.5%;
+} */
 
 
 /* 토글 스위치 */
-.toggleSwitch {
-    width: 100px;
-    height: 50px;
+/* .toggleSwitch {
+    width: 10vw;
+    height: 8vh;
     display: block;
     position: relative;
     border-radius: 30px;
     background-color: #fff;
     box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
     cursor: pointer;
-}
+} */
   
 /* 토글 버튼 */
-.toggleSwitch .toggleButton {
-  width: 40px;
-  height: 40px;
+/* .toggleSwitch .toggleButton {
+  width: 4vw;
+  height: 7vh;
   position: absolute;
   top: 50%;
   left: 4px;
   transform: translateY(-50%);
   border-radius: 50%;
   background: #f03d3d;
-}
+} */
 /* 체크박스가 체크되면 변경 이벤트 */
-#toggle:checked ~ .toggleSwitch {
+/* #toggle:checked ~ .toggleSwitch {
     background: #f03d3d;
 }
-  
-#toggle:checked ~ .toggleSwitch .toggleButton {
-  left: calc(100% - 44px);
+   */
+/* #toggle:checked ~ .toggleSwitch .toggleButton {
+  left: calc(100% - 60px);
   background: #fff;
-}
+} */
 
-.toggleSwitch, .toggleButton {
+/* .toggleSwitch, .toggleButton {
   transition: all 0.2s ease-in;
-}
+} */
