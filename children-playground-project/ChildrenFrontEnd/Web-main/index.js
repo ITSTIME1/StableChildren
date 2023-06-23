@@ -84,6 +84,13 @@ completeBtn.addEventListener("click", () => {
   // 3. 단어들을 뿌리는 효과를 생성.
   const fourImageSection = document.querySelector(".four-image-section");
   const imageBox = document.querySelectorAll(".image-box");
+  const footerFormSection = document.querySelector(".form-section");
+  const imageSection = document.querySelector(".image-section");
+
+  // textArea.style.display = "none";
+  // completeBtn.style.display = "none";
+  footerFormSection.style.display = "none";
+  imageSection.style.height = "100%";
   for (let i = 0; i < imageBox.length; i++) {
     imageBox[i].style.display = "none";
   }
@@ -109,7 +116,21 @@ completeBtn.addEventListener("click", () => {
 // 서클영역
 function circleSection(parent) {
   let circleDiv = document.createElement("div");
-  circleDiv.setAttribute("id", "Div1"); // 새로운 디브에 대한 css
+  let animationDiv = document.createElement("div");
+  animationDiv.setAttribute("id", "animationDiv");
+
+  animationDiv.style.width = "100%";
+  animationDiv.style.height = "55%";
+
+  animationDiv.style.backgroundColor = "rgba(" + 28 + ", " + 15 + ", " + 223 + ", " + 1 + ")";
+  animationDiv.style.display = "flex";
+  animationDiv.style.justifyContent = "center";
+  animationDiv.style.alignItems = "center";
+  animationDiv.style.textAlign = "center";
+  animationDiv.style.position = "absolute";
+
+  // 새로운 디브에 대한 css
+  circleDiv.setAttribute("id", "Div1"); 
   circleDiv.style.width = "100%";
   circleDiv.style.height = "100%";
 
@@ -117,16 +138,30 @@ function circleSection(parent) {
     "rgba(" + 88 + ", " + 190 + ", " + 223 + ", " + 1 + ")";
   circleDiv.style.display = "flex";
   circleDiv.style.justifyContent = "center";
-  circleDiv.style.alignItems = "center";
+  // circleDiv.style.alignItems = "center";
   circleDiv.style.textAlign = "center";
   circleDiv.style.position = "relative";
   // circleDiv.style.overflow = "scroll";
-  // console.log(imageBox);
-  console.log(circleDiv);
+
+
+  animationDiv.setAttribute("id", "animationDiv");
+
+  animationDiv.style.width = "100%";
+  animationDiv.style.height = "55%";
+
+  animationDiv.style.backgroundColor = "rgba(" + 88 + ", " + 190 + ", " + 223 + ", " + 1 + ")";
+  animationDiv.style.display = "flex";
+  animationDiv.style.justifyContent = "center";
+  animationDiv.style.alignItems = "center";
+  animationDiv.style.textAlign = "center";
+  animationDiv.style.position = "absolute";
+
+  // 애니메이션 디브 추가
+  circleDiv.appendChild(animationDiv);
   parent.appendChild(circleDiv);
 
   // 원형 서클 애니메이션
-  circleAnimation(circleDiv);
+  circleAnimation(animationDiv);
   // 북극곰 3D 모델링
   polarBear3D(circleDiv);
   // mouse tracker
@@ -204,13 +239,51 @@ function polarBear3D(parent) {
   bearCSS.position = "absolute";
   bearCSS.bottom = "0";
   bearCSS.width = "20vw";
-  bearCSS.height = "30vh";
+  bearCSS.height = "45vh";
   bearCSS.borderRadius = "220px 220px 0 0";
   bearCSS.backgroundColor = "white";
 
-
   parent.appendChild(bear);
 
+  // 손 박스
+  const handContainer = document.createElement("div");
+  const handContainerCSS = handContainer.style;
+  handContainerCSS.position = "absolute";
+  handContainerCSS.display = "flex";
+  handContainerCSS.justifyContent = "space-around";
+  handContainerCSS.padding = "22px";
+  handContainerCSS.width = "30vw";
+  handContainerCSS.height = "5vh";
+  handContainerCSS.top = "50%";
+  // handContainerCSS.backgroundColor = "black";
+
+  bear.appendChild(handContainer);
+
+  // 왼손
+  const leftHand = document.createElement("div");
+  const leftHandCSS = leftHand.style;
+  leftHand.classList.add("hand");
+  leftHandCSS.position = "absolute";
+  leftHandCSS.width = "20%";
+  leftHandCSS.left = "8%";
+  leftHandCSS.height = "100%";
+  leftHandCSS.backgroundColor = "white";
+  leftHandCSS.borderRadius = "350px 50px 450px 100px";
+
+  handContainer.appendChild(leftHand);
+
+  // 오른손
+  const rightHand = document.createElement("div");
+  const rightHandCSS = rightHand.style;
+  rightHand.classList.add("hand");
+  rightHandCSS.position = "absolute";
+  rightHandCSS.width = "20%";
+  rightHandCSS.right = "8%";
+  rightHandCSS.height = "100%";
+  rightHandCSS.backgroundColor = "white";
+  rightHandCSS.borderRadius = "50px 350px 100px 450px";
+
+  handContainer.appendChild(rightHand);
 
   // 안면 제한 박스
   const limitContainer = document.createElement("div");
@@ -242,7 +315,6 @@ function polarBear3D(parent) {
   faceCSS.zIndex = 3;
   limitContainer.appendChild(faceContainer);
 
-
   // 귀 위치 잡는 컨테이너
   const bearEearContainer = document.createElement("div");
   const bearEearContainerCSS = bearEearContainer.style;
@@ -251,7 +323,7 @@ function polarBear3D(parent) {
   bearEearContainerCSS.position = "absolute";
   bearEearContainerCSS.display = "flex";
   bearEearContainerCSS.justifyContent = "space-around";
-  
+
   bearEearContainerCSS.top = "1%";
   bearEearContainerCSS.bottom = "0";
   bearEearContainerCSS.width = "150%";
@@ -284,7 +356,6 @@ function polarBear3D(parent) {
 
   bearEearContainer.appendChild(bearRightEar);
 
-
   // 눈 박스
   const eyeContainer = document.createElement("div");
   const eyeContainerCSS = eyeContainer.style;
@@ -299,7 +370,6 @@ function polarBear3D(parent) {
   eyeContainerCSS.height = "20px";
   eyeContainerCSS.marginLeft = "-41px";
   // eyeContainerCSS.backgroundColor="blue";
-
 
   // 왼쪽 눈
   const leftEye = document.createElement("div");
@@ -336,7 +406,7 @@ function polarBear3D(parent) {
   phizContainerCSS.justifyContent = "center";
   phizContainerCSS.top = "20%";
   phizContainerCSS.width = "60%";
-  phizContainerCSS.height = "60%";
+  phizContainerCSS.height = "50%";
   phizContainerCSS.borderRadius = "100px";
   phizContainerCSS.backgroundColor =
     "rgb(" + 222 + ", " + 249 + "," + 254 + ")";
@@ -356,7 +426,6 @@ function polarBear3D(parent) {
   noseCSS.backgroundColor = "black";
 
   phizContainer.appendChild(nose);
-
 
   // 코 음영
   const dot = document.createElement("div");
@@ -406,61 +475,27 @@ function mouseTracker(event) {
   };
   // console.log(mouseCenter);
 
-  let limitContainer = document.getElementById("bear");
+  // mouse x, y좌표에 따라서 눈과 몸통이 이동.
+  interact(event, mouse, mouseCenter);
+}
+
+// interact 함수
+function interact(e, mouse, mouseCenter) {
+  // let limitContainer = document.getElementById("bear");
   let faceContainer = document.getElementById("faceContainer");
   let nose = document.getElementById("nose");
   let ears = document.querySelectorAll(".ears");
   let bearMouse = document.getElementById("mouse");
+  let hands = document.querySelectorAll(".hand");
   // console.log(ears);
 
   var eyeSize = 20,
     eyeSizeRate = 12,
     noseMoveRate = 2.5,
     earMoveRate = 5.5,
+    handMoveRate = 5.5,
     faceMoveRate = 10;
 
-  // mouse x, y좌표에 따라서 눈과 몸통이 이동.
-  interact(
-    event,
-    faceMoveRate,
-    earMoveRate,
-    noseMoveRate,
-    eyeSizeRate,
-    eyeSize,
-    mouseCenter,
-    limitContainer,
-    faceContainer,
-    ears,
-    nose,
-    bearMouse
-  );
-}
-
-// 위치 이동
-function translate (selector, x, y) {
-  selector.style.transform = 
-      'translate(' + x + 'px,' + y + 'px)';
-}
-
-function scale(selector, scale) {
-  selector.style.transform = `scale(${scale})`;
-}
-
-// interact 함수
-function interact(
-  e,
-  faceMoveRate,
-  earMoveRate,
-  noseMoveRate,
-  eyeSizeRate,
-  eyeSize,
-  mouseCenter,
-  limitContainer,
-  faceContainer,
-  ears,
-  nose,
-  mouse
-) {
   // 첫번째 터치지점의 x, y좌표를 만약에 touch이벤트가 존재할 경우에
 
   mouse.x = e.clientX;
@@ -468,69 +503,43 @@ function interact(
   // console.log(mouse.x);
   // console.log(mouse.x);
   // 얼굴 이동비율에 대해서 얼마나 떨어져 있는가를 나타내는것
-  let dx = (mouse.x - mouseCenter.x) / faceMoveRate,
-    dy = (mouse.y - mouseCenter.y) / faceMoveRate,
-    classX = dx < 0 ? "left" : "right";
+  let dx = (mouse.x - mouseCenter.x) / faceMoveRate;
+  let dy = (mouse.y - mouseCenter.y) / faceMoveRate;
 
-  // 그럼 얼굴 중심으로 부터 얼마나 떨어져 있는 지를 비율로써 나타내고
-
-  let limit = {
-    left: -(limitContainer.offsetWidth - faceContainer.offsetWidth) / 2,
-    right: (limitContainer.offsetWidth - faceContainer.offsetWidth) / 2,
-    top: -(limitContainer.offsetHeight - faceContainer.offsetHeight) / 2,
-    bottom: (limitContainer.offsetHeight - faceContainer.offsetHeight) / 2,
-  };
-  
-  // x, y좌표 비율에 대한 좌표
-  console.log(
-    `x : ${dx},
-     y : ${dy},
-     left : ${limit.left}, 
-     right : ${limit.right}, 
-     top : ${limit.top}, 
-     bottom : ${limit.bottom}`);
-
-  // dx = dx > limit.left ? dx : 
-  // dx = dx < limit.left ? limit.left : dx > limit.right ? limit.right : dx;
-
-  // dy = dy < limit.top ? limit.top : dy > limit.bottom ? limit.bottom : dy;
-  console.log(dx + ", " + dy);
-
-
-  // dx 값에 따라서 dx가 0보다 작으면 왼쪽 눈을 기준
-  // dx 값이 0보다 크다면 오른쪽 눈을 기준
-  let eye = document.getElementsByClassName(classX + '-eye')[0];
-  // console.log(eye);
-  
-
-  // 눈비율을 측정하고 혀재 눈 사이즈 에서 dx만큼 빼고
-  // 눈의 비율 대비 얼마나 크게할지 정함.
-  let size = Math.round(eyeSize - Math.abs(dx)/eyeSizeRate);
-  // let margin = Math.round((eyeSize - size)/2);
-
-  // eye.style.cssText = 'width:' + size + 'px; \
-  //                        height:' + size + 'px;'
-
-  // fish.style.cssText =
-  //     'left:' + mouse.x + 'px; \
-  //      top:' + mouse.y + 'px;'
-
+  // 얼굴 비율 조절
   translate(faceContainer, dx * 0.2, dy * 0.2);
 
-  // 귀의 위치도 조절
-  // 귀비율 대비
+  // 귀 비율 조절
   for (let i = 0; i < ears.length; i++) {
-      translate(ears[i], -dx/earMoveRate, -dy/earMoveRate);
+    translate(ears[i], -dx / earMoveRate, -dy / earMoveRate);
   }
-  
+
+  // 손 비율 조절
+  for (let i = 0; i < hands.length; i++) {
+    translate(hands[i], -dx / handMoveRate, -dy / handMoveRate);
+  }
+
+  // 코비율 조절
   translate(nose, dx * 0.2, dy * 0.2);
-  if(dx < 0) {
-    translate(mouse, dx * 0.2 * 0.1, dy * 0.2);
-    scale(mouse, dx * -0.03);
+  translate(nose, dx * 0.2, dy * 0.2);
+  // 입비율 조절
+  if (dx < 0) {
+    translate(bearMouse, dx * 0.2 * 0.1, dy * 0.2 * 0.1);
+    scale(bearMouse, dx * -0.03);
   } else {
-    translate(mouse, dx * 0.2 * -0.1, dy * 0.2);
-    scale(mouse, dx * 0.03);
+    translate(bearMouse, dx * 0.2 * -0.1, dy * 0.2 * 0.1);
+    scale(bearMouse, dx * 0.03);
   }
-  
-  translate(phizContainer, dx/noseMoveRate, dy/noseMoveRate);
+
+  // 음영 비율 조절
+  translate(phizContainer, dx / noseMoveRate, dy / noseMoveRate);
+}
+
+// 위치 이동
+function translate(selector, x, y) {
+  selector.style.transform = "translate(" + x + "px," + y + "px)";
+}
+
+function scale(selector, scale) {
+  selector.style.transform = `scale(${scale})`;
 }
