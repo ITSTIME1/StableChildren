@@ -4,10 +4,14 @@ const toggleBtn = document.getElementById("toggle-btn");
 const gausianScreen = document.querySelectorAll(".gausian");
 const completeBtn = document.getElementById("complete-btn");
 
+// 중복 div 방지
 let duplicate = false;
 // wordList
 let wordList = [];
 let circlePosList = [];
+let startPosX, startPosY;
+let isDragging = false;
+let wordTarget = null;
 
 // onKeyDown: keycode 값 - 한/영, Shift, Backsapce 등 인식 가능
 // onKeyPress: ASCII 값 - 한/영, Shift, Backsapce 등 인식 불가
@@ -21,6 +25,7 @@ wordArea.addEventListener("keydown", (event) => {
   } else {
     duplicate = false;
   }
+
   // 워드를 입력하지 않았을때
   if (wordArea.length != 0) {
     completeBtn.style.visibility = "visible";
@@ -117,20 +122,8 @@ completeBtn.addEventListener("click", () => {
 function circleSection(parent) {
   let circleDiv = document.createElement("div");
   let animationDiv = document.createElement("div");
-  animationDiv.setAttribute("id", "animationDiv");
-
-  animationDiv.style.width = "100%";
-  animationDiv.style.height = "55%";
-
-  animationDiv.style.backgroundColor = "rgba(" + 28 + ", " + 15 + ", " + 223 + ", " + 1 + ")";
-  animationDiv.style.display = "flex";
-  animationDiv.style.justifyContent = "center";
-  animationDiv.style.alignItems = "center";
-  animationDiv.style.textAlign = "center";
-  animationDiv.style.position = "absolute";
-
   // 새로운 디브에 대한 css
-  circleDiv.setAttribute("id", "Div1"); 
+  circleDiv.setAttribute("id", "Div1");
   circleDiv.style.width = "100%";
   circleDiv.style.height = "100%";
 
@@ -143,18 +136,20 @@ function circleSection(parent) {
   circleDiv.style.position = "relative";
   // circleDiv.style.overflow = "scroll";
 
-
+  // animation
   animationDiv.setAttribute("id", "animationDiv");
 
   animationDiv.style.width = "100%";
   animationDiv.style.height = "55%";
 
-  animationDiv.style.backgroundColor = "rgba(" + 88 + ", " + 190 + ", " + 223 + ", " + 1 + ")";
+  animationDiv.style.backgroundColor =
+    "rgba(" + 88 + ", " + 190 + ", " + 223 + ", " + 1 + ")";
   animationDiv.style.display = "flex";
   animationDiv.style.justifyContent = "center";
   animationDiv.style.alignItems = "center";
   animationDiv.style.textAlign = "center";
-  animationDiv.style.position = "absolute";
+  animationDiv.style.position = "relative";
+  animationDiv.style.backgroundColor = "blue";
 
   // 애니메이션 디브 추가
   circleDiv.appendChild(animationDiv);
@@ -167,19 +162,41 @@ function circleSection(parent) {
   // mouse tracker
   circleDiv.addEventListener("mousemove", mouseTracker);
 }
+
+
+
 // circle animation.
 function circleAnimation(parent) {
+
   for (let i = 0; i < wordList.length; i++) {
     // circle안에 텍스트가 들어가야 되기 때문에
     let wordCircleDiv = document.createElement("div");
+    wordCircleDiv.setAttribute("id", `wordCircle-${i}`)
     const divInnerText = document.createTextNode(wordList[i]);
     wordCircleDiv.style.fontSize = "10";
     wordCircleDiv.appendChild(divInnerText);
 
+    wordCircleDiv.style.boxSizing = "border-box";
     wordCircleDiv.style.position = "absolute";
     wordCircleDiv.style.display = "flex";
     wordCircleDiv.style.justifyContent = "center";
     wordCircleDiv.style.alignItems = "center";
+    // wordCircleDiv.draggable = "true";
+    // document.addEventListener("mouseup", (event) => {
+    //   isDragging = false;
+    // });
+    wordCircleDiv.addEventListener("mousedown", (event) => {
+      isDragging = true;
+      // 현재 다운된걸 전역변수로 넣어주고
+      wordTarget = wordCircleDiv.id;
+      // 시작위치를 저장해둔다.
+      startPosX = event.clientX - wordCircleDiv.offsetLeft;
+      startPosY = event.clientY - wordCircleDiv.offsetTop;
+
+      // console.log(wordTarget);
+      
+    });
+
     animeCircle = parent.appendChild(wordCircleDiv);
     animeCircle.classList.add("anime-circle");
   }
@@ -244,6 +261,17 @@ function polarBear3D(parent) {
   bearCSS.backgroundColor = "white";
 
   parent.appendChild(bear);
+
+  // 몸체에 단어가 들어오게된다면
+  bear.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+  // 들어오는건데 착각하고 있었네.
+  bear.addEventListener("drop", (event) => {
+    console.log(
+      `drop zone X: ${event.target.clientX} drop zone Y : ${event.target.clientY}`
+    );
+  });
 
   // 손 박스
   const handContainer = document.createElement("div");
@@ -400,6 +428,7 @@ function polarBear3D(parent) {
   // 코 음영
   const phizContainer = document.createElement("div");
   const phizContainerCSS = phizContainer.style;
+  phizContainer.classList.add("phizContainer");
   phizContainer.setAttribute("id", "phizContainer");
   phizContainerCSS.position = "absolute";
   phizContainerCSS.display = "flex";
@@ -540,6 +569,49 @@ function translate(selector, x, y) {
   selector.style.transform = "translate(" + x + "px," + y + "px)";
 }
 
+// 입의 크기를 증가
 function scale(selector, scale) {
   selector.style.transform = `scale(${scale})`;
 }
+
+// 서클 움직임 위치 변화
+
+// 서클들을 마음대로 움직이려면 조건이 필요하다
+
+// 원하는 기능은 첫번째 박스를 클릭하면 이동이 가능해야된다.
+
+// 1. 서클을 마우스의 왼쪽 버튼을 통해 클릭한다.(mousedown)
+// 2. 마우스로 박스를 누르면 해당 div가 움직이는걸 전역으로 알려준다.
+// 3. 마우스를 눌렀을 때 컨텐이너를 기준으로 x, y좌표와 브라우저의 맨 왼쪽 위를 기준으로 한 마우스 포인터의 좌표를 기억시킨다
+// ====
+//
+// mousemove할때 초기 위치가 설정되지 않으면 좌상단 0,0에서 시작된다.
+
+
+// 마우스가 움직이면
+document.addEventListener("mousemove", (event) => {
+  // 드래깅이 감지되었고 target이 설정되어있다면
+  if(isDragging && wordTarget != null) { 
+    let s = document.getElementById(wordTarget);
+    // let rect = s.getBoundingClientRect();
+    // console.log(`${rect.left}, ${parseInt(rect.top)}`);
+
+    let xPos = event.clientX - startPosX;
+    let yPos = event.clientY - startPosY;
+
+
+    s.style.left = xPos + "px";
+    s.style.top = parseInt(yPos) + "px";
+    
+  }
+
+  // console.log(`${event.clientX}, ${event.clientY}`);
+ 
+});
+
+// 마우스가 떼어졌을때
+document.addEventListener("mouseup", (event) => {
+  if(isDragging == true) {
+    isDragging = false;
+  }
+});
