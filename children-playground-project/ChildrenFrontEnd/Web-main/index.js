@@ -3,7 +3,7 @@ const wordArea = document.getElementById("word-area");
 const toggleBtn = document.getElementById("toggle-btn");
 const gausianScreen = document.querySelectorAll(".gausian");
 const completeBtn = document.getElementById("complete-btn");
-
+let phizContainerDiv = null;
 // 중복 div 방지
 let duplicate = false;
 // wordList
@@ -149,7 +149,7 @@ function circleSection(parent) {
   animationDiv.style.alignItems = "center";
   animationDiv.style.textAlign = "center";
   animationDiv.style.position = "relative";
-  animationDiv.style.backgroundColor = "blue";
+  // animationDiv.style.backgroundColor = "blue";
 
   // 애니메이션 디브 추가
   circleDiv.appendChild(animationDiv);
@@ -231,7 +231,7 @@ function circleAnimation(parent) {
       return y;
     },
     scale: () => {
-      return anime.random(1.45, 2.55);
+      return anime.random(2.45, 3.55);
     },
     duration: () => {
       return anime.random(250, 1500);
@@ -263,15 +263,15 @@ function polarBear3D(parent) {
   parent.appendChild(bear);
 
   // 몸체에 단어가 들어오게된다면
-  bear.addEventListener("dragover", (event) => {
-    event.preventDefault();
-  });
-  // 들어오는건데 착각하고 있었네.
-  bear.addEventListener("drop", (event) => {
-    console.log(
-      `drop zone X: ${event.target.clientX} drop zone Y : ${event.target.clientY}`
-    );
-  });
+  // bear.addEventListener("dragover", (event) => {
+  //   event.preventDefault();
+  // });
+  // // 들어오는건데 착각하고 있었네.
+  // bear.addEventListener("drop", (event) => {
+  //   console.log(
+  //     `drop zone X: ${event.target.clientX} drop zone Y : ${event.target.clientY}`
+  //   );
+  // });
 
   // 손 박스
   const handContainer = document.createElement("div");
@@ -320,7 +320,6 @@ function polarBear3D(parent) {
   limitCSS.position = "absolute";
   limitCSS.display = "flex";
   limitCSS.justifyContent = "center";
-  limitCSS.alignItems = "center";
   limitCSS.top = "5%";
   limitCSS.width = "10vw";
   limitCSS.height = "100%";
@@ -338,7 +337,7 @@ function polarBear3D(parent) {
   faceCSS.justifyContent = "center";
   faceCSS.top = "0%";
   faceCSS.width = "100%";
-  faceCSS.height = "20%";
+  faceCSS.height = "10%";
   // faceCSS.backgroundColor="orange";
   faceCSS.zIndex = 3;
   limitContainer.appendChild(faceContainer);
@@ -426,14 +425,14 @@ function polarBear3D(parent) {
   faceContainer.appendChild(eyeContainer);
 
   // 코 음영
-  const phizContainer = document.createElement("div");
+  let phizContainer = document.createElement("div");
   const phizContainerCSS = phizContainer.style;
   phizContainer.classList.add("phizContainer");
   phizContainer.setAttribute("id", "phizContainer");
   phizContainerCSS.position = "absolute";
   phizContainerCSS.display = "flex";
   phizContainerCSS.justifyContent = "center";
-  phizContainerCSS.top = "20%";
+  phizContainerCSS.top = "10%";
   phizContainerCSS.width = "60%";
   phizContainerCSS.height = "50%";
   phizContainerCSS.borderRadius = "100px";
@@ -447,7 +446,7 @@ function polarBear3D(parent) {
   const noseCSS = nose.style;
   nose.setAttribute("id", "nose");
 
-  noseCSS.position = "relative";
+  noseCSS.position = "absolute";
   noseCSS.top = "6%";
   noseCSS.width = "50px";
   noseCSS.height = "60px";
@@ -455,6 +454,7 @@ function polarBear3D(parent) {
   noseCSS.backgroundColor = "black";
 
   phizContainer.appendChild(nose);
+  
 
   // 코 음영
   const dot = document.createElement("div");
@@ -477,12 +477,14 @@ function polarBear3D(parent) {
   mouse.setAttribute("id", "mouse");
   mouseCSS.top = "80%";
   mouseCSS.position = "absolute";
-  mouseCSS.width = "30px";
-  mouseCSS.height = "15px";
-  mouseCSS.borderRadius = "0px 0px 15px 15px";
+  mouseCSS.width = "40px";
+  mouseCSS.height = "25px";
+  mouseCSS.borderRadius = "0px 0px 20px 20px";
   mouseCSS.backgroundColor = "black";
 
   phizContainer.appendChild(mouse);
+  phizContainerDiv = phizContainer.id;
+  // console.log(phizContainerDiv);
 
   // const bear
 }
@@ -552,14 +554,22 @@ function interact(e, mouse, mouseCenter) {
   translate(nose, dx * 0.2, dy * 0.2);
   translate(nose, dx * 0.2, dy * 0.2);
   // 입비율 조절
+  
   if (dx < 0) {
-    translate(bearMouse, dx * 0.2 * 0.1, dy * 0.2 * 0.1);
-    scale(bearMouse, dx * -0.03);
-  } else {
-    translate(bearMouse, dx * 0.2 * -0.1, dy * 0.2 * 0.1);
-    scale(bearMouse, dx * 0.03);
+    translate(bearMouse, dx * 0.3, dy * 0.2);
+    scale(bearMouse, dx * -3);
+  }  else {
+    translate(bearMouse, dx * 0.3, dy * 0.2);
+    scale(bearMouse, dx * 3);
   }
 
+  if(dy < 0) {
+    scale(bearMouse, dy * -0.03);
+  } else {
+    scale(bearMouse, dy * 0.03);
+  }
+
+  console.log(`${dx}, ${dy}`);
   // 음영 비율 조절
   translate(phizContainer, dx / noseMoveRate, dy / noseMoveRate);
 }
@@ -599,12 +609,11 @@ document.addEventListener("mousemove", (event) => {
     let xPos = event.clientX - startPosX;
     let yPos = event.clientY - startPosY;
 
-
+    console.log(`${xPos}, ${parseInt(yPos)}`);
     s.style.left = xPos + "px";
     s.style.top = parseInt(yPos) + "px";
     
   }
-
   // console.log(`${event.clientX}, ${event.clientY}`);
  
 });
@@ -615,3 +624,5 @@ document.addEventListener("mouseup", (event) => {
     isDragging = false;
   }
 });
+
+
