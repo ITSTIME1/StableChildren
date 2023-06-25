@@ -1,14 +1,15 @@
 // textarea enter 입력시 해당 단어를 전부 가지고 와서 리스트에 추가
 const wordArea = document.getElementById("word-area");
-const toggleBtn = document.getElementById("toggle-btn");
+const toggleBtn = document.getElementById("logo-image");
 const gausianScreen = document.querySelectorAll(".gausian");
 const completeBtn = document.getElementById("complete-btn");
+
 let phizContainerDiv = null;
 // 중복 div 방지
 let duplicate = false;
 // wordList
 let wordList = [];
-let circlePosList = [];
+let prompt = [];
 let startPosX, startPosY;
 let isDragging = false;
 let wordTarget = null;
@@ -61,25 +62,28 @@ wordArea.addEventListener("keydown", (event) => {
   }
 });
 
-// Document.querySelector()는 제공한 선택자 또는 선택자 뭉치와 일치하는 문서 내 첫 번째 Element를 반환합니다. 일치하는 요소가 없으면 null을 반환합니다.(MDN)
-// Document.getElementById() 메서드는 주어진 문자열과 일치하는 id 속성을 가진 요소를 찾고, 이를 나타내는 Element 객체를 반환합니다. ID는 문서 내에서 유일해야 하기 때문에 특정 요소를 빠르게 찾을 때 유용합니다.(MDN)
+// 이미지 토글버튼
+toggleBtn.addEventListener("click", () => {
+  let originSrc = toggleBtn.src;
+  const fileName = originSrc.split('/').pop();
+  // imagePath.svg만 추출
+  console.log(fileName);
+  
+  if(fileName == "polar-black.svg") {
 
-// 토글 버튼 클릭시 gausian & image icon 삭제
-toggleBtn.addEventListener("click", (event) => {
-  // 만약 토글 버튼이 체크되었다면
-  // 가우시안 페이지를 전부 걷어냄 이미지와 함께
-  if (event.target.innerText === "숨기기") {
-    event.target.innerText = "보이기";
+    toggleBtn.src = "../src/images/polar-not-black.svg";
     for (let i = 0; i < gausianScreen.length; i++) {
       gausianScreen[i].style.visibility = "hidden";
     }
   } else {
-    event.target.innerText = "숨기기";
+
+    toggleBtn.src = "../src/images/polar-black.svg";
     for (let i = 0; i < gausianScreen.length; i++) {
       gausianScreen[i].style.visibility = "visible";
     }
   }
 });
+
 
 // 완료 버튼 누를시 화면을 새로운 걸로 바꾸고
 // image-box, toggle-btn, complete-btn, textArea 를 display block으로 없앰
@@ -163,17 +167,13 @@ function circleSection(parent) {
   circleDiv.addEventListener("mousemove", mouseTracker);
 }
 
-
-
 // circle animation.
 function circleAnimation(parent) {
-
   for (let i = 0; i < wordList.length; i++) {
     // circle안에 텍스트가 들어가야 되기 때문에
     let wordCircleDiv = document.createElement("div");
-    wordCircleDiv.setAttribute("id", `wordCircle-${i}`)
+    wordCircleDiv.setAttribute("id", `wordCircle-${i}`);
     const divInnerText = document.createTextNode(wordList[i]);
-    wordCircleDiv.style.fontSize = "10";
     wordCircleDiv.appendChild(divInnerText);
 
     wordCircleDiv.style.boxSizing = "border-box";
@@ -194,7 +194,6 @@ function circleAnimation(parent) {
       startPosY = event.clientY - wordCircleDiv.offsetTop;
 
       // console.log(wordTarget);
-      
     });
 
     animeCircle = parent.appendChild(wordCircleDiv);
@@ -237,8 +236,11 @@ function circleAnimation(parent) {
       return anime.random(250, 1500);
     },
     delay: () => {
-      return anime.random(500, 1000);
+      return anime.random(300, 1000);
     },
+    // rotate: () => { 
+    //   return anime.random(-360, 360); 
+    // },
     loop: false,
     direction: "alternate",
     easing: "easeInOutQuad",
@@ -454,7 +456,6 @@ function polarBear3D(parent) {
   noseCSS.backgroundColor = "black";
 
   phizContainer.appendChild(nose);
-  
 
   // 코 음영
   const dot = document.createElement("div");
@@ -486,7 +487,46 @@ function polarBear3D(parent) {
   phizContainerDiv = phizContainer.id;
   // console.log(phizContainerDiv);
 
-  // const bear
+  // bear영역에 왔다면
+  bear.addEventListener("mouseover", (event) => {
+    // wordTarget이 정해져있다면 over 되었을때 해당 리스트에 서삭제하고
+    // 그리고 노드도 삭제
+    if (wordTarget != null && isDragging) {
+      console.log("bear!");
+      console.log(wordTarget);
+      let targetDiv = document.getElementById(wordTarget);
+      let targetParent = targetDiv.parentNode;
+
+      if (prompt.includes(targetDiv.innerText) == false) {
+        prompt.push(targetDiv.innerText);
+      }
+
+      console.log(prompt);
+
+      // targetDiv.animate(
+      //   [
+      //     { transform: "scale(1.2)" },
+      //     { transform: "scale(1.0)" },
+      //     { transform: "scale(0.8)" },
+      //     { transform: "scale(0.5)" },
+      //     { transform: "scale(0.2)" },
+      //   ],
+      //   {
+      //     duration: 200,
+      //     fill: "forwards",
+      //   }
+      // );
+
+      targetParent.removeChild(targetDiv);
+
+      // 뭔가 bear가 들어올때 애니메이션을 추가하고 싶은데.
+
+      // wordTarget을 null로 하지 않는다면 over 상태에서 계속 이벤트가 지속됨.
+      // 왜냐하면 removechild를 통해서 부모로부터 해당 자식요소를 지우면 요소가 없는 null상태가 되는데
+      // 이때 null상태에서 드래깅중이고 over영역안에 들어와있기 때문에 오류가 나는것
+      wordTarget = null;
+    }
+  });
 }
 
 // mouse Tracker
@@ -554,22 +594,22 @@ function interact(e, mouse, mouseCenter) {
   translate(nose, dx * 0.2, dy * 0.2);
   translate(nose, dx * 0.2, dy * 0.2);
   // 입비율 조절
-  
+
   if (dx < 0) {
     translate(bearMouse, dx * 0.3, dy * 0.2);
     scale(bearMouse, dx * -3);
-  }  else {
+  } else {
     translate(bearMouse, dx * 0.3, dy * 0.2);
     scale(bearMouse, dx * 3);
   }
 
-  if(dy < 0) {
+  if (dy < 0) {
     scale(bearMouse, dy * -0.03);
   } else {
     scale(bearMouse, dy * 0.03);
   }
 
-  console.log(`${dx}, ${dy}`);
+  // console.log(`${dx}, ${dy}`);
   // 음영 비율 조절
   translate(phizContainer, dx / noseMoveRate, dy / noseMoveRate);
 }
@@ -597,11 +637,10 @@ function scale(selector, scale) {
 //
 // mousemove할때 초기 위치가 설정되지 않으면 좌상단 0,0에서 시작된다.
 
-
 // 마우스가 움직이면
 document.addEventListener("mousemove", (event) => {
   // 드래깅이 감지되었고 target이 설정되어있다면
-  if(isDragging && wordTarget != null) { 
+  if (isDragging && wordTarget != null) {
     let s = document.getElementById(wordTarget);
     // let rect = s.getBoundingClientRect();
     // console.log(`${rect.left}, ${parseInt(rect.top)}`);
@@ -609,20 +648,17 @@ document.addEventListener("mousemove", (event) => {
     let xPos = event.clientX - startPosX;
     let yPos = event.clientY - startPosY;
 
-    console.log(`${xPos}, ${parseInt(yPos)}`);
+    // console.log(`${xPos}, ${parseInt(yPos)}`);
     s.style.left = xPos + "px";
     s.style.top = parseInt(yPos) + "px";
-    
   }
   // console.log(`${event.clientX}, ${event.clientY}`);
- 
 });
 
 // 마우스가 떼어졌을때
 document.addEventListener("mouseup", (event) => {
-  if(isDragging == true) {
+  if (isDragging == true) {
     isDragging = false;
+    wordTarget = null;
   }
 });
-
-

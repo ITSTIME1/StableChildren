@@ -14,66 +14,139 @@ div[class=main-content] {
     overflow: hidden;
 }
 
-/* 타이틀 섹션 */
+/* 네비게이션 영역 */
 div[class="main-content"] > div[class="nav-section"] {
+    
+    width: 100%;
+    height: 10vh;
+    position: relative;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #78d2ff;
+}
+
+/* i 영역 */
+div[class="nav-section"] > div[class="item-section"] {
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    width: 20%;
+    height: 100%;
+    color:white;
+    /* background-color: rgb(109, 115, 115); */
+}
+
+/* toggle button */
+div[class="item-section"] #sun {
+    /* background-color: rgb(243, 156, 26); */
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 8vh;
-    background-color: #88d5f8;
+
+    /* border-radius: 50px;
+    text-align: center;
+    height: 100%;
+    border-radius: 30px 30px 30px 30px;
+    font-size: 0.8rem; */
+    cursor: pointer;
+}
+
+/* logo image */
+div[class="sun-anime"] > img{
+    width: 80%;
+    height: 80%;
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+/* logo image hover */
+div[class="sun-anime"] > img:hover{
+    transform: scale(1.2);
+}
+/* logi image not hover */
+div[class="sun-anime"] > img:not(:hover){
+    transform: scale(1);
+}
+
+/* list 부모영역 */
+div[class="item-section-relative"] {
     position: relative;
-}
-
-/* 타이틀 */
-div[class="nav-section"] > div[class="title-section"] {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    color: white;
-    margin-left: 10%;
-}
-
-/* 토글버튼 */
-div[class="toggle-section"] button{
-    position: absolute;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    text-align: center;
     width: 100%;
     height: 100%;
-    background-color: #a0e1ff;
-    cursor: pointer;
-    border-radius: 10px;
-
+    font-size: 1.5rem;
+    /* background-color: rgb(92, 175, 234);    */
 }
-/* 토글영역 */
-div[class="nav-section"] > div[class="toggle-section"] {
+
+/* list 영역 */
+div[class="item-section"] #list {
+    background-color: rgb(98, 161, 205);
     position: absolute;
-    width: 10%;
-    height: 60%;
-    border-radius: 10px;
-    background-color: #f03d3d;
-}
-
-
-/* 제목 영역
-div[class=top-title-section] {
-    width: 100vw;
-    height: 5vh;
-    font-size: 5em;
-    background-color: #d9f2fe;
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
+    width: 30%;
+    height: 100%;
+    font-size: 1.2rem;
+    border-radius: 30px 0px 0px 30px;
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+
+div[class="item-section"] #list:hover{
+    width: 100%;
+}
+div[class="item-section"] #list:not(:hover){
+    background-color: rgb(92, 175, 234);
+}
+
+
+/* title */
+div[class="item-section"] > div[class="book-title"] {
+    background-color: rgb(140, 197, 237);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 30%;
+    height: 100%;
+    font-size: 1.2rem;
+    border-radius: 30px 30px 30px 30px;
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* title */
+div[class="item-section"] > div[class="book-title"]:hover{
+    width: 45%;
+    height: 100%;
+    border-radius: 30px 30px 30px 30px;
+    cursor: pointer;
+}
+
+
+/* div[class="toggle-section"] button{
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    background-color: #e7722a;
+    cursor: pointer;
+    border-radius: 10px;
 } */
 
-/* 제목 영역 -> 제목 */
-/* div[class=top-title-section] > div[class="title"] {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    font-size: 1rem;
-} */
 
 /* 이미지 영역 */
 div[class=image-section] {
@@ -85,24 +158,6 @@ div[class=image-section] {
     justify-content: center;
     align-items: center;
 }
-
-/* 폴리곤 이미지 영역 */
-/* div[class=four-image-section] > div[class=polygon-ice] {
-    display: flex;
-    width: 30%;
-    height: 30%;
-    background-color: rgb(178, 84, 84);
-    width: 100vmin;
-    height: 84vmin;
-    -webkit-clip-path: polygon(12% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 2%);
-    clip-path: polygon(2% 44%, 46% 33%, 80% 36%, 100% 53%, 81% 74%, 48% 69%, 34% 72%, 12% 69%, 0% 72%);
-    position: absolute;
-    background: linear-gradient(#dde 30%, #eee 60%);
-    top: 2%;
-    left: 50%;
-    transform: translatex(-50%);
-
-} */
 
 /* 이미지 영역의 이미지 박스 영역 */
 div[class=image-section] > div[class="four-image-section"]{
@@ -123,7 +178,7 @@ div[class~=image-box] {
     width: 50%;
     height: 70%;
     border-radius: 10px;
-    border: 2px solid #4a8cab;
+    /* border: 2px solid #4a8cab; */
     /* box-shadow: 0px 5px 10px 0.4px #969f9f;; */
     background-color: #ffffff;
     /* animation-name: image-box; */
@@ -154,13 +209,13 @@ div[class~=image-box] > div[class="gausian"]{
     align-items: center;
     width: 100%;
     height: 100%;
-    border-radius: 8px;
     /* box-shadow: 2px -1px 2px 0.5px rgb(196, 214, 246); */
     background-color: rgba(88, 190, 223, 1);
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
 
 }
-
-
 
 /* 이미지 박스 가우시안 마우스 올려졌을 때*/
 div[class~=image-box] > div[class="gausian"]:hover{
@@ -168,23 +223,14 @@ div[class~=image-box] > div[class="gausian"]:hover{
     height: 100%;
     border-radius: 10px;
     background-color: rgba(29, 29, 29, 0);
-    animation-name: gausian;
-    animation-fill-mode: forwards;
-    animation-duration: 2s;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* transform: scale(0); */
 }
 
-@keyframes gausian {
-    0% {
-        border-radius: 10px;
-        background-color: rgb(88, 190, 223);
-    }
-    100% {
-        border-radius: 10px;
-        background-color: rgb(255, 255, 255);
-    }
+div[class~=image-box] > div[class="gausian"]:not(:hover){
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: rgba(88, 190, 223, 1);
 }
 
 
@@ -207,7 +253,7 @@ div[class="main-content"] > div[class="footer-section"] {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 30vh;
+    height: 20vh;
     background-color: #a0e1ff;
     position: relative;
 }
@@ -268,10 +314,17 @@ div[class="text-area-section"] > textarea {
     position: absolute;
     background: #fff;
     border-radius: 50%;
-    font-size: 0.4rem;
+    font-size: 0.5rem;
     text-align: center;
     white-space: normal;
 }
+
+.anime-circle:hover {
+    width: 60px;
+    height: 60px;
+    transform:scale(1.2);
+}
+
 
 
 
