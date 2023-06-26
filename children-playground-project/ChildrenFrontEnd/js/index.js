@@ -1,8 +1,9 @@
-// textarea enter 입력시 해당 단어를 전부 가지고 와서 리스트에 추가
 const wordArea = document.getElementById("word-area");
 const toggleBtn = document.getElementById("logo-image");
 const gausianScreen = document.querySelectorAll(".gausian");
 const completeBtn = document.getElementById("complete-btn");
+const title = document.querySelector(".book-title");
+const checkWord = document.getElementById("list");
 
 let phizContainerDiv = null;
 // 중복 div 방지
@@ -18,6 +19,19 @@ let wordTarget = null;
 // onKeyPress: ASCII 값 - 한/영, Shift, Backsapce 등 인식 불가
 // 워드를 입력하지 않았을때
 
+// title 변경
+title.addEventListener("click", (event) => {
+  let str = event.target.innerText;
+  // console.log(str);
+  if(str == "오늘 읽을 책을 알려줘!") {
+    let result = window.prompt("무슨책이야?");
+    event.target.innerText = result;
+    // console.log(result);
+  }
+});
+
+
+// textArea에 키가 눌려졌을 경우.
 wordArea.addEventListener("keydown", (event) => {
   // 만약 애니메이션 Div1이 남아있다면 삭제한다.
   let element = document.getElementById("Div1");
@@ -62,13 +76,12 @@ wordArea.addEventListener("keydown", (event) => {
   }
 });
 
-// 이미지 토글버튼
+// 가우시안 삭제 버튼.
 toggleBtn.addEventListener("click", () => {
-  let originSrc = toggleBtn.src;
-  const fileName = originSrc.split('/').pop();
+  const fileName = toggleBtn.src.split('/').pop();
   // imagePath.svg만 추출
   console.log(fileName);
-  
+
   if(fileName == "polar-black.svg") {
 
     toggleBtn.src = "../src/images/polar-not-black.svg";
@@ -122,7 +135,7 @@ completeBtn.addEventListener("click", () => {
   }
 });
 
-// 서클영역
+// 서클영역.
 function circleSection(parent) {
   let circleDiv = document.createElement("div");
   let animationDiv = document.createElement("div");
@@ -247,7 +260,7 @@ function circleAnimation(parent) {
   });
 }
 
-// polar bear animation
+// polar bear animation.
 function polarBear3D(parent) {
   const bear = document.createElement("div");
   bear.setAttribute("id", "bear");
@@ -529,7 +542,7 @@ function polarBear3D(parent) {
   });
 }
 
-// mouse Tracker
+// mouse Tracker.
 function mouseTracker(event) {
   // console.log(`Screen X(pos) : ${event.x}`);
   // console.log(`Screen Y(pos) : ${event.y}`);
@@ -550,7 +563,7 @@ function mouseTracker(event) {
   interact(event, mouse, mouseCenter);
 }
 
-// interact 함수
+// interact 함수.
 function interact(e, mouse, mouseCenter) {
   // let limitContainer = document.getElementById("bear");
   let faceContainer = document.getElementById("faceContainer");
@@ -614,30 +627,17 @@ function interact(e, mouse, mouseCenter) {
   translate(phizContainer, dx / noseMoveRate, dy / noseMoveRate);
 }
 
-// 위치 이동
+// 위치 이동.
 function translate(selector, x, y) {
   selector.style.transform = "translate(" + x + "px," + y + "px)";
 }
 
-// 입의 크기를 증가
+// 입의 크기를 증가.
 function scale(selector, scale) {
   selector.style.transform = `scale(${scale})`;
 }
 
-// 서클 움직임 위치 변화
-
-// 서클들을 마음대로 움직이려면 조건이 필요하다
-
-// 원하는 기능은 첫번째 박스를 클릭하면 이동이 가능해야된다.
-
-// 1. 서클을 마우스의 왼쪽 버튼을 통해 클릭한다.(mousedown)
-// 2. 마우스로 박스를 누르면 해당 div가 움직이는걸 전역으로 알려준다.
-// 3. 마우스를 눌렀을 때 컨텐이너를 기준으로 x, y좌표와 브라우저의 맨 왼쪽 위를 기준으로 한 마우스 포인터의 좌표를 기억시킨다
-// ====
-//
-// mousemove할때 초기 위치가 설정되지 않으면 좌상단 0,0에서 시작된다.
-
-// 마우스가 움직이면
+// 아이템을 드래깅.
 document.addEventListener("mousemove", (event) => {
   // 드래깅이 감지되었고 target이 설정되어있다면
   if (isDragging && wordTarget != null) {
@@ -661,4 +661,21 @@ document.addEventListener("mouseup", (event) => {
     isDragging = false;
     wordTarget = null;
   }
+});
+
+
+// 워드리스트를 확인.
+checkWord.addEventListener("mouseover", (event)=>{
+  if(wordList.length != 0 && checkWord.innerText == "클릭") {
+    checkWord.innerText = prompt.join(" ");
+  } else if (wordList.length == 0 && checkWord.innerText == "클릭") {
+    checkWord.innerText = "아무것도 없어요!";
+    checkWord.classList.add("hover-effect");
+    checkWord.style.width = checkWord.style.width;
+  }
+});
+
+// 워드 리스트가 '클릭'에서 벗어났을 경우.
+checkWord.addEventListener("mouseout", (event) => {
+  checkWord.innerText = "클릭";
 });

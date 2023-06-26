@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+
+    <script>
+      // 캔버스와 컨텍스트 가져오기
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // 물체 조각 정보
+      const fragments = [];
+      const numFragments = 100;
+      const explosionSpeed = 2;
+
+      // 폭발 시뮬레이션 초기화
+      function initializeExplosion() {
+        for (let i = 0; i < numFragments; i++) {
+          const fragment = {
+            x: canvas.width / 2, // 폭발 중심점
+            y: canvas.height / 2, // 폭발 중심점
+            dx: (Math.random() - 0.5) * explosionSpeed, // x축 속도
+            dy: (Math.random() - 0.5) * explosionSpeed, // y축 속도
+            radius: Math.random() * 3 + 1, // 조각 크기
+          };
+          fragments.push(fragment);
+        }
+      }
+
+      // 프레임 업데이트 및 그리기
+      function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < fragments.length; i++) {
+          const fragment = fragments[i];
+
+          fragment.x += fragment.dx;
+          fragment.y += fragment.dy;
+
+          // 캔버스 범위를 벗어나면 제거
+          if (
+            fragment.x < 0 ||
+            fragment.x > canvas.width ||
+            fragment.y < 0 ||
+            fragment.y > canvas.height
+          ) {
+            fragments.splice(i, 1);
+            i--;
+            continue;
+          }
+
+          // 조각 그리기
+          ctx.beginPath();
+          ctx.arc(fragment.x, fragment.y, fragment.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "red";
+          ctx.fill();
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      // 초기화 및 애니메이션 시작
+      function startAnimation() {
+        initializeExplosion();
+        update();
+      }
+
+      startAnimation();
+    </script>
+  </body>
+</html>
