@@ -1,78 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      canvas {
-        border: 1px solid black;
+<head>
+  <title>물체 폭발 애니메이션</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+
+  <script>
+    // 캔버스 요소와 컨텍스트 가져오기
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 물체의 속성 설정
+    const radius = 50;
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    const pieces = 20;
+    const pieceSize = radius / pieces;
+    const explosionForce = 5;
+
+    // 조각들 배열 생성 및 초기화
+    let piecesArr = [];
+    for (let i = 0; i < pieces; i++) {
+      for (let j = 0; j < pieces; j++) {
+        const px = x + i * pieceSize;
+        const py = y + j * pieceSize;
+        const piece = {
+          x: px,
+          y: py,
+          xSpeed: (Math.random() - 0.5) * explosionForce,
+          ySpeed: (Math.random() - 0.5) * explosionForce,
+          color: 'red'
+        };
+        piecesArr.push(piece);
       }
-    </style>
-  </head>
-  <body>
-    <canvas id="myCanvas" width="400" height="400"></canvas>
+    }
 
-    <script>
-      // 캔버스와 컨텍스트 가져오기
-      const canvas = document.getElementById("myCanvas");
-      const ctx = canvas.getContext("2d");
+    // 애니메이션 프레임 업데이트
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 물체 조각 정보
-      const fragments = [];
-      const numFragments = 100;
-      const explosionSpeed = 2;
+      // 조각들 이동 및 그리기
+      for (let i = 0; i < piecesArr.length; i++) {
+        const piece = piecesArr[i];
+        piece.x += piece.xSpeed;
+        piece.y += piece.ySpeed;
 
-      // 폭발 시뮬레이션 초기화
-      function initializeExplosion() {
-        for (let i = 0; i < numFragments; i++) {
-          const fragment = {
-            x: canvas.width / 2, // 폭발 중심점
-            y: canvas.height / 2, // 폭발 중심점
-            dx: (Math.random() - 0.5) * explosionSpeed, // x축 속도
-            dy: (Math.random() - 0.5) * explosionSpeed, // y축 속도
-            radius: Math.random() * 3 + 1, // 조각 크기
-          };
-          fragments.push(fragment);
-        }
-      }
-
-      // 프레임 업데이트 및 그리기
-      function update() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let i = 0; i < fragments.length; i++) {
-          const fragment = fragments[i];
-
-          fragment.x += fragment.dx;
-          fragment.y += fragment.dy;
-
-          // 캔버스 범위를 벗어나면 제거
-          if (
-            fragment.x < 0 ||
-            fragment.x > canvas.width ||
-            fragment.y < 0 ||
-            fragment.y > canvas.height
-          ) {
-            fragments.splice(i, 1);
-            i--;
-            continue;
-          }
-
-          // 조각 그리기
-          ctx.beginPath();
-          ctx.arc(fragment.x, fragment.y, fragment.radius, 0, Math.PI * 2);
-          ctx.fillStyle = "red";
-          ctx.fill();
-        }
-
-        requestAnimationFrame(update);
+        ctx.beginPath();
+        ctx.rect(piece.x, piece.y, pieceSize, pieceSize);
+        ctx.fillStyle = piece.color;
+        ctx.fill();
+        ctx.closePath();
       }
 
-      // 초기화 및 애니메이션 시작
-      function startAnimation() {
-        initializeExplosion();
-        update();
-      }
+      // 애니메이션 프레임 업데이트
+      requestAnimationFrame(update);
+    }
 
-      startAnimation();
-    </script>
-  </body>
+    // 애니메이션 시작
+    update();
+  </script>
+</body>
 </html>
