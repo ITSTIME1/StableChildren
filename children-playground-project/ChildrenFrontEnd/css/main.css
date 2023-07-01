@@ -85,7 +85,7 @@ div[class="item-section-relative"] {
     /* background-color: rgb(92, 175, 234);    */
 }
 
-/* list 영역 */
+/* word list 영역 */
 div[class="item-section"] #list {
     background-color: rgb(98, 161, 205);
     position: absolute;
@@ -106,6 +106,7 @@ div[class="item-section"] #list {
 
 div[class="item-section"] #list:hover{
     width: 80%;
+    
 }
 div[class="item-section"] #list:not(:hover){
     background-color: rgb(98, 161, 205);

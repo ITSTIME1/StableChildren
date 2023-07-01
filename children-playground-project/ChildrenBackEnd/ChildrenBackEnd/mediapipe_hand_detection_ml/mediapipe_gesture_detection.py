@@ -35,6 +35,11 @@ def initialize():
 
 # finger state initialize
 def finger_state_initialize():
+    
+    # global coordinate calculator
+    cx = ( hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x * screen_width) - 150
+    cy = ( hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y * screen_height) - 150
+    
     THUMB_CMC = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC].y * image_height
     THUMB_MCP = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].y * image_height
     THUMB_IP = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].y * image_height
@@ -90,17 +95,6 @@ def finger_state_initialize():
     if finger_state[0] and finger_state[1] and finger_state[2] and finger_state[3]:
         print("손가락 펴짐")
 
-        # 6,10,14, 18
-        # (not finger_state[1] and not finger_state[2] and not finger_state[3] and not finger_state[4])
-        # 4개의 끝 마디가 아래 4개의 마디보다 커지는 경우이면서 and 엄지가 4마디보다 커질때
-        # 여기서 image_height는 컬러작업후에 변경된 이미지의 크기를 가지고온다.
-        cx = (
-            hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x * screen_width)
-        cy = (
-            hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y * screen_height)
-
-        print(f"{cx}, {cy}")
-        # cx, cy값을 viewport의 화면 크기에 상대좌표로 바꿔야하니까
         pyautogui.moveTo(cx, cy)
 
         mp_drawing.draw_landmarks(
@@ -108,28 +102,32 @@ def finger_state_initialize():
             hand_landmarks,
             mp_hands.HAND_CONNECTIONS,
             mp_drawing.DrawingSpec(
-                color=(255, 191, 0), thickness=2, circle_radius=3),
+                color=(255, 191, 0), thickness=1, circle_radius=2),
             mp_drawing.DrawingSpec(color=(255, 255, 255), thickness=1, circle_radius=2))
+        
     # (THUMB_TIP > INDEX_PIP) and (THUMB_TIP > MIDDLE_PIP)
     #       and (THUMB_TIP > RING_PIP)
     #       and (THUMB_TIP > PINKY_PIP) and
     elif ((INDEX_TIP > INDEX_MCP and MIDDLE_TIP > MIDDLE_MCP and RING_TIP > RING_MCP and PINKY_TIP > PINKY_MCP)):
         # BGR
+        
         mp_drawing.draw_landmarks(
             image,
             hand_landmarks,
             mp_hands.HAND_CONNECTIONS,
-            mp_drawing.DrawingSpec(
-                color=(255, 191, 0), thickness=2, circle_radius=3),
+            mp_drawing.DrawingSpec(color=(255, 191, 0), thickness=1, circle_radius=2),
             mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=1, circle_radius=2))
+        
+        pyautogui.dragTo(cx, cy, button="left")
         print(f"주먹쥠")
     else:
+        print("손을 핀상태도 아니고 주먹을 쥔 상태도 아님")
         mp_drawing.draw_landmarks(
             image,
             hand_landmarks,
             mp_hands.HAND_CONNECTIONS,
             mp_drawing.DrawingSpec(
-                color=(255, 191, 0), thickness=2, circle_radius=3),
+                color=(255, 191, 0), thickness=1, circle_radius=2),
             mp_drawing.DrawingSpec(color=(255, 255, 255), thickness=1, circle_radius=2))
 
 
