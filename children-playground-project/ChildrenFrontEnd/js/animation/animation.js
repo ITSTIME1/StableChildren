@@ -6,6 +6,7 @@ let startPosX, startPosY;
 let isDragging = false;
 let wordTarget = null;
 let phizContainerDiv = null;
+// git test.
 
 // 서클 영역 지정 함수.
 export function circleSection(word) {
