@@ -1,11 +1,8 @@
 import { get_generated_image } from "./api/get_generated_image.js";
+import { total } from "./api/get_generated_image.js";
 import {circleSection} from "../js/animation/animation.js";
+import {wordArea, toggleBtn, gausianScreen, completeBtn, title, gausian1, gausian2, gausian3, gausian4} from "../js/constants/constant.js";
 
-const wordArea = document.getElementById("word-area");
-const toggleBtn = document.getElementById("logo-image");
-const gausianScreen = document.querySelectorAll(".gausian");
-const completeBtn = document.getElementById("complete-btn");
-const title = document.querySelector(".book-title");
 // 중복 div 방지
 let duplicate = false;
 // 단어리스트
@@ -21,7 +18,6 @@ title.addEventListener("click", (event) => {
     // console.log(result);
   }
 });
-
 
 // 텍스트 입력 필드 관련 함수.
 wordArea.addEventListener("keydown", (event) => {
@@ -68,14 +64,13 @@ wordArea.addEventListener("keydown", (event) => {
   }
 });
 
-// 이미지 덮개 제거 함수.
+// 토글 버튼 함수
 toggleBtn.addEventListener("click", () => {
   const fileName = toggleBtn.src.split('/').pop();
   // imagePath.svg만 추출
   console.log(fileName);
 
   if(fileName == "polar-black.svg") {
-
     toggleBtn.src = "../src/images/polar-not-black.svg";
     for (let i = 0; i < gausianScreen.length; i++) {
       gausianScreen[i].style.visibility = "hidden";
@@ -124,7 +119,10 @@ completeBtn.addEventListener("click", () => {
 
   // 생성 버튼을 누르면 stable diffusion이랑 연결됨
   createBtn.addEventListener("click", (event)=> {
-    get_generated_image(prompt, event);
+    // get_generated_image(prompt, event);
+    // api test
+    total();
+    get_generated_image();
   });
   
   // 만약 호버한다면 scale커지게
@@ -155,3 +153,47 @@ completeBtn.addEventListener("click", () => {
   }
 });
 
+// 나중에 foreach로 gausian 객체에 한번에 리스너를 달아줘야겠다.
+// 가우시안 제거 할때 아이콘 제거 함수
+// @TODO 리팩토링 필요
+gausian1.addEventListener("mouseover", ()=>{
+  gausianIconRemover(gausian1.getElementsByTagName("img")[0]);
+});
+
+gausian1.addEventListener("mouseout", () => {
+  gausianIconCreater(gausian1.getElementsByTagName("img")[0]);
+});
+
+gausian2.addEventListener("mouseover", ()=>{
+  gausianIconRemover(gausian2.getElementsByTagName("img")[0]);
+});
+
+gausian2.addEventListener("mouseout", () => {
+  gausianIconCreater(gausian2.getElementsByTagName("img")[0]);
+});
+
+gausian3.addEventListener("mouseover", ()=>{
+  gausianIconRemover(gausian3.getElementsByTagName("img")[0]);
+});
+
+gausian3.addEventListener("mouseout", () => {
+  gausianIconCreater(gausian3.getElementsByTagName("img")[0]);
+});
+
+gausian4.addEventListener("mouseover", ()=>{
+  gausianIconRemover(gausian4.getElementsByTagName("img")[0]);
+});
+
+gausian4.addEventListener("mouseout", () => {
+  gausianIconCreater(gausian4.getElementsByTagName("img")[0]);
+});
+
+// icon 숨기기 함수.
+function gausianIconRemover(target) {
+  target.style.visibility = "hidden";
+}
+
+// icon 보이기 함수.
+function gausianIconCreater(target) {
+  target.style.visibility = "visible";
+}

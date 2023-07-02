@@ -1,7 +1,10 @@
 // 서클영역.
+
 const checkWord = document.getElementById("list");
+// 곰한테 준 워드 객체들
+export let prompt = [];
+
 let wordList = [];
-let prompt = [];
 let startPosX, startPosY;
 let isDragging = false;
 let wordTarget = null;
