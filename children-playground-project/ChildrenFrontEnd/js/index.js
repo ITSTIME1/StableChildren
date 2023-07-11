@@ -1,7 +1,7 @@
 import { get_generated_image } from "./api/get_generated_image.js";
 import { total } from "./api/get_generated_image.js";
-import {circleSection} from "../js/animation/animation.js";
-import {wordArea, toggleBtn, gausianScreen, completeBtn, title, gausian1, gausian2, gausian3, gausian4} from "../js/constants/constant.js";
+import { circleSection } from "../js/animation/animation.js";
+import { wordArea, toggleBtn, gausianScreen, completeBtn, title, gausian1, gausian2, gausian3, gausian4} from "../js/constants/constant.js";
 
 // 중복 div 방지
 let duplicate = false;
@@ -60,9 +60,19 @@ wordArea.addEventListener("keydown", (event) => {
     }
     event.preventDefault();
     wordArea.value = "";
-    completeBtn.style.visibility = "hidden";
+  }
+  
+  // backspace를 눌렀을때 워드리스트에 단어가 0개가 아니라면
+  // 계속 보이게 한다.
+  if (event.key === "Backspace") {
+    if (wordList.length != 0) {
+      completeBtn.style.visibility = "visible";
+    } else {
+      completeBtn.style.visibility = "hidden";
+    }
   }
 });
+
 
 // 토글 버튼 함수
 toggleBtn.addEventListener("click", () => {
@@ -99,22 +109,35 @@ completeBtn.addEventListener("click", () => {
 
   bookSection.style.display = "none";
 
-  const createBtn = document.createElement("div");
+  const createBtn = document.createElement("img");
   createBtn.setAttribute("id", "create-btn");
 
   console.log(createBtn);
-  createBtn.style.width = "100%";
-  createBtn.style.height = "100%";
-  createBtn.style.backgroundColor = "cyan";
-  createBtn.style.borderRadius = "30px 30px 30px 30px";
-  createBtn.style.color = "white";
-  createBtn.style.display = "flex";
-  createBtn.style.justifyContent = "center";
-  createBtn.style.alignItems = "center";
-  createBtn.style.textAlign = "center";
 
-  const createBtnTxt = document.createTextNode("생성!");
-  createBtn.appendChild(createBtnTxt);
+  createBtn.src = "../src/images/lightOFF.png";
+  createBtn.alt = "lightBulb";
+
+  // onImage.src = "../src/images/lightON.png"
+
+
+  // 이미지 생성버튼
+  // 이미지를 생성하는게 아니라 icon을 추가하자.
+  createBtn.style.width = "80px";
+  createBtn.style.height = "80px";
+  // createBtn.style.backgroundColor = "rgb(235, 247, 176)";
+  // createBtn.style.borderRadius = "50px";
+  // createBtn.style.color = "white";
+  // createBtn.style.display = "flex";
+  // createBtn.style.justifyContent = "center";
+  // createBtn.style.alignItems = "center";
+  // createBtn.style.textAlign = "center";
+  // createBtn.style.fontSize = "1rem";
+
+  // const createBtnTxt = document.createTextNode("생성!");
+  // createBtn.appendChild(createBtnTxt);
+
+
+
   titleSection.appendChild(createBtn);
 
   // 생성 버튼을 누르면 stable diffusion이랑 연결됨
@@ -125,7 +148,21 @@ completeBtn.addEventListener("click", () => {
     get_generated_image();
   });
   
-  // 만약 호버한다면 scale커지게
+  // 호버가 된다면 전등을 켜는 이미지로 변경.
+  createBtn.addEventListener("mouseover", (event) => {
+    createBtn.src = "../src/images/lightON.png";
+    createBtn.style.width = "110px";
+    createBtn.style.height = "110px";
+  });
+
+
+  // 호버가 풀린다면 전등을 끄는 이미지로 변경.
+  createBtn.addEventListener("mouseout", (event) => {
+    createBtn.src = "../src/images/lightOFF.png";
+    createBtn.style.width = "80px";
+    createBtn.style.height = "80px";
+  });
+
 
   // textArea.style.display = "none";
   // completeBtn.style.display = "none";
