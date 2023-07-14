@@ -23,18 +23,18 @@ import { prompt } from "../animation/animation.js";
 
 // endPoint쪽으로 get 요청을 날리자
 // 서버에서 받을 수 있게
-export async function get_generated_image () {
+export async function get_generated_image (prompts) {
     try {
       // @TODO 오늘 할일
       // prompt 받은 리스트를 넘겨주면 될거 같은데 + 스타일이랑 해서
       // 그럼 스타일을 고를 화면을 만들어줘야 겠네
       // const response = await axios.get(endPoint, [
       // ]);
-      const response = axios.post(endPoint, {
+      const response = await axios.post(endPoint, {
         method : "post",
         params: {
           image_style : "ghibri",
-          prompt : [prompt],
+          prompt : [prompts],
         },
         timeout: 1000,
         responseType: 'json',
@@ -46,50 +46,50 @@ export async function get_generated_image () {
     }
 }
 
-async function getId() {
-  const userUrl = "https://jsonplaceholder.typicode.com/users";
-  try {
-    // get요청을해서 아이디를 가지고오고
-    const userData = await axios.get(userUrl);
-    let result = [];
+// async function getId() {
+//   const userUrl = "https://jsonplaceholder.typicode.com/users";
+//   try {
+//     // get요청을해서 아이디를 가지고오고
+//     const userData = await axios.get(userUrl);
+//     let result = [];
     
-    userData.data.forEach(element => {
-        result.push(element.id);
-    });
+//     userData.data.forEach(element => {
+//         result.push(element.id);
+//     });
 
-    return result;
-  } catch(error) {
-    // 해당 비동기 요청에 대한 에러를 잡고
-    console.log(error);
-  }
-}
+//     return result;
+//   } catch(error) {
+//     // 해당 비동기 요청에 대한 에러를 잡고
+//     console.log(error);
+//   }
+// }
 
-// 음 비동기 요청은 이렇게 하면 되는구나
-async function getName() {
-  const userUrl = "https://jsonplaceholder.typicode.com/users";
-  try {
-    // get요청을해서 아이디를 가지고오고
-    const userData = await axios.get(userUrl);
-    let result = [];
-    userData.data.forEach(element => {
-      result.push(element.name);
-    });
-    return result;
-  } catch(error) {
-    // 해당 비동기 요청에 대한 에러를 잡고
-    console.log(error);
-  }
-}
+// // 음 비동기 요청은 이렇게 하면 되는구나
+// async function getName() {
+//   const userUrl = "https://jsonplaceholder.typicode.com/users";
+//   try {
+//     // get요청을해서 아이디를 가지고오고
+//     const userData = await axios.get(userUrl);
+//     let result = [];
+//     userData.data.forEach(element => {
+//       result.push(element.name);
+//     });
+//     return result;
+//   } catch(error) {
+//     // 해당 비동기 요청에 대한 에러를 잡고
+//     console.log(error);
+//   }
+// }
 
 
-export async function total() {
-  try {
-    const idData = await getId();
-    const nameData = await getName();
-    console.log(`${idData + "\n"}, ${nameData}`);
+// export async function total() {
+//   try {
+//     const idData = await getId();
+//     const nameData = await getName();
+//     console.log(`${idData + "\n"}, ${nameData}`);
     
-    console.log(prompt);
-  } catch(error) {
-    console.log(error);
-  }
-}
+//     console.log(prompt);
+//   } catch(error) {
+//     console.log(error);
+//   }
+// }

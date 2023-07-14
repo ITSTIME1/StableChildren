@@ -10,6 +10,10 @@ import json
 def index(request):
     return HttpResponse("Hello, World")
 
+
+'''
+클라이언트에서 이미지를 얻기 위한 함수.
+'''
 def get_image(request):
     if request.method == "POST":
         

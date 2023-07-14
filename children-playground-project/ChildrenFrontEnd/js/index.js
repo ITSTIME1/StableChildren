@@ -1,8 +1,20 @@
 import { get_generated_image } from "./api/get_generated_image.js";
-import { total } from "./api/get_generated_image.js";
+// import { total } from "./api/get_generated_image.js";
 import { circleSection } from "../js/animation/animation.js";
-import { wordArea, toggleBtn, gausianScreen, completeBtn, title, gausian1, gausian2, gausian3, gausian4} from "../js/constants/constant.js";
+import {
+  wordArea,
+  toggleBtn,
+  gausianScreen,
+  completeBtn,
+  title,
+  gausian1,
+  gausian2,
+  gausian3,
+  gausian4,
+  hoverSound,
+} from "../js/constants/constant.js";
 
+let createBtn = null;
 // 중복 div 방지
 let duplicate = false;
 // 단어리스트
@@ -12,7 +24,7 @@ let wordList = [];
 title.addEventListener("click", (event) => {
   let str = event.target.innerText;
   // console.log(str);
-  if(str == "오늘 읽을 책을 알려줘!") {
+  if (str == "오늘 읽을 책을 알려줘!") {
     let result = window.prompt("무슨책이야?");
     event.target.innerText = result;
     // console.log(result);
@@ -61,7 +73,7 @@ wordArea.addEventListener("keydown", (event) => {
     event.preventDefault();
     wordArea.value = "";
   }
-  
+
   // backspace를 눌렀을때 워드리스트에 단어가 0개가 아니라면
   // 계속 보이게 한다.
   if (event.key === "Backspace") {
@@ -73,20 +85,18 @@ wordArea.addEventListener("keydown", (event) => {
   }
 });
 
-
 // 토글 버튼 함수
 toggleBtn.addEventListener("click", () => {
-  const fileName = toggleBtn.src.split('/').pop();
+  const fileName = toggleBtn.src.split("/").pop();
   // imagePath.svg만 추출
   console.log(fileName);
 
-  if(fileName == "polar-black.svg") {
+  if (fileName == "polar-black.svg") {
     toggleBtn.src = "../src/images/polar-not-black.svg";
     for (let i = 0; i < gausianScreen.length; i++) {
       gausianScreen[i].style.visibility = "hidden";
     }
   } else {
-
     toggleBtn.src = "../src/images/polar-black.svg";
     for (let i = 0; i < gausianScreen.length; i++) {
       gausianScreen[i].style.visibility = "visible";
@@ -102,59 +112,48 @@ completeBtn.addEventListener("click", () => {
   const imageBox = document.querySelectorAll(".image-box");
   const footerFormSection = document.querySelector(".form-section");
   const imageSection = document.querySelector(".image-section");
-  
+
   // 제목 영역을 삭제하고 그림만들어줘!
   const bookSection = document.querySelector(".book-title");
   const titleSection = document.getElementById("title");
 
   bookSection.style.display = "none";
 
-  const createBtn = document.createElement("img");
+  createBtn = document.createElement("img");
   createBtn.setAttribute("id", "create-btn");
-
-  console.log(createBtn);
 
   createBtn.src = "../src/images/lightOFF.png";
   createBtn.alt = "lightBulb";
-
-  // onImage.src = "../src/images/lightON.png"
-
-
-  // 이미지 생성버튼
-  // 이미지를 생성하는게 아니라 icon을 추가하자.
   createBtn.style.width = "80px";
   createBtn.style.height = "80px";
-  // createBtn.style.backgroundColor = "rgb(235, 247, 176)";
-  // createBtn.style.borderRadius = "50px";
-  // createBtn.style.color = "white";
-  // createBtn.style.display = "flex";
-  // createBtn.style.justifyContent = "center";
-  // createBtn.style.alignItems = "center";
-  // createBtn.style.textAlign = "center";
-  // createBtn.style.fontSize = "1rem";
-
-  // const createBtnTxt = document.createTextNode("생성!");
-  // createBtn.appendChild(createBtnTxt);
-
-
-
-  titleSection.appendChild(createBtn);
 
   // 생성 버튼을 누르면 stable diffusion이랑 연결됨
-  createBtn.addEventListener("click", (event)=> {
-    // get_generated_image(prompt, event);
-    // api test
-    total();
-    get_generated_image();
+  // 생성 버튼을 클릭할때
+  createBtn.addEventListener("click", (event) => {
+    // 사운드 이펙트
+    hoverSound.play();
+
+    // 중요한건 여기에서 스타일을 선택하는 화면을 만들어야 된다는건데 slide를 구현해야되고
+    // slide를 구한하고 나서 거기에 이미지들을 좀 넣어 놔야 된다.
+    // 그래야 보고 이미지를 선택할 수 있으니
+
+    // 현재 페이지에서 화면을 어둡게 처리하면서
+    // 집중할 수 있도록 뒤에는 가우시안 처리하고
+    // 이미지 스타일을 고를 수 있도록한다.
+
+    // 1. 슬라이드 이미지를 구현
+    // 2. 스타일 선택시 wordList랑 imagestyle을 같이 요청해서 보냄.
+    image_style_choice();
+    // get_generated_image(wordList);
   });
-  
+
   // 호버가 된다면 전등을 켜는 이미지로 변경.
+  // 효과음 오디오 요소를 선택합니다.
   createBtn.addEventListener("mouseover", (event) => {
     createBtn.src = "../src/images/lightON.png";
     createBtn.style.width = "110px";
     createBtn.style.height = "110px";
   });
-
 
   // 호버가 풀린다면 전등을 끄는 이미지로 변경.
   createBtn.addEventListener("mouseout", (event) => {
@@ -163,6 +162,7 @@ completeBtn.addEventListener("click", () => {
     createBtn.style.height = "80px";
   });
 
+  titleSection.appendChild(createBtn);
 
   // textArea.style.display = "none";
   // completeBtn.style.display = "none";
@@ -193,7 +193,7 @@ completeBtn.addEventListener("click", () => {
 // 나중에 foreach로 gausian 객체에 한번에 리스너를 달아줘야겠다.
 // 가우시안 제거 할때 아이콘 제거 함수
 // @TODO 리팩토링 필요
-gausian1.addEventListener("mouseover", ()=>{
+gausian1.addEventListener("mouseover", () => {
   gausianIconRemover(gausian1.getElementsByTagName("img")[0]);
 });
 
@@ -201,7 +201,7 @@ gausian1.addEventListener("mouseout", () => {
   gausianIconCreater(gausian1.getElementsByTagName("img")[0]);
 });
 
-gausian2.addEventListener("mouseover", ()=>{
+gausian2.addEventListener("mouseover", () => {
   gausianIconRemover(gausian2.getElementsByTagName("img")[0]);
 });
 
@@ -209,7 +209,7 @@ gausian2.addEventListener("mouseout", () => {
   gausianIconCreater(gausian2.getElementsByTagName("img")[0]);
 });
 
-gausian3.addEventListener("mouseover", ()=>{
+gausian3.addEventListener("mouseover", () => {
   gausianIconRemover(gausian3.getElementsByTagName("img")[0]);
 });
 
@@ -217,7 +217,7 @@ gausian3.addEventListener("mouseout", () => {
   gausianIconCreater(gausian3.getElementsByTagName("img")[0]);
 });
 
-gausian4.addEventListener("mouseover", ()=>{
+gausian4.addEventListener("mouseover", () => {
   gausianIconRemover(gausian4.getElementsByTagName("img")[0]);
 });
 
@@ -233,4 +233,103 @@ function gausianIconRemover(target) {
 // icon 보이기 함수.
 function gausianIconCreater(target) {
   target.style.visibility = "visible";
+}
+
+// 이미지 스타일 선택.
+function image_style_choice() {
+  const fourImageSection = document.querySelector(".four-image-section");
+  const divScreen = document.getElementById("Div1");
+  // 부모노드에 div 스크린이 있다면 지워주고
+  if (fourImageSection.contains(divScreen)) {
+    // 현재 부모노드에 슬라이드 이미지를 생성할 것.
+    divScreen.parentNode.removeChild(divScreen);
+    model_image_slider(fourImageSection);
+  } else {
+    return;
+  }
+  // divScreen.style.backgroundColor = "rgba(60, 60, 60, 10)";
+}
+
+// 모델 이미지를 보여주고 선택할 슬라이드를 구현.
+
+function model_image_slider(node) {
+  const image_list = [
+    "../src/images/daemonrat_image.jpeg",
+    "../src/images/ghibli_background_model_image.jpeg",
+    "../src/images/manmaru_mix_image.jpeg",
+  ];
+
+  let slide_object = [];
+  for (let i = 0; i < 3; i++) {
+    const slide = document.createElement("div");
+    slide.style.width = "20%";
+    slide.style.boxSizing = "border-box";
+    slide.style.height = "70%";
+    slide.style.position = "relative";
+    slide.style.margin = "50px";
+    slide.style.borderTopLeftRadius = "30px";
+    slide.style.borderTopRightRadius = "30px";
+    slide.style.borderBottomLeftRadius = "30px";
+    slide.style.borderBottomRightRadius = "30px";
+    slide.style.backgroundColor = "rgba(60, 60, 60, 10)";
+    slide.style.display = "flex";
+
+    slide.classList.add("image-slide");
+    slide.setAttribute("id", i);
+
+    slide_object.push(slide);
+  }
+  console.log(slide_object);
+  // slide object를 만들어주고
+  // slide object에 image object를 생성해서 넣어준다.
+  for (let idx in slide_object) {
+    const imageSrc = document.createElement("img");
+    imageSrc.src = image_list[idx];
+    imageSrc.style.position = "absoulte";
+    imageSrc.style.width = "100%";
+    imageSrc.style.height = "100%";
+    imageSrc.style.objectFit = "cover";
+    imageSrc.style.borderTopLeftRadius = "30px";
+    imageSrc.style.borderTopRightRadius = "30px";
+    imageSrc.style.borderBottomLeftRadius = "30px";
+    imageSrc.style.borderBottomRightRadius = "30px";
+    slide_object[idx].appendChild(imageSrc);
+    node.appendChild(slide_object[idx]);
+  }
+
+  for (let obj of slide_object) {
+
+    // 클릭했을때 가우시안을 추가하고 텍스트 설명을 추가 어떤 느낌인지
+    // @TODO 여기서부터 해야되겠다. 2023.07.15
+    obj.addEventListener("click", (event) => {
+      const dscr = document.createElement("div");
+      dscr.setAttribute("id", "dscrFilter");
+      dscr.style.position = "absolute";
+      dscr.style.borderTopLeftRadius = "30px";
+      dscr.style.borderTopRightRadius = "30px";
+      dscr.style.borderBottomLeftRadius = "30px";
+      dscr.style.borderBottomRightRadius = "30px";
+      dscr.style.width = "100%";
+      dscr.style.height = "100%";
+      dscr.style.backgroundColor = "rgba(0,0,0,0.5)";
+      dscr.style.backdropFilter = "blur(5px)";
+      console.log("오버");
+      const getDscr = document.getElementById("dscrFilter");
+
+      // 가우시안이 없다면 가우시안을 추가.
+      if (!obj.contains(getDscr)) {
+        obj.appendChild(dscr);
+      } else {
+        getDscr.parentNode.removeChild(getDscr);
+      }
+    });
+
+    // 마우스가 포커스를 잃었을때 가우시안이 남아있다면 해제
+    obj.addEventListener("mouseleave", ()=>{
+      const getDscr = document.getElementById("dscrFilter");
+      if (obj.contains(getDscr)) {
+        getDscr.parentNode.removeChild(getDscr);
+      }
+    });
+  }
 }

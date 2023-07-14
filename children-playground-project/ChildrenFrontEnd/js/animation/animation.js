@@ -1,5 +1,4 @@
 // 서클영역.
-
 const checkWord = document.getElementById("list");
 // 곰한테 준 워드 객체들
 export let prompt = [];
