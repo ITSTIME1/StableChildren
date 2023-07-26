@@ -50,6 +50,7 @@ jspm_packages/
 *.text
 *.exe
 *.zip
+*.DS_Store
 
 ## 폴더 무시
 test/
