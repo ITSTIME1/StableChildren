@@ -18,12 +18,13 @@
 // 동화책 만드는 기능을 이후에 생각해보자.
 
 import { endPoint } from "../constants/constant.js";
-import { prompt } from "../animation/animation.js";
 
 
 // endPoint쪽으로 get 요청을 날리자
 // 서버에서 받을 수 있게
-export async function get_generated_image (prompts) {
+export async function get_generated_image (prompts, model) {
+    // 여기까지는 잘 오네
+    console.log(`${prompts} + ${model}`);
     try {
       // @TODO 오늘 할일
       // prompt 받은 리스트를 넘겨주면 될거 같은데 + 스타일이랑 해서
@@ -33,7 +34,7 @@ export async function get_generated_image (prompts) {
       const response = await axios.post(endPoint, {
         method : "post",
         params: {
-          image_style : "ghibri",
+          image_model : model,
           prompt : [prompts],
         },
         timeout: 1000,

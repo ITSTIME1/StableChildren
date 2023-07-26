@@ -19,6 +19,11 @@ let createBtn = null;
 let duplicate = false;
 // 단어리스트
 let wordList = [];
+// imageModel 선택 전역변수
+let imageModel = null;
+// imageModel 선택시 api 호출 가능 여부
+// (imageBulb를 재 클릭하기 때문에 모델을 선택했다면 api 호출을 가능 하도록 해야됨)
+let isModel = false;
 
 // 제목을 입력하기 위한 함수.
 title.addEventListener("click", (event) => {
@@ -66,7 +71,6 @@ wordArea.addEventListener("keydown", (event) => {
     // 모든 단어가 다 모아졌다면 단어추가
     if (event.isComposing === false && !event.shiftKey) {
       wordList.push(word);
-      console.log(wordList);
     } else {
       return;
     }
@@ -89,7 +93,7 @@ wordArea.addEventListener("keydown", (event) => {
 toggleBtn.addEventListener("click", () => {
   const fileName = toggleBtn.src.split("/").pop();
   // imagePath.svg만 추출
-  console.log(fileName);
+  // console.log(fileName);
 
   if (fileName == "polar-black.svg") {
     toggleBtn.src = "../src/images/polar-not-black.svg";
@@ -129,22 +133,36 @@ completeBtn.addEventListener("click", () => {
 
   // 생성 버튼을 누르면 stable diffusion이랑 연결됨
   // 생성 버튼을 클릭할때
-  createBtn.addEventListener("click", (event) => {
+  createBtn.addEventListener("click", () => {
     // 사운드 이펙트
-    hoverSound.play();
+    if (isModel) {
 
-    // 중요한건 여기에서 스타일을 선택하는 화면을 만들어야 된다는건데 slide를 구현해야되고
-    // slide를 구한하고 나서 거기에 이미지들을 좀 넣어 놔야 된다.
-    // 그래야 보고 이미지를 선택할 수 있으니
+      // 여기서 모델이름이랑, 프롬포트를 같이 보내준다.
+      // 그랬을때 api 호출이 시작됨 과 동시에 로딩 아이콘이 bulb 아이콘이랑 바뀌고
+      // 모든 이미지가 전부 들어왔을때 
+      // 페이지는 새로 고침해서 처음으로 온다.
+      // 그리고 이미지를 받아왔을때 전역변수로 저장해놔서
+      // 해당 이미지 소스들을 저장해눟고
+      // 해당 저장된 이미지들을 4개의 카드 이미지에 저장해둔다.
+      console.log("imageModel 선택시 api 호출")
+      get_generated_image(wordList, imageModel);
+    } else {
+      console.log("imageModel 선택 안했을때 호출");
+      hoverSound.play();
 
-    // 현재 페이지에서 화면을 어둡게 처리하면서
-    // 집중할 수 있도록 뒤에는 가우시안 처리하고
-    // 이미지 스타일을 고를 수 있도록한다.
+      // 중요한건 여기에서 스타일을 선택하는 화면을 만들어야 된다는건데 slide를 구현해야되고
+      // slide를 구한하고 나서 거기에 이미지들을 좀 넣어 놔야 된다.
+      // 그래야 보고 이미지를 선택할 수 있으니
 
-    // 1. 슬라이드 이미지를 구현
-    // 2. 스타일 선택시 wordList랑 imagestyle을 같이 요청해서 보냄.
-    image_style_choice();
-    // get_generated_image(wordList);
+      // 현재 페이지에서 화면을 어둡게 처리하면서
+      // 집중할 수 있도록 뒤에는 가우시안 처리하고
+      // 이미지 스타일을 고를 수 있도록한다.
+
+      // 1. 슬라이드 이미지를 구현
+      // 2. 스타일 선택시 wordList랑 imagestyle을 같이 요청해서 보냄.
+      image_style_choice();
+      // get_generated_image(wordList);
+    }
   });
 
   // 호버가 된다면 전등을 켜는 이미지로 변경.
@@ -235,6 +253,8 @@ function gausianIconCreater(target) {
   target.style.visibility = "visible";
 }
 
+// 모델을 선택하는데 모델을 선택할때 다른 변수를 보내주어야 할거 같음근데
+
 // 이미지 스타일 선택.
 function image_style_choice() {
   const fourImageSection = document.querySelector(".four-image-section");
@@ -251,7 +271,6 @@ function image_style_choice() {
 }
 
 // 모델 이미지를 보여주고 선택할 슬라이드를 구현.
-
 function model_image_slider(node) {
   const image_list = [
     "../src/images/daemonrat_image.jpeg",
@@ -263,6 +282,9 @@ function model_image_slider(node) {
   for (let i = 0; i < 3; i++) {
     const slide = document.createElement("div");
     slide.style.width = "20%";
+    slide.style.justifyContent = "center";
+    slide.style.alignItems = "center";
+    slide.style.textAlign = "center";
     slide.style.boxSizing = "border-box";
     slide.style.height = "70%";
     slide.style.position = "relative";
@@ -279,7 +301,7 @@ function model_image_slider(node) {
 
     slide_object.push(slide);
   }
-  console.log(slide_object);
+  // console.log(slide_object);
   // slide object를 만들어주고
   // slide object에 image object를 생성해서 넣어준다.
   for (let idx in slide_object) {
@@ -298,13 +320,42 @@ function model_image_slider(node) {
   }
 
   for (let obj of slide_object) {
-
     // 클릭했을때 가우시안을 추가하고 텍스트 설명을 추가 어떤 느낌인지
     // @TODO 여기서부터 해야되겠다. 2023.07.15
-    obj.addEventListener("click", (event) => {
+    // 이제 버튼을 달고 선택과 해제를 통해서
+    // 해당 모델을 선택했으면 스타일이 선택되었다고 알려주고 다른 버튼이나 bulb가 켜진 상태로 변경하며
+    // 그 버튼을 눌렀을때
+    // 이미지를 생성하기 위해 api호출을 하고
+    // api호출을 하고 나면 이미지를 받을때까지 로딩 아이콘을 띄우며
+    // 해당 slide부분을 지우고 다시 보이게 한다. 이미지를 받아온 즉시 image_box부분들을 전부 다시 visibility를 다시 보이게하여
+    // 그런다음 거기에 있는 imagebox에 이미지를 전부 src로 받아주면서
+    // imagebox를 클릭할시 이미지가 가운데로 오면서 커지는 효과를 만들어 준다면 프로그램을 완성할 수 있을 것 같다.
+
+    // 이후 프로그램의 다른 기능들을 천천히 추가시키면 더 좋을것 같음.
+    obj.addEventListener("click", () => {
       const dscr = document.createElement("div");
+      const dscrScreen = document.createElement("div");
+      const dscrScreenText = document.createElement("div");
+      const dscrScreenButton = document.createElement("button");
+
       dscr.setAttribute("id", "dscrFilter");
+      dscrScreen.setAttribute("id", "dscrScreen");
+      dscrScreenText.setAttribute("id", `${obj.id}-dscrText`);
+      dscrScreenButton.setAttribute("id", "dscrButton");
+
+      // 여기서 분기처리
+      // 클릭했을때 slide id에 따라서
+      // 다른 텍스트를 부여
+
+      // 가우시안 css
+      dscr.style.display = "flex";
+      dscr.style.fontSize = "0.9rem";
+
+      dscr.style.color = "white";
       dscr.style.position = "absolute";
+      dscr.style.justifyContent = "center";
+      dscr.style.alignContent = "center";
+      dscr.style.textAlign = "center";
       dscr.style.borderTopLeftRadius = "30px";
       dscr.style.borderTopRightRadius = "30px";
       dscr.style.borderBottomLeftRadius = "30px";
@@ -313,9 +364,76 @@ function model_image_slider(node) {
       dscr.style.height = "100%";
       dscr.style.backgroundColor = "rgba(0,0,0,0.5)";
       dscr.style.backdropFilter = "blur(5px)";
-      console.log("오버");
-      const getDscr = document.getElementById("dscrFilter");
 
+      // 가우시안안에 있는 부모 div
+      dscrScreen.style.width = "100%";
+      dscrScreen.style.height = "100%";
+      dscrScreen.style.display = "flex";
+      dscrScreen.style.flexDirection = "column";
+      dscrScreen.style.justifyContent = "center";
+      dscrScreen.style.alignItems = "center";
+      dscrScreen.style.textAlign = "center";
+      dscrScreen.style.position = "relative";
+
+      // 가우시안 안에 있는 텍스트
+      dscrScreenText.style.width = "50%";
+      dscrScreenText.style.height = "auto";
+      dscrScreenText.style.position = "absoulte";
+
+      switch (obj.id) {
+        case "0":
+          dscrScreenText.innerText =
+            "판타지 스러운 분위기는 어때요? 정말 딱일 것 같은데요?";
+          break;
+        case "1":
+          dscrScreenText.innerText = "너무 따듯해요.";
+          break;
+        case "2":
+          dscrScreenText.innerText = "귀여운 모습들이 많이 나올것 같은데요?";
+          break;
+      }
+
+      // 가우시안 안에 있는 선택 버튼
+      dscrScreenButton.style.marginTop = "30px";
+      dscrScreenButton.style.border = "none";
+      dscrScreenButton.style.cursor = "pointer";
+      dscrScreenButton.style.background = "none";
+      dscrScreenButton.style.backgroundColor = "cyan";
+      dscrScreenButton.style.borderRadius = "50px";
+      dscrScreenButton.style.width = "20%";
+      dscrScreenButton.style.height = "5%";
+      dscrScreenButton.style.color = "black";
+      // dscrScreenButton.style.position = "absolute";
+      dscrScreenButton.innerText = "선택";
+
+      // 선택버튼을 클릭했을때
+      // imageSrc를 바꿔보자
+      dscrScreenButton.addEventListener("click", () => {
+        switch (obj.id) {
+          case "0":
+            imageModel = "Cheese Daddy's Landscapes mix 3.5";
+            // console.log("Daemonstrate Model");
+            break;
+          case "1":
+            imageModel = "Ghibli background";
+            // console.log("Ghibli Model");
+            break;
+          case "2":
+            imageModel = "Manmaru mix";
+            // console.log("Manmaru Model");
+            break;
+        }
+        const getCreateBtn = document.getElementById("create-btn");
+        getCreateBtn.src = "../src/images/lightON.png";
+        isModel = true;
+        // console.log(imageModel);
+      });
+
+      dscrScreen.appendChild(dscrScreenText);
+      dscrScreen.appendChild(dscrScreenButton);
+      dscr.appendChild(dscrScreen);
+
+      const getDscr = document.getElementById("dscrFilter");
       // 가우시안이 없다면 가우시안을 추가.
       if (!obj.contains(getDscr)) {
         obj.appendChild(dscr);
@@ -325,7 +443,7 @@ function model_image_slider(node) {
     });
 
     // 마우스가 포커스를 잃었을때 가우시안이 남아있다면 해제
-    obj.addEventListener("mouseleave", ()=>{
+    obj.addEventListener("mouseleave", () => {
       const getDscr = document.getElementById("dscrFilter");
       if (obj.contains(getDscr)) {
         getDscr.parentNode.removeChild(getDscr);
