@@ -1,3 +1,7 @@
+# Created by https://www.toptal.com/developers/gitignore/api/node,venv
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,venv
+
+### Node ###
 # Logs
 logs
 *.log
@@ -42,6 +46,13 @@ build/Release
 node_modules/
 jspm_packages/
 
+## 다음과 같은 확장자는 전체 무시
+*.text
+*.exe
+*.zip
+
+## 폴더 무시
+test/
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
@@ -102,7 +113,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -128,3 +138,28 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+### Node Patch ###
+# Serverless Webpack directories
+.webpack/
+
+# Optional stylelint cache
+
+# SvelteKit build / generate output
+.svelte-kit
+
+### venv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+
+# End of https://www.toptal.com/developers/gitignore/api/node,venv
