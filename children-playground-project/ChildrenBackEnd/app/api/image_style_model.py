@@ -4,7 +4,6 @@ from ..constants.constant import Constant
 class ImageStyleModel:
     # image_model_id를 받아서 함수 실행
     def __init__(self):
-        self._save_path = "/Users/itstime/children-playground/children-playground-project/ChildrenBackEnd/app/images"
         self.stablediffusion = StableDiffusionAuto1111()
         self.constant = Constant()
         pass
@@ -43,21 +42,20 @@ class ImageStyleModel:
         #     "height": 768,
         #     "sampler_index": "DPM++ 2M"
         # }
-        positive_prompts = f'<lora:brighter-eye1:1>, {", ".join(user_prompts)}, masterpiece, best quality'
-        negative_prompts = f'lowres, (bad anatomy:1.2), bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, nsfw, bad fingers'
+        positive_prompts = f'<lora:brighter-eye1:1>, {", ".join(user_prompts)}, smile, low angle, masterpiece, best quality'
+        negative_prompts = f'(lowres), (bad anatomy:1.2), (bad hands), text, error, (missing fingers), extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ((nsfw)), bad fingers'
         # result가 받게 되는 값은 생성된 이미지 이름을 받으면 되겠다
         generated_image = None
         
-        # try:
-        #     change_model = self.stablediffusion.change_model(loRa="brighter-eye1", 
-        #                                                  model="manMaru.safetensors [aeb953ac1a]", 
-        #                                                  vae="orangemix.vae.pt")
-        # except Exception as e:
-        #     print(e)
+
+        try:
+            change_model = self.stablediffusion.change_model(loRa="brighter-eye1", 
+                                                         model="manMaru.safetensors [aeb953ac1a]", 
+                                                         vae="orangemix.vae.pt")
+        except Exception as e:
+            print(e)
     
         # 모델이 정상적으로 수신 되었기 때문에 이미지를 생성한다.
-        # test
-        change_model = 200
         if change_model == 200:
             
             # 이미지 생성 완료 -> client 보내줌 
@@ -73,8 +71,9 @@ class ImageStyleModel:
             return "Sorry Response Code is 422"
         
         # 이미지 path를 보냐주자
-        if generated_image != -1:
+        if generated_image is not None:
             # path를 넘겨주게 되고
+            print(generated_image)
             return generated_image
     
     
