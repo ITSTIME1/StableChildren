@@ -3,14 +3,16 @@ import requests
 import io
 import base64
 from PIL import Image, PngImagePlugin
-    
-index = 0
 
-# ddtailer라는 것도 고려해볼 만한네
+# 데이터베이스 short int 범위 최대치
+INF = 32767
 
 class StableDiffusionAuto1111:
-    def __init__(self):
-        self._endPoint = "https://3660ab4c563d8f8763.gradio.live"
+    def __init__(self, lora=None, model=None, vae=None):
+        self._lora = lora
+        self._model = model
+        self._vae = vae
+        self._end_point = "https://3660ab4c563d8f8763.gradio.live"
         self._save_path = "/Users/itstime/children-playground/children-playground-project/ChildrenFrontEnd/src/generatedImages"
         self._payload = {
             "restore_faces": True,
@@ -40,83 +42,115 @@ class StableDiffusionAuto1111:
     # 3. 비동기로 하면 안되는게 이건 절대적으로 기다려야 한다. 그렇지 않으면 다른 결과물이 나올 수 있기 떄문임.
     # 4. 이미지가 나왔으면 데이터베이스에다가 저장해두면 좋을거 같긴한데 (데베를 아직 할 줄 모르니까 일단 이건 패스 테스트 환경이니까)
     # 5. 근데 그러면 가능할거 깉은ㄷ[
-    def get_image(self, image_model_id, prompt = None, negative_prompt = None):
+    def generate_image(self, image_model_id=None, prompt = None, negative_prompt = None):
         
-        # 긍정과 부정 프롬포트를 설정해준다
+        if image_model_id == None: 
+            return None
+        
+        
         # 긍정, 부정은 공통사항
-        self._payload['prompt'] = prompt
-        self._payload['negative_prompt'] = negative_prompt
+        # 둘다 None으로 들어오지 않은 경우
+        if (prompt is not None) and (negative_prompt is not None):
+            self._payload['prompt'] = prompt
+            self._payload['negative_prompt'] = negative_prompt
         
 
         # 이미지 모델에 따라 cfg_scale과 steps 변경
         result = None
         
-        
-        if image_model_id == "Manmaru":
+        # 모델의 옵션 설정
+        if image_model_id is not None and image_model_id == "Manmaru":
             self._payload['cfg_scale'] = 11
             self._payload['steps'] = 22
         else:
+            # image_model_id 가 None 이거나 또는 image_model_id != ManMaru인 경우
             self._payload['cfg_scale'] = 8.5
             self._payload['steps'] = 30
         
         try:
-            response = requests.post(url=f'{self._endPoint}/sdapi/v1/txt2img', json=self._payload)
+            response = requests.post(url=f'{self._end_point}/sdapi/v1/txt2img', json=self._payload)
+            
+            if response.status_code == 200:
+                r = response.json()
 
-            r = response.json()
+                for i in r['images']:
+                    image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
-            for i in r['images']:
-                image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+                    png_payload = {
+                        "image": "data:image/png;base64," + i
+                    }
 
-                png_payload = {
-                    "image": "data:image/png;base64," + i
-                }
+                    image_info = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
+
+
+                    if image_info.status_code == 200:
+                        pnginfo = PngImagePlugin.PngInfo()
+                        pnginfo.add_text("parameters", image_info.json().get("info"))
+                        # 1~부터 9999까지의 랜덤 정수를 사용해서 저장
+                        # 이건 나중에 데이터베이스에다가 저장하는거랑 다르게 하면됨.
+                        random_number = random.randrange(1, INF)
+                        path = f'{random_number}.png'
+                        # @TODO 데이터베이스 연결
+                        # 여기서 데이터베이스에 저장을 해야 할거 같다.
+                        # 그럼 데이터베이스에 저장해서 저장이 정상적으로 되었다면
+                        # 여기서 다시 받은다음에
+                        # 그 이미지의 id나 그 이미지를 식별할 수 있는 값을 알려준 다음에
+                        # 그걸 서버에서 적용하게 할 순 없으니까
+                        # 클라이언트에서 데이터베이스에 통신을 하게 된다면?
+                        # 이 api 자체는 이미지를 저장하는 것 뿐
+                        # 즉 클라이언트에서 이미지를 생성하고 데이터베이스에 저장해준 뒤
+                        # 클라이언트에서 성공적으로 데이터베이스에 저장 되었다는 걸 알려준 다음에
+                        # 해당 이미지의 path를 알려주고 그 path나 id를 가지고 쿼리문을 할 수 있도록 하면 어떨까
+                        # 그럼 js에서 이미지가 생성 되었다는 걸 알려주고
+                        # 그럼 과 동시에 결과에 따라 데이터베이스를 js에서 조회
+                        # 조회한 뒤 클라이언트 쪽에서 이미지를 적용.
+                        # sqlit를 제공해주니까 이걸 사용해도 좋을거 같네
+                        # 테스트니까 이미지 저장용도로만 사용하기에 안성맞춤이고
+                        # splite를 써소 해보자
+                        image.save(f'{self._save_path}/{random_number}.png', pnginfo=pnginfo)
+                        
+                        
+                        # 이미지 이름을 short int 범위 내에 랜덤하게 생성해서
+                        # 이미지 이름을 그렇게 사용하면 어떨까
+                        # path를 만들어서 저장하는걸 
+                        result = path 
+                        
+                        
+                        return result
                 
-                image_info = requests.post(url=f'{self._endPoint}/sdapi/v1/png-info', json=png_payload)
-
-
-                if image_info.status_code == 200:
-                    pnginfo = PngImagePlugin.PngInfo()
-                    pnginfo.add_text("parameters", image_info.json().get("info"))
-                    # 1~부터 9999까지의 랜덤 정수를 사용해서 저장
-                    # 이건 나중에 데이터베이스에다가 저장하는거랑 다르게 하면됨.
-                    random_number = random.randrange(1, 10000)
-                    path = f'{random_number}.png'
-                    # 랜덤 넘버를 생성해서 이미지를 저장할건데
-                    # 이미지를 저장하기 위해서 어떠한 경로가 필요할거고
-                    # 그 경로를 명시해서 저장하는게 필요할것이다.
-                    image.save(f'{self._save_path}/{random_number}.png', pnginfo=pnginfo)
-                    result = path 
-                    return result
         except Exception as e:
-            print(e)
+            return e
 
+        
+        
     
 
-    # model 바꾸기
-    def change_model(self, loRa = None, model=None, vae=None):
+    # model 변경
+    def change_model(self):
         # 모델을 바꾸는건 성공적으로 되네
-        self._option_payload["sd_model_checkpoint"] = model
-        self._option_payload["sd_lora"] = loRa
-        self._option_payload["sd_vae"] = vae
+        self._option_payload["sd_model_checkpoint"] = self._model
+        self._option_payload["sd_lora"] = self._lora
+        self._option_payload["sd_vae"] = self._vae
             
         try:
-            response = requests.post(url=f'{self._endPoint}/sdapi/v1/options', json=self._option_payload)
+            response = requests.post(url=f'{self._end_point}/sdapi/v1/options', json=self._option_payload)
+            
+            if response.status_code == 200:
+                print("Successful Model Change")
+                return response.status_code
+            else:
+                return "error"
+            
         except Exception as e:
-            print(e)
+            return e
+
         
-        # 만약 response 응답 코드가 정상적이라면( 모델이 정상적으로 적용 되었다면 200을 리턴)
-        if response.status_code == 200:
-            print("Success Change Model")
-            return response.status_code
-        # 만약 response 응답 코드가 그 외에 것이라면 (422) 제대로 바뀌지 않았다는 걸 알려줌 
-        else:
-            print("Faile Change Model")
-            return 422
+        
         
     # 옵션들 보기
     def get_options(self):
         try:
-            response = requests.get(url=f'{self._endPoint}/sdapi/v1/options')
+            response = requests.get(url=f'{self._end_point}/sdapi/v1/options')
             print(response.json())
         except Exception as e:
             print(f'Error : {e}')
@@ -125,7 +159,7 @@ class StableDiffusionAuto1111:
     # 모델 이름 가져오기
     def get_model_name(self):
         try:
-            response = requests.get(url=f'{self._endPoint}/sdapi/v1/sd-models') 
+            response = requests.get(url=f'{self._end_point}/sdapi/v1/sd-models') 
             r = response.json()
             print(r)
         except Exception as e:
@@ -133,25 +167,25 @@ class StableDiffusionAuto1111:
             
     # 샘플러 다 보기
     def get_sampler(self):
-        response = requests.get(url=f'{self._endPoint}/sdapi/v1/samplers')
+        response = requests.get(url=f'{self._end_point}/sdapi/v1/samplers')
         r = response.json()
         print(r)
             
     # lora model 가져오기
     def get_LoRa(self):
-        response = requests.get(url=f'{self._endPoint}/sdapi/v1/loras')
+        response = requests.get(url=f'{self._end_point}/sdapi/v1/loras')
         r = response.json()
         print(r)
         
     # 현재 옵션 상태가져오기
     def get_options(self):
-        response = requests.get(url=f'{self._endPoint}/sdapi/v1/options')
+        response = requests.get(url=f'{self._end_point}/sdapi/v1/options')
         r = response.json()
         print(r)
         
     # vae 목록 가져오기
     def get_vae(self):
-        response = requests.get(url=f'{self._endPoint}/sdapi/v1/sd-vae')
+        response = requests.get(url=f'{self._end_point}/sdapi/v1/sd-vae')
         r = response.json()
         print(r)
         
@@ -172,7 +206,7 @@ class StableDiffusionAuto1111:
     #     try:
             
     #         response = requests.post(
-    #         url=f'{self._endPoint}/sdapi/v1/txt2img', json=self._payload)
+    #         url=f'{self._end_point}/sdapi/v1/txt2img', json=self._payload)
 
     #         r = response.json()
 
@@ -182,7 +216,7 @@ class StableDiffusionAuto1111:
     #             png_payload = {
     #                 "image": "data:image/png;base64," + i
     #             }
-    #             response2 = requests.post(url=f'{self._endPoint}/sdapi/v1/png-info', json=png_payload)
+    #             response2 = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
 
     #             # png 정보를 성공적으로 받아 왔을때만 이미지를 저장한다.
     #             # 이미지를 줄지 아니면 음... 이미지 path를 주는게 가장 현명하지 않을까
@@ -223,7 +257,7 @@ class StableDiffusionAuto1111:
     #     }
     #     # 모델을 바꾸는건 성공적으로 되네
     #     try: 
-    #         response = requests.post(url=f'{self._endPoint}/sdapi/v1/options', json=option_payload)
+    #         response = requests.post(url=f'{self._end_point}/sdapi/v1/options', json=option_payload)
     #     except Exception as e:
     #         print(e)
         

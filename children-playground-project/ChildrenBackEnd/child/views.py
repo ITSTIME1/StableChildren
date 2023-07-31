@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
 from django.http import JsonResponse as json
-from .api.image_style_model import ImageStyleModel as GenerateImage
+from .api.image_style_model import ImageStyleModel
 import json
 
 
@@ -17,13 +17,18 @@ def get_image(request):
         # @image_model_id = 이미지 모델을 파싱해서 저장.
         # @prompts_data =  이중 리스트로 오기 때문에 [0]요소 접근(모든데이터)
         image_model_id = request_body["image_model"]
-        prompts_data = request_body["prompt"][0] 
+        prompt = request_body["prompt"][0] 
         
-        print(image_model_id, prompts_data)
+        print(image_model_id, prompt)
         # 이미지 모델 id 가 none?
-        result = GenerateImage().search_model(image_model_id=image_model_id, prompts_data=prompts_data)
+        result = ImageStyleModel(image_model_id=image_model_id, prompts_data=prompt)
+        # 모델 탐색후 이미지 path얻기
+        # 그럼 여기서 해당 모델의 대한 path값을 넘겨줄테니까
+        # 그 데이터베이스에 저장된 path값을 넘겨주어서
+        # 클라이언트 쪽에서 데이터베이스 쿼리 요청을 할 수 있게끔 하면 될거 같다.
+        path = result.search_model()
         
-        parsing_path = f'{client_ip}children-playground-project/ChildrenFrontEnd/src/generatedImages/{result}'
+        parsing_path = f'{client_ip}children-playground-project/ChildrenFrontEnd/src/generatedImages/{path}'
         return HttpResponse(parsing_path)
     else:
         return HttpResponse("Post Test Success")

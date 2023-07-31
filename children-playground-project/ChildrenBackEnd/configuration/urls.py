@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('getImage/', include("app.urls")),
+    path('getImage/', include("child.urls")),
     path('admin/', admin.site.urls),
 ]
