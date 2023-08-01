@@ -48,7 +48,6 @@ class ImageStyleModel:
         # 이미지 path를 보냐주자
         if generated_image is not None:
             # path를 넘겨주게 되고
-            print(generated_image)
             return generated_image
     
     

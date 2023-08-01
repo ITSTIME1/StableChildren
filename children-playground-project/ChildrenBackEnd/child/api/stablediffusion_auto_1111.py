@@ -1,19 +1,19 @@
-import random
-import requests
-import io
-import base64
+import sys, random, requests, io, base64
 from PIL import Image, PngImagePlugin
+from ..models import SaveImage
+from datetime import datetime as dt
+from datetime import time
+from django.utils import timezone
 
-# 데이터베이스 short int 범위 최대치
-INF = 32767
+INF = 100000
 
 class StableDiffusionAuto1111:
     def __init__(self, lora=None, model=None, vae=None):
+        self._result = None 
         self._lora = lora
         self._model = model
         self._vae = vae
-        self._end_point = "https://3660ab4c563d8f8763.gradio.live"
-        self._save_path = "/Users/itstime/children-playground/children-playground-project/ChildrenFrontEnd/src/generatedImages"
+        self._end_point = "https://4163d3f7e7fd4f65af.gradio.live"
         self._payload = {
             "restore_faces": True,
             "prompt": None,
@@ -35,91 +35,116 @@ class StableDiffusionAuto1111:
 
         # self._override_settings = {'sd_model_checkpoint' : "", 'filter_nsfw' : True}
 
-    # 이미지 얻기
-    # 이미지를 얻기 위해서 어떤 모델을 사용할지 받아오고
-    # 1. 그 모델로 체인지 로라면 로라 모델이면 모델
-    # 2. 모델이 바뀌어 질때까지 기다려야 하고 모델이 바뀌어 지고 난 다음에 이미지를 생성하도록 api를 구성해주면 될거 같은데
-    # 3. 비동기로 하면 안되는게 이건 절대적으로 기다려야 한다. 그렇지 않으면 다른 결과물이 나올 수 있기 떄문임.
-    # 4. 이미지가 나왔으면 데이터베이스에다가 저장해두면 좋을거 같긴한데 (데베를 아직 할 줄 모르니까 일단 이건 패스 테스트 환경이니까)
-    # 5. 근데 그러면 가능할거 깉은ㄷ[
+
     def generate_image(self, image_model_id=None, prompt = None, negative_prompt = None):
         
         if image_model_id == None: 
             return None
         
-        
-        # 긍정, 부정은 공통사항
-        # 둘다 None으로 들어오지 않은 경우
+        '''
+        이미지 모델 id가 None이 아니면 실행되게 되고, 이미지 모델 id에 따라서 payload 설정.
+        prompt, negative_prompt 는 공통적용 사항
+        '''
         if (prompt is not None) and (negative_prompt is not None):
             self._payload['prompt'] = prompt
             self._payload['negative_prompt'] = negative_prompt
-        
 
-        # 이미지 모델에 따라 cfg_scale과 steps 변경
-        result = None
-        
-        # 모델의 옵션 설정
-        if image_model_id is not None and image_model_id == "Manmaru":
-            self._payload['cfg_scale'] = 11
-            self._payload['steps'] = 22
-        else:
-            # image_model_id 가 None 이거나 또는 image_model_id != ManMaru인 경우
-            self._payload['cfg_scale'] = 8.5
-            self._payload['steps'] = 30
-        
-        try:
-            response = requests.post(url=f'{self._end_point}/sdapi/v1/txt2img', json=self._payload)
-            
-            if response.status_code == 200:
-                r = response.json()
+            if image_model_id == "Manmaru":
+                self._payload['cfg_scale'] = 11
+                self._payload['steps'] = 22
+            else:
+                self._payload['cfg_scale'] = 8.5
+                self._payload['steps'] = 30
 
-                for i in r['images']:
-                    image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            try:
+                response = requests.post(url=f'{self._end_point}/sdapi/v1/txt2img', json=self._payload)
 
-                    png_payload = {
-                        "image": "data:image/png;base64," + i
-                    }
+                if response.status_code == 200:
+                    r = response.json()
 
-                    image_info = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
+                    byte_path = None
+                    image = None
+                    for i in r['images']:
+                        byte_path = i.split(",",1)[0]
+                        # print(type(i.split(",",1)[0]))
+                        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+                        # byte_path = base64.b64decode(i.split(",",1)[0])
+                        # 이미지는 잘 나오네
+                        # 이미지 먼저 확인용
+                        image.show()   
+                    # base64로 디코드 하지 않은걸 그대로 보내보자 
+                    return byte_path
 
-
-                    if image_info.status_code == 200:
-                        pnginfo = PngImagePlugin.PngInfo()
-                        pnginfo.add_text("parameters", image_info.json().get("info"))
-                        # 1~부터 9999까지의 랜덤 정수를 사용해서 저장
-                        # 이건 나중에 데이터베이스에다가 저장하는거랑 다르게 하면됨.
-                        random_number = random.randrange(1, INF)
-                        path = f'{random_number}.png'
-                        # @TODO 데이터베이스 연결
-                        # 여기서 데이터베이스에 저장을 해야 할거 같다.
-                        # 그럼 데이터베이스에 저장해서 저장이 정상적으로 되었다면
-                        # 여기서 다시 받은다음에
-                        # 그 이미지의 id나 그 이미지를 식별할 수 있는 값을 알려준 다음에
-                        # 그걸 서버에서 적용하게 할 순 없으니까
-                        # 클라이언트에서 데이터베이스에 통신을 하게 된다면?
-                        # 이 api 자체는 이미지를 저장하는 것 뿐
-                        # 즉 클라이언트에서 이미지를 생성하고 데이터베이스에 저장해준 뒤
-                        # 클라이언트에서 성공적으로 데이터베이스에 저장 되었다는 걸 알려준 다음에
-                        # 해당 이미지의 path를 알려주고 그 path나 id를 가지고 쿼리문을 할 수 있도록 하면 어떨까
-                        # 그럼 js에서 이미지가 생성 되었다는 걸 알려주고
-                        # 그럼 과 동시에 결과에 따라 데이터베이스를 js에서 조회
-                        # 조회한 뒤 클라이언트 쪽에서 이미지를 적용.
-                        # sqlit를 제공해주니까 이걸 사용해도 좋을거 같네
-                        # 테스트니까 이미지 저장용도로만 사용하기에 안성맞춤이고
-                        # splite를 써소 해보자
-                        image.save(f'{self._save_path}/{random_number}.png', pnginfo=pnginfo)
+                        # 바이너리 데이터를 얻어서 메모리 내의 바이트 스트림으로 열고, 바이트 스트림을 Image.open()을 통해서
+                        # 이미지 객체로 만든다. 이 PIL 이미지 객체를 활용해서 pnginfo와 함께
+                        # 이미지를 저장하는데 쓰이는데 구지 필요 없을 거같다.
+                        # 이미지 객체의 메모리를 얻기 위해서 사용하자.
+                        # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+                        # png_payload = {
+                        #     "image": "data:image/png;base64," + i
+                        # }
                         
+                        # 다른 경로에도 영향을 미치는지 확인을 좀 해보자
+                        # 맞네 다른 경로에 저장하면 상관이 없네
+                        # 그럼 로컬 데이터베이스에 저장하면 안되고 외부 db를 써야 되겠네
+                        # 외부 로컬 디비에 넣으면 아무런 영향을 안미치니까
+                        # 이미지의 정보를 뽑아오고
+                        # image_info = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
+
+                        # print(image_info.status_code)
+                        # if image_info.status_code == 200:
+                            # pnginfo = PngImagePlugin.PngInfo()
+                            # pnginfo.add_text("parameters", image_info.json().get("info"))
+                            # file_number = random.randrange(1,INF)
                         
-                        # 이미지 이름을 short int 범위 내에 랜덤하게 생성해서
-                        # 이미지 이름을 그렇게 사용하면 어떨까
-                        # path를 만들어서 저장하는걸 
-                        result = path 
-                        
-                        
-                        return result
-                
-        except Exception as e:
-            return e
+
+                            # console.log(url);
+                            # 이런 방법을 이용하면 되겠다
+                            # 먼저 외부 DB에 연결한 다음에
+                            # 그 외부 DB에 저장되어 있는 이미지 binary code를
+                            # 클라이언트 쪽에서 해석한 다음에
+                            # 그걸 하나의 임시 url로 만들어서 이미지를 보여주면 되겠다
+                            # 그러면 이미지는 저장되어 있고
+                            # 그 이미지를 보고 싶을때마다 유효키를 검색해서 보여줄 수 있기 때문에
+                            # 이 방법도 괜찮을 거 같은데
+                            # save_path = f'/Users/itstime/testImages/{file_number}.png'
+                            # image.save(save_path, pnginfo=pnginfo)
+
+                            # return save_path
+                            
+                            # datetime_object로 리턴하기 때문에 str을 통해서 parsing
+                            # date_time = str(dt.now())
+                            # current_time = date_time.split(" ")[1].split(":")
+                            # current_time[2] = round(float(current_time[2]), 0)
+                            # current_time = list(map(int, current_time))
+                            
+                            # parsed_time = time(current_time[0], current_time[1], current_time[2])
+                            # # 데이터베이스 정보 생성
+                            # '''
+                            # @image_object = 이미지 저장 테이블 (sqlite3)
+                            # @model_name = 모델 이름
+                            # @image_info = 이미지 바이너리 데이터
+                            # # default로 저장해주는 것.
+                            # @image_date = 이미지 생성 날짜
+                            # @image_time = 이미지 생성 시간
+                            # @image_size = 이미지 크기(바이트 단위)
+                            # '''
+                            
+                            
+                            # 로컬 디비에 하는 것도 생각해보니까 로컬에 저장하는 것이기 때문에 새로 고침당하는구나
+                            # 그럼 거에다가 저장해보자
+                            # 데이터 베이스 저장할때도 navigate를 하네 저장을 해서 그런가.
+                            # image_object = SaveImage()
+                            # image_object.model_name = image_model_id
+                            # image_object.image_info = binary_data
+                            # # 이미지의 메모리 크기는 바이트 단위로
+                            # image_object.image_size = sys.getsizeof(image)
+                            
+                            # print(f'{image_object.model_name}, {image_object.image_date}')
+                            # print("Successful saved in database")
+                            # image_object.save()
+            except Exception as e:
+                return e
 
         
         
