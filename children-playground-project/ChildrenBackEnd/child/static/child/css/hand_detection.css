@@ -1,0 +1,168 @@
+:root {
+    /* --main-background-color: #a0e1ff; */
+    --animation-background-color: rgb(145, 207, 252);
+    --prompt-background-color:rgb(41, 116, 170);
+    /* --select-background-color : rgb(98, 122, 45); */
+    /* --bear-background-color : rgb(239, 148, 95); */
+    
+}
+
+
+* {
+    margin : 0;
+    padding : 0;
+}
+
+
+body {
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: var(--animation-background-color);
+    width: 100%;
+    height: 10vh;
+}
+
+/* header 영역s */
+.hand-header-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.first-content {
+    width: 10%;
+    height: 100%;
+    background-color: var(--animation-background-color);
+}
+
+
+
+/* 전구영역 */
+.second-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    height: 100%;
+    background-color: var(--animation-background-color);
+}
+
+
+/* 프롬포트 영역 */
+.third-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    text-align: center;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    width: 10%;
+    height: 100%;
+    transition-duration: 2s;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background-color: var(--prompt-background-color);
+}
+
+.third-content:hover {
+    width: 50%;
+    opacity: 0.8;
+}
+
+
+
+main{
+    position: relative;
+    background-color: var(--animation-background-color);
+    width: 100%;
+    height: 70vh;
+}
+
+/* 애니메이션 영역 */
+.hand-animation-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: var(--animation-background-color);
+    width: 100%;
+    height: 100%;
+}
+
+/* circle 나타나는 영역 */
+.hand-circle-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: var(--animation-background-color);
+    width: 100%;
+    height: 100%;
+}
+
+
+
+footer{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: var(--animation-background-color);
+    width: 100%;
+    height: 20vh;
+}
+
+/* 곰 애니메이션 영역 */
+.hand-bear-content {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: var(--animation-background-color);
+}
+
+/* 단어 */
+.anime-circle {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 0.5rem;
+    text-align: center;
+    white-space: normal;
+    cursor: pointer;
+}
+
+.anime-circle:hover {
+    width: 55px;
+    height: 55px;
+}
+
+/* 전구 아이콘 */
+#bulb {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+}
+
+/* 전구 아이콘 hover */
+#bulb:hover {
+    transform: scale(1.2);
+}
+
+/* 프롬포트에 마우스를 올렸을때 */
+.prompt-object:hover {
+    transform: scale(1.4);
+}

@@ -1,13 +1,39 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
 from django.http import JsonResponse as json
+from django.templatetags.static import static
+
 from .api.image_style_model import ImageStyleModel
-import json, base64
+import json
+
+    
+
+'''
+Server-side rendering (SSR) is an application's ability to convert HTML files on the server into a fully rendered HTML page for the client.
+관리자가 접속할 페이지를 렌더링 해줍니다. (선생님용)
+'''
+def manager_page(request):
+    if request.method == "GET":
+        return render(request, "child/manage.html")
+
+'''
+아이들 교육 파일 렌더링 함수.
+'''
+def child_page(request):
+    # 요청 method가 get일때 정적 파일을 넘겨준다.
+    if request.method == "GET":
+        return render(request, 'child/main.html')
+    
+'''
+아이들 핸드 인식 화면.
+'''
+def get_hand_detection(request):
+    if request.method == "GET":
+        return render(request, 'child/hand_detection.html')
 
 
 def get_image(request):
     if request.method == "POST":
-        client_ip = request.META['HTTP_REFERER']
         # @body = 바이트 객체를 json으로 변환 후 디코드해서 데이터를 유니코드화.
         # @request_body = json 객체로 변환된 데이터 중 'params' 데이터에 접근.
         body = json.loads(request.body.decode("utf-8"))

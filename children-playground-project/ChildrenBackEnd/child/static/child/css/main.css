@@ -1,0 +1,286 @@
+/* 가상클래스로 변수를 관리하는데 리팩토링할때 정리하자 */
+:root {
+    --main-background-color: #a0e1ff;
+}
+
+/* init */
+* {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    background-color: #a0e1ff;
+}
+/* 메인 영역 */
+.main-content {
+    position:relative;
+    background-color: #a0e1ff;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 로딩화면 */
+.loading-page {
+    opacity: 0;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    display: none;
+    animation-name: loading-anime;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.272);
+    animation-fill-mode: forwards;
+    font-size: 20px;
+}
+
+#idea-image {
+    position: absolute;
+    width: 10%;
+    height: 20vh;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#loading-image {
+    position: absolute;
+    width: 50%;
+    height: 70vh;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes loading-anime {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 100;
+    }
+}
+
+/* 네비게이션 영역 */
+.nav-section {
+    width: 100%;
+    height: 10vh;
+    position: relative;
+    display:flex;
+    justify-content: center;
+    margin:10px;
+    align-items: center;
+    background-color: #a0e1ff;
+}
+
+/* i 영역 */
+.item-section {
+    position: absolute;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    width: 50%;
+    height: 100%;
+    color:white;
+    /* background-color: rgb(109, 115, 115); */
+}
+/* 책 타이틀 */
+.book-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: #31a6dc;
+    width: 100;
+    height: 100%;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    transition-duration: 2s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+}
+
+/* 책 타이틀을 호버 했을때 */
+.book-title:hover {
+    width : 70%;
+}
+
+
+
+/* title */
+div[class="item-section"] > div[class="book-title"]:hover{
+    width: 45%;
+    height: 100%;
+    border-radius: 30px 30px 30px 30px;
+    cursor: pointer;
+}
+
+
+
+/* 이미지 영역 */
+div[class=image-section] {
+    width: 100vw;
+    height: 70vh;
+    background-color: rgb(242, 242, 218);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이미지 영역의 이미지 박스 영역 */
+div[class=image-section] > div[class="four-image-section"]{
+    width: 100%;
+    height: 100%;
+    background-color: #a0e1ff;
+    display:flex;
+    position: relative;
+    justify-content: center;
+    align-items: start;
+    perspective: 400px;
+}
+
+/* 이미지 박스 */
+div[class~=image-box] {
+    box-sizing: border-box;
+    display: flex;
+    margin: 50px;
+    width: 50%;
+    height: 70%;
+    border-radius: 10px;
+    /* border: 2px solid #4a8cab; */
+    /* box-shadow: 0px 5px 10px 0.4px #969f9f;; */
+    background-color: #ffffff;
+    /* animation-name: image-box; */
+    animation-delay: 1.2s;
+    animation-duration: 2s, 0.2s;
+    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    animation-fill-mode: both;
+    position: relative;
+}
+/* 박스 애니메이션 */
+@keyframes image-box {
+    0%{
+        width: 0%;
+        height: 0%;
+    }
+    100% {
+        width: 50%;
+        height: 70%;
+    }
+}
+
+
+/* 이미지 박스 가우시안 */
+div[class~=image-box] > div[class="gausian"]{
+    position: absolute;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    /* box-shadow: 2px -1px 2px 0.5px rgb(196, 214, 246); */
+    background-color: rgba(88, 190, 223, 1);
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+
+}
+
+/* 이미지 박스 가우시안 마우스 올려졌을 때*/
+div[class~=image-box] > div[class="gausian"]:hover{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: rgba(29, 29, 29, 0);
+    /* transform: scale(0); */
+}
+
+div[class~=image-box] > div[class="gausian"]:not(:hover){
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: rgba(88, 190, 223, 1);
+}
+
+
+/* 가우시안 텍스트 */
+div[class="gausian"] h2{
+    position: absolute;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 20%;
+    color: white;
+}
+
+
+/* 푸터영역 */
+div[class="main-content"] > div[class="footer-section"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 20vh;
+    background-color: #a0e1ff;
+    position: relative;
+}
+
+/* complete-section */
+div[class="form-section"] > div[class="complete-button-section"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40%;
+    border-radius: 50px;
+    background-color: #a0e1ff;
+}
+
+/* 버튼영역 */
+div[class="complete-button-section"] > button{
+    visibility: hidden;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+    background-color: rgb(235, 247, 176);
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+
+
+/* text-area-section */
+div[class="form-section"] > div[class="text-area-section"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40%;
+    background-color: #a0e1ff;;
+    position: relative;
+}
+
+
+/* textArea */
+div[class="text-area-section"] > textarea {
+    position: absolute;
+    text-align: center;
+    width: 50%;
+    height: 90%;
+    resize: none;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 2px solid #31a6dc;
+}

@@ -61,16 +61,23 @@ class StableDiffusionAuto1111:
 
                 if response.status_code == 200:
                     r = response.json()
-
+                    
+                    
+                    
+                    '''
+                    @TODO 이미지 4장을 뽑아서 클라이언트 쪽에 보내는 기능구현해야 하고.
+                    @TODO 이미지 해당 이미지가 선정적인지 별로 좋지 않은 이미지인지 구별하기 위해 교사 체크 기능 구현.
+                    @TODO 외부 DB에 해당 데이터를 추가하는 데이터베이스 구축도 하면 좋겠음. (로컬 DB에 저장시 프론트 파일이 장고랑 연결 되어 있기 때문에 리로드 됨.)
+                    '''
+                
+                
+                
                     byte_path = None
                     image = None
                     for i in r['images']:
-                        byte_path = i.split(",",1)[0]
-                        # print(type(i.split(",",1)[0]))
+                        # base64로 디코드 하기전 base64문자열을 전달해서 클라이언트에서 처리.
+                        byte_path = i.split(",", maxsplit=1)[0]
                         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-                        # byte_path = base64.b64decode(i.split(",",1)[0])
-                        # 이미지는 잘 나오네
-                        # 이미지 먼저 확인용
                         image.show()   
                     # base64로 디코드 하지 않은걸 그대로 보내보자 
                     return byte_path

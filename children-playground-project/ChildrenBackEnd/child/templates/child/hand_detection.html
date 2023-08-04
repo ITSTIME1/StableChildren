@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'child/css/hand_detection.css'%}" />
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <div class="hand-header-content">
+            <div class="first-content"></div>
+            <div class="second-content">
+                <img id = "bulb" src="{% static 'child/images/lightON.png'%}" alt="bulb">
+            </div>
+            <div class="third-content">요기!</div>
+            
+        </div>
+
+    </header>
+
+    <main>
+        <div class="hand-animation-content">
+            <div class="hand-circle-content"></div>
+        </div>
+    </main>
+
+
+    <footer>
+        <div class="hand-bear-content"></div>
+    </footer>
+
+    <script async type="module" src="{% static 'child/js/main/hand_detection.js'%}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</body>
+</html>

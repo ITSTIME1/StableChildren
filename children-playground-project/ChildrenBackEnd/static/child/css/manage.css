@@ -1,0 +1,86 @@
+/* 가상클래스로 변수를 관리하는데 리팩토링할때 정리하자 */
+:root {
+    --main-background-color: #a0e1ff;
+}
+/* init */
+* {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 메인 영역 */
+div[class= teacher-main] {
+    position:relative;
+    background-color: #a0e1ff;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 이미지 영역 */
+div[class=teacher-image-section] {
+    width: 100vw;
+    height: 70vh;
+    background-color: rgb(242, 242, 218);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이미지 영역의 이미지 박스 영역 */
+div[class=teacher-image-section] > div[class="teacher-four-section"]{
+    width: 100%;
+    height: 100%;
+    background-color: #a0e1ff;
+    display:flex;
+    position: relative;
+    justify-content: center;
+    align-items: start;
+    perspective: 400px;
+}
+
+/* 이미지 박스 */
+div[class~=teacher-generated-box] {
+    box-sizing: border-box;
+    display: flex;
+    margin: 30px;
+    width: 70%;
+    height: 90%;
+    border-radius: 10px;
+    /* border: 2px solid #4a8cab; */
+    /* box-shadow: 0px 5px 10px 0.4px #969f9f;; */
+    background-color: #ffffff;
+    /* animation-name: image-box; */
+    animation-delay: 1.2s;
+    animation-duration: 2s, 0.2s;
+    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    animation-fill-mode: both;
+    position: relative;
+}
+
+div[class="footer-section"] {
+    position: absolute;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 30vh;
+}
+
+div[class="footer-section"] > div[class="button-section"] {
+    align-items: center;
+    width: 30%;
+    height: 30%;
+    margin: 30px;
+    background-color: bisque;
+}
+
+#agree {
+    background-color: #a4efa0;
+}
+#regenerate {
+    background-color: #eff0d0;
+}

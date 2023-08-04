@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'child/css/manage.css' %}">
+    <title>Manage</title>
+    <script src="../node_modules/axios/dist/axios.min.js"></script>
+    <script async type="module" src="{% static 'child/js/main/manage.js' %}"></script>
+</head>
+
+<body>
+    <div class="teacher-main" id="main">
+
+        <!-- 이미지 영역 -->
+        <div class="teacher-image-section">
+            <!-- 이미지 박스 영역-->
+            <div class="teacher-four-section">
+
+                <!-- 이미지를 표시하기 위한 박스 -->
+                <div class="teacher-generated-box" id="t1">
+                    {% comment %} {% static 'child/images/8684.png'%} {% endcomment %}
+                    <img src="{% static 'child/images/8684.png'%}" id="check-1-image" alt="first-image">
+                </div>
+
+                <div class="teacher-generated-box" id="t2">
+                    <img src="{% static 'child/images/8756.png'%}" id="check-2-image" alt="second-image">
+                </div>
+
+                <div class="teacher-generated-box" id="t3">
+                    <img src="{% static 'child/images/9077.png'%}" id="check-3-image" alt="third-image">
+                </div>
+
+                <div class="teacher-generated-box" id="t4">
+                    <img src="{% static 'child/images/9120.png'%}" id="check-4-image" alt="four-image">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="button-section">
+                <button id="agree" onclick=confirm()>모두승인</button>
+            </div>
+            <div class="button-section">
+                <button id="regenerate" onclick=regenerate()>재생성</button>
+            </div>
+        </div>
+        <!-- 채팅창 영역
+        <div class="footer-section">
+            <div class="text-area-section">
+                <textarea id="word-area" name="word" rows="5" cols="40" placeholder="추가할 단어를 넣어주세요!"></textarea>
+            </div>
+
+        </div> -->
+    </div>
+</body>
+</html>

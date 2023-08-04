@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}   
+    {% comment %} 정적파일을 로드하게 되는데 이때 static 태그는 absolute path staticfile의 정적 주소를 생성한다. {% endcomment %}
+    <link rel="stylesheet" href="{% static 'child/css/main.css' %}">
+    <title>Children-PlayGround</title>
+
+</head>
+
+<body>
+    <div class="main-content" id="main">
+        <div class="loading-page" id="loading">
+            <img src="{% static 'child/images/idea.gif'%}" alt="idea-gif" id="idea-image">
+            <img src="{% static 'child/images/teddy-bear.gif'%}" alt="loading-gif" id="loading-image">
+        </div>
+        <div class="nav-section" id="nav-id">
+            <!-- itemsection -->
+            <div class="item-section" id="title">
+                <div class="book-title">
+                    오늘 읽을 책을 알려줘!
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 이미지 영역 -->
+        <div class="image-section">
+            <!-- 이미지 박스 영역-->
+            <div class="four-image-section">
+
+                <!-- 이미지를 표시하기 위한 박스 -->
+                <div class="image-box" id="box1">
+                    <img class="generate-image" id="generate1" src="{% static 'child/images/polar.png' %}" alt="생성이미지">
+                    <div class="gausian" id="g1">
+                        <img id="bear-image" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
+                            style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                    </div>
+                </div>
+
+                <div class="image-box" id="box2">
+                    <img class="generate-image" id="generate2" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
+                    <div class="gausian" id="g2">
+                        <img id="bear-image" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
+                            style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                    </div>
+                </div>
+
+                <div class="image-box" id="box3">
+                    <img class="generate-image" id="generate3" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
+                    <div class="gausian" id="g3">
+                        <img id="bear-image" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
+                            style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                    </div>
+                </div>
+
+                <div class="image-box" id="box4">
+                    <img class="generate-image" id="generate4" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
+                    <div class="gausian" id="g4">
+                        <img id="bear-image" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
+                            style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 채팅창 영역-->
+        <div class="footer-section">
+            <div class="form-section">
+                <div class="complete-button-section">
+                    <button id="complete-btn" type="submit">GO!</button>
+                </div>
+
+                <div class="text-area-section">
+                    <textarea id="word-area" name="word" rows="5" cols="40" placeholder="원하는 단어를 입력해봐!"></textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 효과음 오디오 요소 -->
+    <audio id="hover-sound">
+        <source src="{% static 'child/sounds/generate_image_btn_sound.mp3'%}" type="audio/mpeg">
+    </audio>
+    <script async type="module" src="{% static 'child/js/main/index.js'%}"></script>
+    <script async type="module" src="{% static 'child/js/constants/constant.js'%}"></script>
+</body>
+</html>
