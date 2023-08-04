@@ -50,8 +50,7 @@ jspm_packages/
 *.text
 *.exe
 *.zip
-# ds store ignore
-.DS_Store
+
 
 ## 폴더 무시
 test/
@@ -63,6 +62,9 @@ web_modules/
 .DS_Store
 package-lock.json
 package.json
+
+#pycache
+__pycache__
 
 # TypeScript cache
 *.tsbuildinfo
