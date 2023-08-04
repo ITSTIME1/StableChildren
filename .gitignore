@@ -58,6 +58,12 @@ test/
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
+# vscode ignore
+.vscode
+.DS_Store
+package-lock.json
+package.json
+
 # TypeScript cache
 *.tsbuildinfo
 
