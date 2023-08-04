@@ -1,14 +1,8 @@
 
 import {
   wordArea,
-  toggleBtn,
-  gausianScreen,
   completeBtn,
   title,
-  gausian1,
-  gausian2,
-  gausian3,
-  gausian4,
   hoverSound,
 } from "../constants/constant.js";
 
