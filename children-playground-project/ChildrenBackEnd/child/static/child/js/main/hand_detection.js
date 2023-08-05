@@ -541,3 +541,12 @@ checkWord.addEventListener("mouseleave", () => {
     }
   }
 });
+
+
+// 버튼 클릭하면 다른 화면으로
+const bulb = document.getElementById("bulb");
+bulb.addEventListener("click", ()=>{
+  // location 이동.
+  // 여기 까지 완료.
+  window.location.href="model_choice_page/";
+});

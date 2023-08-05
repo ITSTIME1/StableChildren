@@ -30,6 +30,19 @@ def hand_detection_page(request):
    
     return render(request, 'child/hand_detection.html')
 
+
+'''
+모델을 선택하는 페이지
+'''
+def model_choice_page(request):
+    return render (request, 'child/model_choice.html')
+
+
+
+
+'''
+모델 선택.
+'''
 def get_image(request):
     if request.method == "POST":
         # @body = 바이트 객체를 json으로 변환 후 디코드해서 데이터를 유니코드화.

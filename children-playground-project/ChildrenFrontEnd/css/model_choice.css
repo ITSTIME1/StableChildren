@@ -28,7 +28,7 @@ body {
 /* 그림 생성 아이콘 */
 .model-choice-icon {
     position: absolute;
-    background-image: url(/static/child/images/lightOFF.png);
+    background-image: url(../html/lightOFF.png);
     background-size: cover;
     width: 100px;
     height: 100px;
@@ -37,7 +37,7 @@ body {
 }
 
 .model-choice-icon:hover {
-    background-image: url(/static/child/images/lightON.png);
+    background-image: url(../html/lightON.png);
     background-size: cover;
     transform: scale(1.2);
     cursor: pointer;
@@ -71,11 +71,11 @@ body {
 }
 
 #s1 {
-    background-image: url(/static/child/images/manMaru.png);
+    background-image: url(../html/manMaru.png);
     background-size: cover;
 }
 
 #s2 {
-    background-image: url(/static/child/images/anime.png);
+    background-image: url(../html/anime.png);
     background-size: cover;
 }

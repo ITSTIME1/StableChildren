@@ -160,6 +160,7 @@ footer{
 /* 전구 아이콘 hover */
 #bulb:hover {
     transform: scale(1.2);
+    background-image: url(/static/child/images/lightON.png);
 }
 
 /* 프롬포트에 마우스를 올렸을때 */

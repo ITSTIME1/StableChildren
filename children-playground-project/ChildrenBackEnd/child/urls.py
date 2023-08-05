@@ -8,4 +8,5 @@ urlpatterns = [
     path("managePage/", views.manager_page, name="manager"),
     path("childPage/", views.child_page, name="childPage"),
     path("childPage/hand_detection_page/", views.hand_detection_page, name="handPage"),
+    path("childPage/hand_detection_page/model_choice_page/", views.model_choice_page, name="modelChoicePage"),
 ]
