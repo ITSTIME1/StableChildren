@@ -1,11 +1,10 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
     {% comment %} 정적파일을 로드하게 되는데 이때 static 태그는 absolute path staticfile의 정적 주소를 생성한다. {% endcomment %}
     <link rel="stylesheet" href="{% static 'child/css/main.css' %}">
     <title>Children-PlayGround</title>
@@ -87,6 +86,7 @@
     <audio id="hover-sound">
         <source src="{% static 'child/sounds/generate_image_btn_sound.mp3'%}" type="audio/mpeg">
     </audio>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script async type="module" src="{% static 'child/js/main/index.js'%}"></script>
     <script async type="module" src="{% static 'child/js/constants/constant.js'%}"></script>
 </body>

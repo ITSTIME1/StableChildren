@@ -1,8 +1,7 @@
-from django.shortcuts import render
-from django.http import HttpResponse 
+from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseRedirect 
 from django.http import JsonResponse as json
 from django.templatetags.static import static
-
 from .api.image_style_model import ImageStyleModel
 import json
 
@@ -17,20 +16,19 @@ def manager_page(request):
         return render(request, "child/manage.html")
 
 '''
-아이들 교육 파일 렌더링 함수.
+아이들 교육 파일 렌더링 함수.s
 '''
 def child_page(request):
     # 요청 method가 get일때 정적 파일을 넘겨준다.
-    if request.method == "GET":
-        return render(request, 'child/main.html')
+    
+    return render(request, 'child/main.html')
     
 '''
 아이들 핸드 인식 화면.
 '''
-def get_hand_detection(request):
-    if request.method == "GET":
-        return render(request, 'child/hand_detection.html')
-
+def hand_detection_page(request):
+   
+    return render(request, 'child/hand_detection.html')
 
 def get_image(request):
     if request.method == "POST":

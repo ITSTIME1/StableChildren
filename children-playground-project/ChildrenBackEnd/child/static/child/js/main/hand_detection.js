@@ -1,9 +1,8 @@
-
 const checkWord = document.querySelector(".third-content");
 let wordTarget = null;
 
 // 워드 리스트를 이전 페이지에서 받아오자.
-let wordList = ["asdf", "fawef", "fawe", "awef"];
+let wordList = null;
 let prompt = [];
 let isDragging = false;
 let startPosX = null,
@@ -11,6 +10,9 @@ let startPosX = null,
 
 // 처음 시작할때 곰을 그려준다.
 window.onload = function () {
+  if (localStorage.getItem("wordList")) {
+    wordList = JSON.parse(localStorage.getItem("wordList"));
+  }
   polarBear3D();
   circleSection();
 };
@@ -359,18 +361,18 @@ function polarBear3D() {
         // 해당 부모에서도 지워주고
         // prompt 데이터에서도 지워준다.
         textContent.addEventListener("dblclick", () => {
-            // console.log(typeof textContent.innerHTML.replace(", ", ""));
-            // 여기서 삭제를 해주어야 하는데
-            // slice를 이렇게 하면 안되는건가 그럼 특정 개체를 어떻게 삭제하지
-            let removeIndex = null;
-            for (let i =0; i < prompt.length; i++) {
-                if (prompt[i] === textContent.innerHTML.replace(", ", "")) {
-                    removeIndex = i;
-                    break;
-                }
+          // console.log(typeof textContent.innerHTML.replace(", ", ""));
+          // 여기서 삭제를 해주어야 하는데
+          // slice를 이렇게 하면 안되는건가 그럼 특정 개체를 어떻게 삭제하지
+          let removeIndex = null;
+          for (let i = 0; i < prompt.length; i++) {
+            if (prompt[i] === textContent.innerHTML.replace(", ", "")) {
+              removeIndex = i;
+              break;
             }
-            prompt.splice(removeIndex, 1);
-            textContent.parentNode.removeChild(textContent);
+          }
+          prompt.splice(removeIndex, 1);
+          textContent.parentNode.removeChild(textContent);
         });
         textContent.style.cursor = "pointer";
         textContent.style.textAlign = "center";
@@ -410,34 +412,36 @@ function circleSection() {
 // 단어 애니메이션 지정 함수.
 function circleAnimation(parent) {
   console.log(parent);
-  for (let i = 0; i < wordList.length; i++) {
-    // circle안에 텍스트가 들어가야 되기 때문에
-    const wordCircleDiv = document.createElement("word-circle");
-    const divInnerText = document.createTextNode(wordList[i]);
+  if (wordList.length != 0) {
+    for (let i = 0; i < wordList.length; i++) {
+      // circle안에 텍스트가 들어가야 되기 때문에
+      const wordCircleDiv = document.createElement("word-circle");
+      const divInnerText = document.createTextNode(wordList[i]);
 
-    wordCircleDiv.setAttribute("id", `wordCircle-${i}`);
-    wordCircleDiv.appendChild(divInnerText);
+      wordCircleDiv.setAttribute("id", `wordCircle-${i}`);
+      wordCircleDiv.appendChild(divInnerText);
 
-    wordCircleDiv.style.boxSizing = "border-box";
-    wordCircleDiv.style.position = "absolute";
-    wordCircleDiv.style.display = "flex";
-    wordCircleDiv.style.justifyContent = "center";
-    wordCircleDiv.style.alignItems = "center";
+      wordCircleDiv.style.boxSizing = "border-box";
+      wordCircleDiv.style.position = "absolute";
+      wordCircleDiv.style.display = "flex";
+      wordCircleDiv.style.justifyContent = "center";
+      wordCircleDiv.style.alignItems = "center";
 
-    // 디브에 워드를 달아둔다음에
-    wordCircleDiv.addEventListener("mousedown", (event) => {
-      isDragging = true;
-      // 현재 다운된걸 전역변수로 넣어주고
-      wordTarget = wordCircleDiv.id;
-      // 시작위치를 저장해둔다.
-      startPosX = event.clientX - wordCircleDiv.offsetLeft;
-      startPosY = event.clientY - wordCircleDiv.offsetTop;
+      // 디브에 워드를 달아둔다음에
+      wordCircleDiv.addEventListener("mousedown", (event) => {
+        isDragging = true;
+        // 현재 다운된걸 전역변수로 넣어주고
+        wordTarget = wordCircleDiv.id;
+        // 시작위치를 저장해둔다.
+        startPosX = event.clientX - wordCircleDiv.offsetLeft;
+        startPosY = event.clientY - wordCircleDiv.offsetTop;
 
-      // console.log(wordTarget);
-    });
+        // console.log(wordTarget);
+      });
 
-    let animeCircle = parent.appendChild(wordCircleDiv);
-    animeCircle.classList.add("anime-circle");
+      let animeCircle = parent.appendChild(wordCircleDiv);
+      animeCircle.classList.add("anime-circle");
+    }
   }
 
   let circles = document.querySelectorAll(".anime-circle");
