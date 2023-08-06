@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'child/css/loading.css'%}" />
+    <title>Loading</title>
+</head>
+
+<body>
+    
+  
+    <div class="loading-content">
+        <div class="loading-icon"></div>
+    </div>
+
+
+    <script async type="module" src="{% static 'child/js/main/loading.js'%}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</body>
+</html>

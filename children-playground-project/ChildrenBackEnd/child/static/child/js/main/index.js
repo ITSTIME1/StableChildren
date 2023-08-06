@@ -1,4 +1,4 @@
-import { wordArea, completeBtn, title, handDetectionURL} from "../constants/constant.js";
+import { wordArea, completeBtn, title, gausianScreen} from "../constants/constant.js";
 
 let wordList = [];
 
@@ -67,3 +67,33 @@ completeBtn.addEventListener("click", async () => {
   console.log(localStorage.getItem("wordList"))
   window.location.href = 'hand_detection_page/';
 });
+
+
+// 로컬 스토리지에 base 64파일이 저장되어 있는지 확인하고
+// 바로 base64가 적용되니는지 보자.
+// 어짜피 서버에서 base64로 인코딩된 문자열을 결과로 받아오니까
+// 나는 그 스트링을 가지고 바로 보여주기만 하면되는데
+
+
+// val이 null이 아닌경우 로컬 스토리지에 이미지가 있다는거니까
+// 이미지를 저장해주자.
+
+// gausian 올렸을때 img 사라지게 하자
+for (let i = 0; i < gausianScreen.length; i++) {
+  const bearImageIcon = document.getElementById(`bear-image-${i+1}`);
+  gausianScreen[i].addEventListener("mouseover", ()=> {
+    bearImageIcon.style.visibility = "hidden";
+  });
+  gausianScreen[i].addEventListener("mouseleave", ()=>{
+    bearImageIcon.style.visibility = "visible";
+  })
+}
+
+// 이동해서 오게 된다면 base64ImageUrl을 보게 될거니까
+let val = localStorage.getItem("base64ImageUrl");
+if (val === null) {
+  console.log("null");
+} else {
+  let image = document.getElementById("generate1");
+  image.src = val;
+}

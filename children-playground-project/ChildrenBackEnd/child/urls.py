@@ -9,4 +9,5 @@ urlpatterns = [
     path("childPage/", views.child_page, name="childPage"),
     path("childPage/hand_detection_page/", views.hand_detection_page, name="handPage"),
     path("childPage/hand_detection_page/model_choice_page/", views.model_choice_page, name="modelChoicePage"),
+    path("childPage/hand_detection_page/model_choice_page/loading_page/", views.loading_page, name="loadingPage"),
 ]

@@ -45,6 +45,7 @@ body {
 
 /* 이미지 슬라이드 생성되는 메인 영역 */
 .model-choice-main-content {
+    position: relative;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -55,12 +56,13 @@ body {
 
 .model-choice-slide {
     position: relative;
+    font-size: 11px;
     box-sizing: border-box;
     margin: 20px;
     border-radius: 30px;
     background-color: black;
     width: 30%;
-    height: 90%;
+    height: 80%;
     transition-duration: 2s;
     transition-timing-function: cubic-bezier(0, 0.76, 0.35, 0.73);
 }
@@ -68,6 +70,11 @@ body {
 .model-choice-slide:hover {
     transform: scale(1.1);
     cursor:pointer;
+}
+
+/* 블러. */
+.blur {
+    backdrop-filter: blur(10px);
 }
 
 #s1 {

@@ -36,7 +36,8 @@
                 <div class="image-box" id="box1">
                     <img class="generate-image" id="generate1" src="{% static 'child/images/polar.png' %}" alt="생성이미지">
                     <div class="gausian" id="g1">
-                        <img id="bear-image" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
+                        {% comment %} {{ post.get_cover_base64 }} {% endcomment %}
+                        <img id="bear-image-1" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
                             style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
@@ -44,7 +45,7 @@
                 <div class="image-box" id="box2">
                     <img class="generate-image" id="generate2" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
                     <div class="gausian" id="g2">
-                        <img id="bear-image" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
+                        <img id="bear-image-2" src="{% static 'child/images/polar.png' %}" alt="베어로딩아이콘"
                             style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
@@ -52,7 +53,7 @@
                 <div class="image-box" id="box3">
                     <img class="generate-image" id="generate3" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
                     <div class="gausian" id="g3">
-                        <img id="bear-image" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
+                        <img id="bear-image-3" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
                             style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>
@@ -60,7 +61,7 @@
                 <div class="image-box" id="box4">
                     <img class="generate-image" id="generate4" src="{% static 'child/images/polar.png'%}" alt="생성이미지">
                     <div class="gausian" id="g4">
-                        <img id="bear-image" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
+                        <img id="bear-image-4" src="{% static 'child/images/polar.png'%}" alt="베어로딩아이콘"
                             style="width: 60px; height: 60px; filter: drop-shadow(10px 6px 11px #636161);">
                     </div>
                 </div>

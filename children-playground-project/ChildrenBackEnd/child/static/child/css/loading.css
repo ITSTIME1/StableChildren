@@ -1,0 +1,25 @@
+* {
+    margin : 0;
+    padding : 0;
+}
+
+body {
+    overflow: hidden;
+}
+
+.loading-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.loading-icon {
+    position: absolute;
+    width: 40vw;
+    height: 80vh;
+    background-image: url(/static/child/images/teddy-bear.gif);
+    background-size: cover;
+}
