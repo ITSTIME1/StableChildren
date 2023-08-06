@@ -62,6 +62,7 @@ getImagebulb.addEventListener("click", async () => {
         // main으로 이동했을때 json 객체값들을 전부 가져와서 넣어주면 되겠다.
 
         await get_generated_image(array, imageModel).then((response)=>{
+            // base64인코딩 문자열들을 저장해놓고
             base64ImageUrlList.push(response.data);
         });
 

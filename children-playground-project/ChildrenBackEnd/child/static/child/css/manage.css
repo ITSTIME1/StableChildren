@@ -1,6 +1,8 @@
 /* 가상클래스로 변수를 관리하는데 리팩토링할때 정리하자 */
 :root {
     --main-background-color: #a0e1ff;
+    --agree-button-background-color : #f1dba9;
+    --generate-button-background-colir :#f3947c;
 }
 /* init */
 * {
@@ -28,7 +30,9 @@ div[class=teacher-image-section] {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
+
 
 /* 이미지 영역의 이미지 박스 영역 */
 div[class=teacher-image-section] > div[class="teacher-four-section"]{
@@ -46,6 +50,8 @@ div[class=teacher-image-section] > div[class="teacher-four-section"]{
 div[class~=teacher-generated-box] {
     box-sizing: border-box;
     display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 30px;
     width: 70%;
     height: 90%;
@@ -76,11 +82,27 @@ div[class="footer-section"] > div[class="button-section"] {
     height: 30%;
     margin: 30px;
     background-color: bisque;
+    border-radius: 20px;
+    font-size: 11px;
 }
 
 #agree {
-    background-color: #a4efa0;
+    background-color: var(--agree-button-background-color);
+    font-size: 1rem;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
 }
+#agree:hover {
+    transform: scale(1.12);
+}
+
 #regenerate {
-    background-color: #eff0d0;
+    background-color: var(--generate-button-background-colir);
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+}
+#regenerate:hover {
+    transform: scale(1.12);
 }

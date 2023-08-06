@@ -7,6 +7,8 @@ function confirmed() {
 
     console.log(confirmed);
     if (confirmed === "true") {
+        // 여기서 true를 확인했다면 main으로 넘어갈테니까
+        // main으로 넘어가게 되면 이미지를 main에서 저장한다.
         console.log("true 입니다.");
         localStorage.setItem("confirm", "false");
         history.go(-3);

@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" href="{% static 'child/css/manage.css' %}">
     <title>Manage</title>
-    <script src="../node_modules/axios/dist/axios.min.js"></script>
     <script async type="module" src="{% static 'child/js/main/manage.js' %}"></script>
 </head>
 
@@ -23,29 +22,29 @@
                 <!-- 이미지를 표시하기 위한 박스 -->
                 <div class="teacher-generated-box" id="t1">
                     {% comment %} {% static 'child/images/8684.png'%} {% endcomment %}
-                    <img src="{% static 'child/images/8684.png'%}" id="check-1-image" alt="first-image">
+                    <img src="" class = "check-image" id="check-1-image" alt="first-image">
                 </div>
 
                 <div class="teacher-generated-box" id="t2">
-                    <img src="{% static 'child/images/8756.png'%}" id="check-2-image" alt="second-image">
+                    <img src="" class = "check-image" id="check-2-image" alt="second-image">
                 </div>
 
                 <div class="teacher-generated-box" id="t3">
-                    <img src="{% static 'child/images/9077.png'%}" id="check-3-image" alt="third-image">
+                    <img src="" class = "check-image" id="check-3-image" alt="third-image">
                 </div>
 
                 <div class="teacher-generated-box" id="t4">
-                    <img src="{% static 'child/images/9120.png'%}" id="check-4-image" alt="four-image">
+                    <img src="" class = "check-image" id="check-4-image" alt="four-image">
                 </div>
             </div>
         </div>
 
         <div class="footer-section">
             <div class="button-section">
-                <button id="agree" onclick=confirm()>모두승인</button>
+                <button id="agree">모두승인</button>
             </div>
             <div class="button-section">
-                <button id="regenerate" onclick=regenerate()>재생성</button>
+                <button id="regenerate">재생성</button>
             </div>
         </div>
         <!-- 채팅창 영역
