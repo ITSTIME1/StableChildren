@@ -25,3 +25,8 @@ print(s)
 # 1024x = 59 kb
 # x = 0.05kb
 print(sys.getsizeof("output.png"))
+
+sd = ["12,123", "124,124", "124515,515"]
+
+for i in sd:
+    print(i.split(","))

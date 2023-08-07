@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, HttpResponseRedirect 
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.http import JsonResponse as json
 from django.templatetags.static import static
 from .api.image_style_model import ImageStyleModel
@@ -70,7 +70,10 @@ def get_image(request):
         result = ImageStyleModel(image_model_id=image_model_id, prompts_data=translated_prompt)
         # base64로 인코드 되어 있는걸 보낸다.
         path = result.search_model()
-        
-        return HttpResponse("dddddd", content_type='image/png')
+        # print(f'반환받은 개수 {len(path)}')
+        payload = {
+            "imagesByteString" : path,
+        }
+        return JsonResponse(payload)
     else:
         return HttpResponse("Post Test Success")

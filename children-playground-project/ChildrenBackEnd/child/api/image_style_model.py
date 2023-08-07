@@ -13,15 +13,16 @@ class ImageStyleModel:
         if self._model_id is None:
             return "올바르지 못한 데이터입니다."
 
-        if self._model_id == "Manmaru":
+        if self._model_id == "manMaru":
             return self.civitai_manmaru_mix_style()
 
-        elif self._model_id == "Anime":
+        elif self._model_id == "anime":
             return self.civitai_anime_style()
     
 
     # Manmaru mix SD1.5
     def civitai_manmaru_mix_style(self):  
+        print("manMaru 스타일")
         generated_image = None
         
         positive_prompts = f'<lora:brighter-eye1:1>, {", ".join(self._prompt)}, smile, low angle, masterpiece, best quality'

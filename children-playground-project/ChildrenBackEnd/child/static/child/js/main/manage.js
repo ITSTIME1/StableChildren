@@ -34,9 +34,10 @@ function image_select() {
       let check = teacher_generated_box[i].querySelector(`#${checkScreenID}`);
 
       /**
-       * @TODO 2023.8.6일
-       * 관리자에서 승인시 이동 구현.
-       * 관리자 페이지 재생성 하기 위해 이미지 선택 함수 구현.
+       * @TODO 2023.8.8일
+       * 관리자에서 승인시 이동 구현. (okay).
+       * 이미지 4개 받아서 보여주는 기능 테스트 (okay).
+       * 관리자 페이지 재생성 하기 위해 이미지 선택 함수 구현. 
        * 특정 이미지 재생성 함수 구현.
        * 특정 이미지 재생성 후 서버에서 다시 받아 교사가 확인한 뒤 원래 있었던 index에 넣어줌. (base64Url상에서 넣어야함.) 따라서 base64배열 구조가 달라지기 때문에
        * base64배열에서 원래 index를 삭제하고 현재 받아온 base64인코딩 값으로 대체.
@@ -61,16 +62,16 @@ function image_select() {
   }
 }
 
+// 이미지를 지속적으로 관찰.
 function checkBase64() {
   console.log("base64 url 체크");
-  // json 문자열을 object로 다시 바꿔준다.
-  let base64UrlList = JSON.parse(localStorage.getItem("base64ImageUrl"));
-  // 4개라면 해당 image_section에 우선적으로 넣어준다.
-  if (base64UrlList.length === 1) {
-    for (let i = 0; i < 1; i++) {
+  // json 문자열을 object로 다시 바꿔준다. 
+  let result = JSON.parse(localStorage.getItem("base64ImageUrl"));
+  console.log(result);
+  if (result != null) {
+    for (let i = 0; i < result.length; i++) {
       // image_section
-      image_section[i].src = base64UrlList[i];
-      console.log(base64UrlList[i]);
+      image_section[i].src = `data:image/png;base64,${result[i]}`;
     }
   }
 }
@@ -85,6 +86,17 @@ agreeBtn.addEventListener("click", () => {
   }
 });
 
+const regenerateBtn = document.getElementById("regenerate");
+// 재생성 버튼
+// 이 버튼을 누르게 되면 re_generate_image에 있는걸 재생성 할건데
+// 삭제하지 않아도
+// 해당 인덱스가 어떤 인덱스가 변경되었다는 걸 알면 인덱스를 구지 insert하지 않아도
+// index에다가 해당 base64값을 변경하기만 하면됨.
+regenerateBtn.addEventListener("click", ()=>{
+
+});
+
 checkBase64();
 image_select();
-// setInterval(checkBase64, 3000);
+setInterval(checkBase64, 5000);
+

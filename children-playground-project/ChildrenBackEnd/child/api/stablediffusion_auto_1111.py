@@ -1,6 +1,6 @@
 import sys, random, requests, io, base64
 from PIL import Image, PngImagePlugin
-from ..models import SaveImage
+# from ..models import SaveImage
 from datetime import datetime as dt
 from datetime import time
 from django.utils import timezone
@@ -13,12 +13,12 @@ class StableDiffusionAuto1111:
         self._lora = lora
         self._model = model
         self._vae = vae
-        self._end_point = "https://4163d3f7e7fd4f65af.gradio.live"
+        self._end_point = "https://abf649db2037d12914.gradio.live"
         self._payload = {
             "restore_faces": True,
             "prompt": None,
             "negative_prompt": None,
-            "batch_size": 1,
+            "batch_size": 4,
             "steps": None,
             "cfg_scale": None,
             "width": 512,
@@ -61,85 +61,21 @@ class StableDiffusionAuto1111:
 
                 if response.status_code == 200:
                     r = response.json()
-                
-                    byte_path = None
+                    byte_path = []
                     image = None
+                    # 이미지가 담긴 리스트를 가지고 있으니까
                     for i in r['images']:
                         # base64로 디코드 하기전 base64문자열을 전달해서 클라이언트에서 처리.
-                        byte_path = i.split(",", maxsplit=1)[0]
-                        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-                        image.show()   
-                    # base64로 디코드 하지 않은걸 그대로 보내보자 
-                    return byte_path
-
-                        # 바이너리 데이터를 얻어서 메모리 내의 바이트 스트림으로 열고, 바이트 스트림을 Image.open()을 통해서
-                        # 이미지 객체로 만든다. 이 PIL 이미지 객체를 활용해서 pnginfo와 함께
-                        # 이미지를 저장하는데 쓰이는데 구지 필요 없을 거같다.
-                        # 이미지 객체의 메모리를 얻기 위해서 사용하자.
+                        # byte_path.append(i[:10])
+                        byte_path.append(i.split(",")[0])
                         # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-                        # png_payload = {
-                        #     "image": "data:image/png;base64," + i
-                        # }
-                        
-                        # 다른 경로에도 영향을 미치는지 확인을 좀 해보자
-                        # 맞네 다른 경로에 저장하면 상관이 없네
-                        # 그럼 로컬 데이터베이스에 저장하면 안되고 외부 db를 써야 되겠네
-                        # 외부 로컬 디비에 넣으면 아무런 영향을 안미치니까
-                        # 이미지의 정보를 뽑아오고
-                        # image_info = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
-
-                        # print(image_info.status_code)
-                        # if image_info.status_code == 200:
-                            # pnginfo = PngImagePlugin.PngInfo()
-                            # pnginfo.add_text("parameters", image_info.json().get("info"))
-                            # file_number = random.randrange(1,INF)
-                        
-
-                            # console.log(url);
-                            # 이런 방법을 이용하면 되겠다
-                            # 먼저 외부 DB에 연결한 다음에
-                            # 그 외부 DB에 저장되어 있는 이미지 binary code를
-                            # 클라이언트 쪽에서 해석한 다음에
-                            # 그걸 하나의 임시 url로 만들어서 이미지를 보여주면 되겠다
-                            # 그러면 이미지는 저장되어 있고
-                            # 그 이미지를 보고 싶을때마다 유효키를 검색해서 보여줄 수 있기 때문에
-                            # 이 방법도 괜찮을 거 같은데
-                            # save_path = f'/Users/itstime/testImages/{file_number}.png'
-                            # image.save(save_path, pnginfo=pnginfo)
-
-                            # return save_path
-                            
-                            # datetime_object로 리턴하기 때문에 str을 통해서 parsing
-                            # date_time = str(dt.now())
-                            # current_time = date_time.split(" ")[1].split(":")
-                            # current_time[2] = round(float(current_time[2]), 0)
-                            # current_time = list(map(int, current_time))
-                            
-                            # parsed_time = time(current_time[0], current_time[1], current_time[2])
-                            # # 데이터베이스 정보 생성
-                            # '''
-                            # @image_object = 이미지 저장 테이블 (sqlite3)
-                            # @model_name = 모델 이름
-                            # @image_info = 이미지 바이너리 데이터
-                            # # default로 저장해주는 것.
-                            # @image_date = 이미지 생성 날짜
-                            # @image_time = 이미지 생성 시간
-                            # @image_size = 이미지 크기(바이트 단위)
-                            # '''
-                            
-                            
-                            # 로컬 디비에 하는 것도 생각해보니까 로컬에 저장하는 것이기 때문에 새로 고침당하는구나
-                            # 그럼 거에다가 저장해보자
-                            # 데이터 베이스 저장할때도 navigate를 하네 저장을 해서 그런가.
-                            # image_object = SaveImage()
-                            # image_object.model_name = image_model_id
-                            # image_object.image_info = binary_data
-                            # # 이미지의 메모리 크기는 바이트 단위로
-                            # image_object.image_size = sys.getsizeof(image)
-                            
-                            # print(f'{image_object.model_name}, {image_object.image_date}')
-                            # print("Successful saved in database")
-                            # image_object.save()
+                        # image.show()   
+                    # base64로 디코드 하지 않은걸 그대로 보내보자 
+                    # batch_size만큼 byte_path에 넣어졌고
+                    print(byte_path[0][-20:-1], byte_path[1][-20:-1])
+                    # print(r['images'][0][-20:-1], r['images'][1][-20:-1])
+                    return byte_path
+                
             except Exception as e:
                 return e
 
@@ -292,6 +228,9 @@ class StableDiffusionAuto1111:
     #         return 422
 
 # stable = StableDiffusionAuto1111()
+# a = stable.generate_image("manMaru", "girl", "nsfw")
+# print(a)
+
 # stable.get_sampler()
 # 테스트하기 위해서
 # Ghibli를 선택하기 위해서
@@ -299,7 +238,7 @@ class StableDiffusionAuto1111:
 # VAE 적용
 # 로라 None
 # stable.test_change_model()
-# stable.test_image()
+
 # stable.get_model_name()
 # stable.get_vae()
 # stable.change_model()
