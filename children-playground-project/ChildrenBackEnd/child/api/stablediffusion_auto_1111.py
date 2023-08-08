@@ -13,12 +13,12 @@ class StableDiffusionAuto1111:
         self._lora = lora
         self._model = model
         self._vae = vae
-        self._end_point = "https://abf649db2037d12914.gradio.live"
+        self._end_point = "https://71134cac215fdcf2b0.gradio.live"
         self._payload = {
             "restore_faces": True,
             "prompt": None,
             "negative_prompt": None,
-            "batch_size": 4,
+            "batch_size": None,
             "steps": None,
             "cfg_scale": None,
             "width": 512,
@@ -36,10 +36,19 @@ class StableDiffusionAuto1111:
         # self._override_settings = {'sd_model_checkpoint' : "", 'filter_nsfw' : True}
 
 
-    def generate_image(self, image_model_id=None, prompt = None, negative_prompt = None):
+    def generate_image(self, image_model_id=None, prompt = None, negative_prompt = None, batch_size = None):
         
         if image_model_id == None: 
             return None
+        
+        # 배치 사이즈를 None이 아니라는건
+        # 생성할 이미지의 개수를 파라미터로 받았다는 것.
+        # 만약 받지 않았다면 None이니까 그럴때는 4장을 생성.
+        if batch_size is not None:
+            print("여기")
+            self._payload["batch_size"] = batch_size
+        else:
+            self._payload["batch_size"] = 4
         
         '''
         이미지 모델 id가 None이 아니면 실행되게 되고, 이미지 모델 id에 따라서 payload 설정.
@@ -61,20 +70,20 @@ class StableDiffusionAuto1111:
 
                 if response.status_code == 200:
                     r = response.json()
-                    byte_path = []
-                    image = None
+                    byte_path = [i.split(",")[0] for i in r["images"]]
+                    return byte_path
+                    # image = None
                     # 이미지가 담긴 리스트를 가지고 있으니까
-                    for i in r['images']:
+                    # for i in r['images']:
                         # base64로 디코드 하기전 base64문자열을 전달해서 클라이언트에서 처리.
                         # byte_path.append(i[:10])
-                        byte_path.append(i.split(",")[0])
+                        # byte_path.append(i.split(",")[0])
                         # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
                         # image.show()   
                     # base64로 디코드 하지 않은걸 그대로 보내보자 
                     # batch_size만큼 byte_path에 넣어졌고
-                    print(byte_path[0][-20:-1], byte_path[1][-20:-1])
+                    # print(byte_path[0][-20:-1], byte_path[1][-20:-1])
                     # print(r['images'][0][-20:-1], r['images'][1][-20:-1])
-                    return byte_path
                 
             except Exception as e:
                 return e

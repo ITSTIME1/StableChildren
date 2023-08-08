@@ -90,10 +90,10 @@ for (let i = 0; i < gausianScreen.length; i++) {
 }
 
 // 이동해서 오게 된다면 base64ImageUrl을 보게 될거니까
-let val = localStorage.getItem("base64ImageUrl");
-if (val === null) {
-  console.log("null");
-} else {
-  let image = document.getElementById("generate1");
-  image.src = val;
-}
+// let val = localStorage.getItem("base64ImageUrl");
+// if (val === null) {
+//   console.log("null");
+// } else {
+//   let image = document.getElementById("generate1");
+//   image.src = val;
+// }

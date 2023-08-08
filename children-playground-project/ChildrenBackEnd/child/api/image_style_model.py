@@ -3,9 +3,10 @@ from ..constants.constant import Constant
 
 class ImageStyleModel:
     
-    def __init__(self, image_model_id = None, prompts_data = None):
+    def __init__(self, image_model_id = None, prompts_data = None, batch_size = None):
         self._model_id = image_model_id
         self._prompt = prompts_data
+        self._batch_size = batch_size
     
     
     def search_model(self):
@@ -26,7 +27,7 @@ class ImageStyleModel:
         generated_image = None
         
         positive_prompts = f'<lora:brighter-eye1:1>, {", ".join(self._prompt)}, smile, low angle, masterpiece, best quality'
-        negative_prompts = f'(lowres), (bad anatomy:1.2), (bad hands), text, error, (missing fingers), extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ((nsfw)), bad fingers'
+        negative_prompts = f'((lowres)), ((bad anatomy)), ((bad hands)), text, error, (missing fingers), extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ((nsfw)), bad fingers'
         
 
         try:
@@ -35,11 +36,20 @@ class ImageStyleModel:
                                                    vae = "orangemix.vae.pt")
 
             
-            # 모델을 변경해서 얻어낸 status_code 가 정상코드일때
-            if model.change_model() == 200:
+            # 정상 코드일때 배치사이즈를 넘겨 받았는지 받지 않았는지에 따라서 구분.
+            if model.change_model() == 200 and self._batch_size is None:
+                print("배치사이즈가 기본")
                 generated_image = model.generate_image(image_model_id = self._model_id, 
                                                           prompt = positive_prompts, 
                                                           negative_prompt = negative_prompts)
+                
+            elif model.change_model() == 200 and self._batch_size is not None:
+                print("배치사이즈가 지정 되어 있음.")
+                generated_image = model.generate_image(image_model_id = self._model_id, 
+                                                          prompt = positive_prompts, 
+                                                          negative_prompt = negative_prompts,
+                                                          batch_size=self._batch_size)
+                
             
             
         except Exception as e:
