@@ -1,12 +1,10 @@
 const checkWord = document.querySelector(".third-content");
-let wordTarget = null;
+const bulb = document.getElementById("bulb");
 
-// 워드 리스트를 이전 페이지에서 받아오자.
-let wordList = null;
-let prompt = [];
+let wordTarget = null, wordList = null, startPosX = null, startPosY = null;
 let isDragging = false;
-let startPosX = null,
-  startPosY = null;
+let prompt = [];
+
 
 // 처음 시작할때 곰을 그려준다.
 window.onload = function () {
@@ -25,19 +23,13 @@ document.addEventListener("mousemove", (event) => {
 // 곰과 마우스간 상호작용 하는 애니메이션 계산 함수.
 function interact(e, mouse, mouseCenter) {
   // let limitContainer = document.getElementById("bear");
-  let faceContainer = document.getElementById("faceContainer");
-  let nose = document.getElementById("nose");
-  let ears = document.querySelectorAll(".ears");
-  let bearMouse = document.getElementById("mouse");
-  let hands = document.querySelectorAll(".hand");
-  // console.log(ears);
+  const faceContainer = document.getElementById("faceContainer");
+  const nose = document.getElementById("nose");
+  const ears = document.querySelectorAll(".ears");
+  const bearMouse = document.getElementById("mouse");
+  const hands = document.querySelectorAll(".hand");
 
-  var eyeSize = 20,
-    eyeSizeRate = 12,
-    noseMoveRate = 2.5,
-    earMoveRate = 5.5,
-    handMoveRate = 5.5,
-    faceMoveRate = 10;
+  const noseMoveRate = 2.5, earMoveRate = 5.5, handMoveRate = 5.5, faceMoveRate = 10;
 
   // 첫번째 터치지점의 x, y좌표를 만약에 touch이벤트가 존재할 경우에
 
@@ -112,6 +104,7 @@ function mouseTracker(event) {
   interact(event, mouse, mouseCenter);
 }
 
+// 곰 애니메이션
 function polarBear3D() {
   const bearContent = document.querySelector(".hand-bear-content");
   console.log(bearContent);
@@ -411,7 +404,10 @@ function circleSection() {
 
 // 단어 애니메이션 지정 함수.
 function circleAnimation(parent) {
-  console.log(parent);
+  const circles = document.querySelectorAll(".anime-circle");
+  const maxX = parent.offsetWidth - 40;
+  const maxY = parent.offsetHeight - 40;
+
   if (wordList.length != 0) {
     for (let i = 0; i < wordList.length; i++) {
       // circle안에 텍스트가 들어가야 되기 때문에
@@ -427,16 +423,14 @@ function circleAnimation(parent) {
       wordCircleDiv.style.justifyContent = "center";
       wordCircleDiv.style.alignItems = "center";
 
-      // 디브에 워드를 달아둔다음에
       wordCircleDiv.addEventListener("mousedown", (event) => {
         isDragging = true;
-        // 현재 다운된걸 전역변수로 넣어주고
+      
         wordTarget = wordCircleDiv.id;
-        // 시작위치를 저장해둔다.
+      
         startPosX = event.clientX - wordCircleDiv.offsetLeft;
         startPosY = event.clientY - wordCircleDiv.offsetTop;
 
-        // console.log(wordTarget);
       });
 
       let animeCircle = parent.appendChild(wordCircleDiv);
@@ -444,13 +438,7 @@ function circleAnimation(parent) {
     }
   }
 
-  let circles = document.querySelectorAll(".anime-circle");
-  // 340, 270
-  // circle div 를 하나 더 만드는게 좋을거 같네
-  // 그리고 그거의 absolute를 주는게 더 바람직하겠다.
-  const maxX = parent.offsetWidth - 40;
-  const maxY = parent.offsetHeight - 40;
-
+  // 서클 애니메이션
   anime({
     targets: circles,
     background: () => {
@@ -463,9 +451,7 @@ function circleAnimation(parent) {
     borderRadius: () => {
       return anime.random(30, 50);
     },
-    // 뷰포트를 기준으로 하는걸 바꿔야하고
     translateX: () => {
-      // x좌표를 설정해주고
       let x = anime.random(-maxX / 2, maxX / 2) + "px";
       return x;
     },
@@ -491,25 +477,20 @@ function circleAnimation(parent) {
   });
 }
 
-// 단어 드래깅 함수.
+// 단어를 드래깅 할때.
 document.addEventListener("mousemove", (event) => {
-  // 드래깅이 감지되었고 target이 설정되어있다면
   if (isDragging && wordTarget != null) {
-    let s = document.getElementById(wordTarget);
-    // let rect = s.getBoundingClientRect();
-    // console.log(`${rect.left}, ${parseInt(rect.top)}`);
+    let targeted_word = document.getElementById(wordTarget);
 
     let xPos = event.clientX - startPosX;
     let yPos = event.clientY - startPosY;
 
-    // console.log(`${xPos}, ${parseInt(yPos)}`);
-    s.style.left = xPos + "px";
-    s.style.top = parseInt(yPos) + "px";
+    targeted_word.style.left = xPos + "px";
+    targeted_word.style.top = parseInt(yPos) + "px";
   }
-  // console.log(`${event.clientX}, ${event.clientY}`);
 });
 
-// 단어에서 드래깅이 풀렸을때 함수.
+// 단어에서 드래깅이 풀렸을때.
 document.addEventListener("mouseup", () => {
   if (isDragging == true) {
     isDragging = false;
@@ -517,12 +498,10 @@ document.addEventListener("mouseup", () => {
   }
 });
 
-// 프롬포트 확인
+
+
+// 사용할 단어를 확인할대
 checkWord.addEventListener("mouseover", () => {
-  // checkWord에 마우스를 가져다대면 div요소들을 보여주자
-  // 음 어떻게 보여줄 수 있지
-  // 아 감추면 되는구over했을때는 보여주고
-  // mouse가 over 되었을 때는 다시 보여주면 되니까
   if (checkWord.innerText == "요기!") {
     checkWord.innerText = "";
   } else {
@@ -534,6 +513,7 @@ checkWord.addEventListener("mouseover", () => {
   }
 });
 
+// 사용할 단어를 확인하는 곳에서 마우스가 벗어났을때
 checkWord.addEventListener("mouseleave", () => {
   if (checkWord.children.length != 0) {
     for (let i = 0; i < checkWord.children.length; i++) {
@@ -543,10 +523,8 @@ checkWord.addEventListener("mouseleave", () => {
 });
 
 
-// 버튼 클릭하면 다른 화면으로
-const bulb = document.getElementById("bulb");
+
+// 클릭시 모델 선택 페이지 이동.
 bulb.addEventListener("click", ()=>{
-  // location 이동.
-  // 여기 까지 완료.
   window.location.href="model_choice_page/";
 });

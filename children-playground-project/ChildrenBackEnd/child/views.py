@@ -1,8 +1,9 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
+from django.http import JsonResponse 
 from django.http import JsonResponse as json
 from django.templatetags.static import static
 from .api.image_style_model import ImageStyleModel
+# 상위 폴더에서는 상대경로를 사용할 수 있다.
 from .api.translate import TransLate
 import json
 
@@ -19,7 +20,7 @@ def manager_page(request):
 '''
 ( 아이들 교육 파일 ) 렌더링 함수.
 '''
-def child_page(request):
+def main_page(request):
     # 요청 method가 get일때 정적 파일을 넘겨준다.
     
     return render(request, 'child/main.html')
@@ -45,73 +46,75 @@ def loading_page(request):
     return render(request, 'child/loading.html')
 
 '''
+미디어 파이프 테스트 웹 페이지
+'''
+def mediapipe_test(request):
+    return render(request, 'child/mediapipe_test.html')
+
+
+'''
 모델 선택.
 '''
 def get_image(request):
     if request.method == "POST":
-        print("잘옴")
-        # @body = 바이트 객체를 json으로 변환 후 디코드해서 데이터를 유니코드화.
-        # @request_body = json 객체로 변환된 데이터 중 'params' 데이터에 접근.
+        
         body = json.loads(request.body.decode("utf-8"))
         request_body = body['params']
 
         
-        # @image_model_id = 이미지 모델을 파싱해서 저장.
-        # @prompts_data =  이중 리스트로 오기 때문에 [0]요소 접근(모든데이터)
         image_model_id = request_body["image_model"]
-        # 리스트 타입으로 오니까
-        # 해당 리스트 타입을 가지고 번역을 할 필요가 있겠구만
         prompt = request_body["prompt"] 
         
-        translated_prompt = TransLate().translate(prompt)
-        
-        print(image_model_id, translated_prompt)
-        # 이미지 모델 id 가 none?
-        result = ImageStyleModel(image_model_id=image_model_id, prompts_data=translated_prompt)
-        # base64로 인코드 되어 있는걸 보낸다.
-        path = result.search_model()
-        # print(f'반환받은 개수 {len(path)}')
-        payload = {
-            "imagesByteString" : path,
-        }
-        return JsonResponse(payload)
-    else:
-        return HttpResponse("Post Test Success")
+        # 프롬포트가 없다면 400에러
+        if len(prompt) == 0:
+            payload = {
+                'status_code' : 400,
+            }
+            return JsonResponse(payload)
+        else:
+            
+            selected_model = ImageStyleModel(image_model_id = image_model_id, 
+                                     prompts_data = TransLate().translator(prompt))
+            
+            base64Encoding = selected_model.search_model()
+            
+            payload = {
+                "imagesByteString" : base64Encoding,
+                'status_code' : 200,
+            }
+            return JsonResponse(payload)
     
 
+'''
+이미지 재생성.
+'''
 def get_regenerate_image(request):
     if request.method == "POST":
-        print("RegenerateImage Processing")
-        # @body = 바이트 객체를 json으로 변환 후 디코드해서 데이터를 유니코드화.
-        # @request_body = json 객체로 변환된 데이터 중 'params' 데이터에 접근.
+        
         body = json.loads(request.body.decode("utf-8"))
         request_body = body['params']
 
         
-        # @image_model_id = 이미지 모델을 파싱해서 저장.
-        # @prompts_data =  이중 리스트로 오기 때문에 [0]요소 접근(모든데이터)
         image_model_id = request_body["image_model"]
         prompt = request_body["prompt"] 
         batch_size = request_body["batch_size"]
         
-        translated_prompt = TransLate().translate(prompt)
-        
-        # 배치사이즈 추가
-        print(image_model_id, translated_prompt, batch_size)
-        
-        # 이미지 모델 id 가 none?
-        result = ImageStyleModel(image_model_id=image_model_id, 
-                                 prompts_data=translated_prompt, 
-                                 batch_size=batch_size)
-        
-        # base64로 인코드 되어 있는걸 보낸다.
-        # 왜 한개일때 문제가 생기지.
-        path = result.search_model()
-        # print(f'반환받은 개수 {len(path)}')
-        print(path)
-        payload = {
-                "regenerate_base64_image" : path,
-        }
-        return JsonResponse(payload)
-    else:
-        return HttpResponse("Post Test Success")
+        # 프롬포트가 없다면 400에러
+        if len(prompt) == 0:
+            payload = {
+                'status_code': 400,
+            }
+            return JsonResponse(payload)
+        else:
+            
+            selected_model = ImageStyleModel(image_model_id=image_model_id, 
+                                     prompts_data=TransLate().translator(prompt), 
+                                     batch_size=batch_size)
+
+            base64Encoding = selected_model.search_model()
+
+            payload = {
+                    "regenerate_base64_image" : base64Encoding,
+                    "status_code": 200,
+            }
+            return JsonResponse(payload)

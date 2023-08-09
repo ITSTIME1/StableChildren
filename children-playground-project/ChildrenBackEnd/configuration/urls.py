@@ -26,4 +26,5 @@ urlpatterns = [
     path('regenerate/', include("child.urls")),
     path("manager/", include("child.urls")),
     path("child/", include("child.urls")),
+    path("mediapipeTest/", include("child.urls")),
 ]

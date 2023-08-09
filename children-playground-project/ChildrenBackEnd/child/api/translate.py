@@ -4,7 +4,7 @@ import urllib.request
 '''
     papago translate api
 '''
-class TransLate:
+class TransLate():
     def __init__(self):
         self._endPoint = "https://openapi.naver.com/v1/papago/n2mt"
         self._apiKey = ""
@@ -15,8 +15,7 @@ class TransLate:
         self._secretKey = "OC9oYBFI45"
         
     
-    
-    def translate(self, prompt):
+    def translator(self, prompt):
         try:
             request = urllib.request.Request(self._endPoint)
             request.add_header("X-Naver-Client-Id", self._clientID)
@@ -33,18 +32,3 @@ class TransLate:
                 return translated_text
         except Exception as e:
             return e
-
-
-# {
-#     "message": {
-#         "result": {
-#             "srcLangType": "ko",
-#             "tarLangType": "en",
-#             "translatedText": "Cherry blossoms, words, trees",
-#             "engineType": "N2MT"
-#         },
-#         "@type": "response",
-#         "@service": "naverservice.nmt.proxy",
-#         "@version": "1.0.0"
-#     }
-# }

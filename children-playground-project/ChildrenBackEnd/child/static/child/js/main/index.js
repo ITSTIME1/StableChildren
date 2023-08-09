@@ -1,6 +1,16 @@
-import { wordArea, completeBtn, title, gausianScreen} from "../constants/constant.js";
+import {
+  wordArea,
+  completeBtn,
+  title,
+  gausianScreen,
+} from "../constants/constant.js";
 
+
+const image_section = document.querySelectorAll(".generate-image");
 let wordList = [];
+
+
+
 
 // 제목을 입력하기 위한 함수.
 title.addEventListener("click", (event) => {
@@ -64,29 +74,27 @@ completeBtn.addEventListener("click", async () => {
   // hand_detection 페이지 요청
   // 로컬 스토리지를 활용해서 wordList를 저장
   localStorage.setItem("wordList", JSON.stringify(wordList));
-  console.log(localStorage.getItem("wordList"))
-  window.location.href = 'hand_detection_page/';
+  console.log(localStorage.getItem("wordList"));
+  window.location.href = "hand_detection_page/";
 });
-
 
 // 로컬 스토리지에 base 64파일이 저장되어 있는지 확인하고
 // 바로 base64가 적용되니는지 보자.
 // 어짜피 서버에서 base64로 인코딩된 문자열을 결과로 받아오니까
 // 나는 그 스트링을 가지고 바로 보여주기만 하면되는데
 
-
 // val이 null이 아닌경우 로컬 스토리지에 이미지가 있다는거니까
 // 이미지를 저장해주자.
 
 // gausian 올렸을때 img 사라지게 하자
 for (let i = 0; i < gausianScreen.length; i++) {
-  const bearImageIcon = document.getElementById(`bear-image-${i+1}`);
-  gausianScreen[i].addEventListener("mouseover", ()=> {
+  const bearImageIcon = document.getElementById(`bear-image-${i + 1}`);
+  gausianScreen[i].addEventListener("mouseover", () => {
     bearImageIcon.style.visibility = "hidden";
   });
-  gausianScreen[i].addEventListener("mouseleave", ()=>{
+  gausianScreen[i].addEventListener("mouseleave", () => {
     bearImageIcon.style.visibility = "visible";
-  })
+  });
 }
 
 // 이동해서 오게 된다면 base64ImageUrl을 보게 될거니까
@@ -97,3 +105,29 @@ for (let i = 0; i < gausianScreen.length; i++) {
 //   let image = document.getElementById("generate1");
 //   image.src = val;
 // }
+
+// base64이미지 체크
+// 이동할때 confirm상ㅌ가 왜 초기화 되는거지
+// 음 페이지가 이동해서 원래 있던 값을
+// 이동을 한 뒤에 Manage에서 true로 바꾼 값을 저렇게 만드는데.
+function checkbase64() {
+
+  let confirmed = JSON.parse(localStorage.getItem("confirm"));
+  console.log(`관리자 승인 상태 ${confirmed}`);
+
+
+  // 관리자 페이지에서 승인을 해주었을때.
+  if (confirmed) {
+    let base64UrlString = JSON.parse(localStorage.getItem("base64ImageUrl"));
+    for (let i = 0; i < image_section.length; i++) {
+      image_section[i].src = `data:image/png;base64,${base64UrlString[i]}`;
+    }
+    localStorage.setItem("confirm", JSON.stringify(false));
+    setTimeout(()=>{
+      alert("저 왔어요!");
+    }, 1000);
+  } 
+
+
+}
+setInterval(checkbase64, 5000);

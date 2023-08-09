@@ -285,7 +285,7 @@ div[class="text-area-section"] > textarea {
     border: 2px solid #31a6dc;
 }
 
-#generate1 {
+.generate-image {
     border-radius: 10px;
     width: 100%;
 }

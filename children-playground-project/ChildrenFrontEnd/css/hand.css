@@ -1,0 +1,40 @@
+body {
+  bottom: 0;
+  font-family: 'Titillium Web', sans-serif;
+  color: white;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform-origin: 0px 0px;
+  overflow: hidden;
+}
+ 
+.container {
+  position: absolute;
+  background-color: #596e73;
+  width: 100%;
+  max-height: 100%;
+}
+ 
+.input_video {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  &.selfie {
+    transform: scale(-1, 1);
+  }
+}
+ 
+ 
+.output_canvas {
+  max-width: 100%;
+  display: block;
+  position: relative;
+  left: 0;
+  top: 0;
+}

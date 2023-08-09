@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - MediaPipe HandLandmarker Task for web</title>
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'child/css/mediapipe_test.css'%}">
+
+</head>
+<body>
+  <button id="webcamButton" class="mdc-button mdc-button--raised">
+    <span class="mdc-button__ripple"></span>
+    <span class="mdc-button__label">ENABLE WEBCAM</span>
+  </button>
+  
+  <div id="liveView" class="videoView">
+
+    <div class = "mainView">
+      <video id="webcam" style="position: abso" autoplay playsinline></video>
+    </div>
+
+    <canvas class="output_canvas" id="output_canvas"></canvas>
+  </div>
+
+  <script type="module" src="{% static 'child/js/api/mediapipe_test.js'%}"></script>
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</body>
+</html>

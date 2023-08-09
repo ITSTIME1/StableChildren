@@ -1,11 +1,5 @@
 import sys, random, requests, io, base64
 from PIL import Image, PngImagePlugin
-# from ..models import SaveImage
-from datetime import datetime as dt
-from datetime import time
-from django.utils import timezone
-
-INF = 100000
 
 class StableDiffusionAuto1111:
     def __init__(self, lora=None, model=None, vae=None):
@@ -13,7 +7,7 @@ class StableDiffusionAuto1111:
         self._lora = lora
         self._model = model
         self._vae = vae
-        self._end_point = "https://71134cac215fdcf2b0.gradio.live"
+        self._end_point = "https://7bc00fe7031f0ac18a.gradio.live"
         self._payload = {
             "restore_faces": True,
             "prompt": None,

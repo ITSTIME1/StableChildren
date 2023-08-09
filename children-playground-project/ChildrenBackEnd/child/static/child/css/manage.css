@@ -48,23 +48,18 @@ div[class=teacher-image-section] > div[class="teacher-four-section"]{
 
 /* 이미지 박스 */
 div[class~=teacher-generated-box] {
+    position: relative;
     box-sizing: border-box;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    margin: 30px;
+    /* 222 * 435 */
     width: 70%;
     height: 90%;
     border-radius: 10px;
-    /* border: 2px solid #4a8cab; */
-    /* box-shadow: 0px 5px 10px 0.4px #969f9f;; */
     background-color: #ffffff;
+    margin: 30px;
     /* animation-name: image-box; */
-    animation-delay: 1.2s;
-    animation-duration: 2s, 0.2s;
-    animation-timing-function: cubic-bezier(0.95, 0.05, 0.795, 0.035);
-    animation-fill-mode: both;
-    position: relative;
 }
 
 div[class="footer-section"] {
@@ -90,7 +85,7 @@ div[class="footer-section"] > div[class="button-section"] {
     background-color: var(--agree-button-background-color);
     font-size: 1rem;
     border-radius: 20px;
-    border: none;
+    border: 1px solid black;
     cursor: pointer;
 }
 #agree:hover {
@@ -100,9 +95,21 @@ div[class="footer-section"] > div[class="button-section"] {
 #regenerate {
     background-color: var(--generate-button-background-colir);
     border-radius: 20px;
+    font-size: 1rem;
     cursor: pointer;
-    border: none;
+    border: 1px solid black;
 }
 #regenerate:hover {
     transform: scale(1.12);
+}
+
+/* 이미지의 원본을 유지한채로 잘리지 않고 넣어주는 방법은 뭐가 있을까. */
+/* object-fit은 종횡비는 유지하면서 만약 채워지는 공간과 비율이 맞지 않는다면 확대해서 채우게 되니까 */
+.check-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+
 }
