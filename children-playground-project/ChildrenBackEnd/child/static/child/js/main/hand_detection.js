@@ -1,86 +1,29 @@
 const checkWord = document.querySelector(".third-content");
 const bulb = document.getElementById("bulb");
 
-let wordTarget = null, wordList = null, startPosX = null, startPosY = null;
+let wordTarget = null,
+  wordList = null,
+  startPosX = null,
+  startPosY = null;
 let isDragging = false;
 let prompt = [];
 
-
 // 처음 시작할때 곰을 그려준다.
-window.onload = function () {
-  if (localStorage.getItem("wordList")) {
-    wordList = JSON.parse(localStorage.getItem("wordList"));
-  }
-  polarBear3D();
-  circleSection();
-};
+if (localStorage.getItem("wordList")) {
+  wordList = JSON.parse(localStorage.getItem("wordList"));
+}
+
+polarBear3D();
+circleSection();
 
 // 마우스가 움직일때마다 마우스 트랙킹.
 document.addEventListener("mousemove", (event) => {
   mouseTracker(event);
 });
 
-// 곰과 마우스간 상호작용 하는 애니메이션 계산 함수.
-function interact(e, mouse, mouseCenter) {
-  // let limitContainer = document.getElementById("bear");
-  const faceContainer = document.getElementById("faceContainer");
-  const nose = document.getElementById("nose");
-  const ears = document.querySelectorAll(".ears");
-  const bearMouse = document.getElementById("mouse");
-  const hands = document.querySelectorAll(".hand");
-
-  const noseMoveRate = 2.5, earMoveRate = 5.5, handMoveRate = 5.5, faceMoveRate = 10;
-
-  // 첫번째 터치지점의 x, y좌표를 만약에 touch이벤트가 존재할 경우에
-
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-  // console.log(mouse.x);
-  // console.log(mouse.x);
-  // 얼굴 이동비율에 대해서 얼마나 떨어져 있는가를 나타내는것
-  let dx = (mouse.x - mouseCenter.x) / faceMoveRate;
-  let dy = (mouse.y - mouseCenter.y) / faceMoveRate;
-
-  // 얼굴 비율 조절
-  translate(faceContainer, dx * 0.2, dy * 0.2);
-
-  // 귀 비율 조절
-  for (let i = 0; i < ears.length; i++) {
-    translate(ears[i], -dx / earMoveRate, -dy / earMoveRate);
-  }
-
-  // 손 비율 조절
-  for (let i = 0; i < hands.length; i++) {
-    translate(hands[i], -dx / handMoveRate, -dy / handMoveRate);
-  }
-
-  // 코비율 조절
-  translate(nose, dx * 0.2, dy * 0.2);
-  translate(nose, dx * 0.2, dy * 0.2);
-  // 입비율 조절
-
-  if (dx < 0) {
-    translate(bearMouse, dx * 0.3, dy * 0.2);
-    scale(bearMouse, dx * -3);
-  } else {
-    translate(bearMouse, dx * 0.3, dy * 0.2);
-    scale(bearMouse, dx * 3);
-  }
-
-  if (dy < 0) {
-    scale(bearMouse, dy * -0.03);
-  } else {
-    scale(bearMouse, dy * 0.03);
-  }
-
-  // console.log(`${dx}, ${dy}`);
-  // 음영 비율 조절
-  translate(phizContainer, dx / noseMoveRate, dy / noseMoveRate);
-}
-
 // 위치 이동 함수.
 function translate(selector, x, y) {
-  selector.style.transform = "translate(" + x + "px," + y + "px)";
+  selector.style.transform = `translate(${x}px, ${y}px)`;
 }
 
 // 입 크기 증가 함수.
@@ -104,10 +47,72 @@ function mouseTracker(event) {
   interact(event, mouse, mouseCenter);
 }
 
+// 곰과 마우스간 상호작용 하는 애니메이션 계산 함수.
+function interact(e, mouse, mouseCenter) {
+  const bearContainer = document.getElementById("bear");
+  const faceContainer = document.getElementById("faceContainer");
+  const handContainer = document.getElementById("handContainer");
+  const nose = document.getElementById("nose");
+  const ears = document.querySelectorAll(".ears");
+  const bearMouse = document.getElementById("mouse");
+  const hands = document.querySelectorAll(".hand");
+
+  const noseMoveRate = 2.5,
+    earMoveRate = 5.5,
+    handMoveRate = 5.5,
+    faceMoveRate = 10;
+
+  // 첫번째 터치지점의 x, y좌표를 만약에 touch이벤트가 존재할 경우에
+
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  // console.log(mouse.x);
+  // console.log(mouse.x);
+  // 얼굴 이동비율에 대해서 얼마나 떨어져 있는가를 나타내는것
+  let dx = (mouse.x - mouseCenter.x) / faceMoveRate;
+  let dy = (mouse.y - mouseCenter.y) / faceMoveRate;
+
+  // 몸통 비율 조절
+  translate(bearContainer, dx * 0.2, dy * 0.2);
+  // 얼굴 비율 조절
+  translate(faceContainer, dx * 0.2, dy * 0.2);
+
+  // 귀 비율 조절
+  for (let i = 0; i < ears.length; i++) {
+    translate(ears[i], -dx / earMoveRate, -dy / earMoveRate);
+    scale(ears[i], -1.2);
+  }
+
+  // 손 비율 조절
+  for (let i = 0; i < hands.length; i++) {
+    translate(hands[i], -dx / handMoveRate, -dy / handMoveRate);
+  }
+
+  // 코비율 조절
+  translate(nose, dx * 0.2, dy * 0.2);
+
+  // 핸드 컨테이너 조절
+  translate(handContainer, dx * 0.2, dy * 0.2);
+
+  // 입비율 조절
+  if (dx < 0) {
+    translate(bearMouse, dx * 0.3, dy * 0.2);
+    scale(bearMouse, dx * -3);
+  } else {
+    translate(bearMouse, dx * 0.3, dy * 0.2);
+    scale(bearMouse, dx * 3);
+  }
+
+  if (dy < 0) {
+    scale(bearMouse, dy * -0.03);
+  } else {
+    scale(bearMouse, dy * 0.03);
+  }
+}
+
 // 곰 애니메이션
 function polarBear3D() {
   const bearContent = document.querySelector(".hand-bear-content");
-  console.log(bearContent);
   const bear = document.createElement("div");
   bear.setAttribute("id", "bear");
   const bearCSS = bear.style;
@@ -117,7 +122,7 @@ function polarBear3D() {
   bearCSS.position = "absolute";
   bearCSS.bottom = "0";
   bearCSS.width = "20vw";
-  bearCSS.height = "34vh";
+  bearCSS.height = "32vh";
   bearCSS.borderRadius = "220px 220px 0 0";
   bearCSS.backgroundColor = "white";
 
@@ -125,6 +130,7 @@ function polarBear3D() {
 
   // 손 박스
   const handContainer = document.createElement("div");
+  handContainer.setAttribute("id", "handContainer");
   const handContainerCSS = handContainer.style;
   handContainerCSS.position = "absolute";
   handContainerCSS.display = "flex";
@@ -334,7 +340,7 @@ function polarBear3D() {
   phizContainer.appendChild(mouse);
   // console.log(phizContainerDiv);
 
-  // bear영역에 왔다면
+  // bear영역에 단어를 끌어 왔다면
   bear.addEventListener("mouseover", () => {
     // 특정 단어를 잡아서 드래깅 하고 있다면
     if (wordTarget != null && isDragging) {
@@ -404,40 +410,38 @@ function circleSection() {
 
 // 단어 애니메이션 지정 함수.
 function circleAnimation(parent) {
-  const circles = document.querySelectorAll(".anime-circle");
   const maxX = parent.offsetWidth - 40;
   const maxY = parent.offsetHeight - 40;
 
-  if (wordList.length != 0) {
-    for (let i = 0; i < wordList.length; i++) {
-      // circle안에 텍스트가 들어가야 되기 때문에
-      const wordCircleDiv = document.createElement("word-circle");
-      const divInnerText = document.createTextNode(wordList[i]);
+  // 단어가 존재하지 않을때는 서클을 생성할 수 없음.
+  // 단어를 생성한다음에
+  for (let i = 0; i < wordList.length; i++) {
+    // circle안에 텍스트가 들어가야 되기 때문에
+    const wordCircleDiv = document.createElement("word-circle");
+    const divInnerText = document.createTextNode(wordList[i]);
 
-      wordCircleDiv.setAttribute("id", `wordCircle-${i}`);
-      wordCircleDiv.appendChild(divInnerText);
+    wordCircleDiv.setAttribute("id", `wordCircle-${i}`);
+    wordCircleDiv.appendChild(divInnerText);
 
-      wordCircleDiv.style.boxSizing = "border-box";
-      wordCircleDiv.style.position = "absolute";
-      wordCircleDiv.style.display = "flex";
-      wordCircleDiv.style.justifyContent = "center";
-      wordCircleDiv.style.alignItems = "center";
+    wordCircleDiv.style.boxSizing = "border-box";
+    wordCircleDiv.style.position = "absolute";
+    wordCircleDiv.style.display = "flex";
+    wordCircleDiv.style.justifyContent = "center";
+    wordCircleDiv.style.alignItems = "center";
 
-      wordCircleDiv.addEventListener("mousedown", (event) => {
-        isDragging = true;
-      
-        wordTarget = wordCircleDiv.id;
-      
-        startPosX = event.clientX - wordCircleDiv.offsetLeft;
-        startPosY = event.clientY - wordCircleDiv.offsetTop;
+    wordCircleDiv.addEventListener("mousedown", (event) => {
+      isDragging = true;
+      wordTarget = wordCircleDiv.id;
 
-      });
+      startPosX = event.clientX - wordCircleDiv.offsetLeft;
+      startPosY = event.clientY - wordCircleDiv.offsetTop;
+    });
 
-      let animeCircle = parent.appendChild(wordCircleDiv);
-      animeCircle.classList.add("anime-circle");
-    }
+    let animeCircle = parent.appendChild(wordCircleDiv);
+    animeCircle.classList.add("anime-circle");
   }
-
+  let circles = document.querySelectorAll(".anime-circle");
+  console.log(circles);
   // 서클 애니메이션
   anime({
     targets: circles,
@@ -498,9 +502,7 @@ document.addEventListener("mouseup", () => {
   }
 });
 
-
-
-// 사용할 단어를 확인할대
+// 사용할 단어를 확인할때
 checkWord.addEventListener("mouseover", () => {
   if (checkWord.innerText == "요기!") {
     checkWord.innerText = "";
@@ -519,12 +521,12 @@ checkWord.addEventListener("mouseleave", () => {
     for (let i = 0; i < checkWord.children.length; i++) {
       checkWord.childNodes[i].style.visibility = "hidden";
     }
+  } else {
+    checkWord.innerText = "요기!";
   }
 });
 
-
-
 // 클릭시 모델 선택 페이지 이동.
-bulb.addEventListener("click", ()=>{
-  window.location.href="model_choice_page/";
+bulb.addEventListener("click", () => {
+  window.location.href = "model_choice_page/";
 });

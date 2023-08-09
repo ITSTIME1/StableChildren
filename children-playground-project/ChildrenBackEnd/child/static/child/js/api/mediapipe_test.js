@@ -1,6 +1,14 @@
 
 /**
- * @TODO Test 해보자.
+ hand_detection 페이지로 오게 되면 캠 검사를 수행하고 캠이 존재한다면 그 캠을 통해서 모션을 인식할 수 있도록 하는데
+ 그러면 핸드 페이지로 왔을때 캠 검사 후 확인이 되면 화면에 나타나게 할건지다. 아이들이 구지 일어나는 것 없이 그냥 앉아서 할 수 있도록 비율을 조정하면 ..
+ 아이들의 손이 움직이는걸 구지 보여주겠다면 그걸 확인시켜주는 페이지로 이동해주면 되겠지만 그게 아니라면 손 모양의 아이콘을 통해서 핸드를 인식하면 좋을거 같은데.
+ 이게 또 마우스 트랙킹 기술이 필요로 되어질거 같고 그럼 일단 핸드 디텍션 자체를 보여주지 말고 마우스를 다른 손 잡이 같은 걸로 바꿔보는게 좋을거 같다.
+ 손을 움직이면 자바스크립트에서 손을 인식하고 옮겨지는 방법이 필요하다.
+ 그렇게 하려면 손을 옮기게 되면 마우스의 좌표가 내가 지금 영상으로 움직인 좌표로 이동 해야 된다는 걸 의미한다.
+ 그러면 일단 이 미디어 파이프 인식을 hand_detection에서 하는게 매우 중요할거 같다.
+ 그럼 우선적으로 미디이 파이프를 핸드 디텍션에다가 지정해주고 전부다 지정이 되었다면
+ css를 통해서 웹 캠은 가리고 손 모양만 즉 캔버스만 나오게 하면 될거 같다.
  */
 import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
 const demosSection = document.getElementById("demos");
@@ -23,11 +31,8 @@ const createHandLandmarker = async () => {
     });
 };
 
-// 
 createHandLandmarker();
-/********************************************************************
-// Demo 2: Continuously grab image from webcam stream and detect it.
-********************************************************************/
+
 const video = document.getElementById("webcam");
 const canvasElement = document.getElementById("output_canvas");
 const canvasCtx = canvasElement.getContext("2d");
@@ -49,7 +54,7 @@ else {
 
 // 여기서부터가 실제 웹캠이 켜지면서 동작하는 곳.
 // Enable the live webcam view and start detection.
-function enableCam(event) {
+function enableCam() {
     if (!handLandmarker) {
         console.log("Wait! objectDetector not loaded yet.");
         return;

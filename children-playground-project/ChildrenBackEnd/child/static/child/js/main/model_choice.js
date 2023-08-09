@@ -20,15 +20,15 @@ for (let i = 0; i < slide.length; i++) {
     gausianScreen.style.justifyContent = "center";
     gausianScreen.style.alignItems = "center";
     gausianScreen.style.textAlign = "center";
-    gausianScreen.style.color = "white";
-    gausianScreen.style.fontSize = "1rem";
+    gausianScreen.style.color = "cyan";
+    gausianScreen.style.fontSize = "1.5rem";
 
     if (event.target.id === "s1") {
       gausianScreen.innerText =
-        "화창한 봄날, 따스한 햇살\n기분이 좋아질 것 같은데요?";
+        "선택 ✓";
     } else {
       gausianScreen.innerText =
-        "전통적인 느낌이 굉장히 많이 느껴져요!\n이것도 궁금해 지는데요?";
+      "선택 ✓";
     }
 
 
