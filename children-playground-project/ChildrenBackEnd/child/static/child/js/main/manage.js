@@ -8,9 +8,14 @@ import { regenerate_image } from "../api/stablediffusion_api.js";
  * base64배열에서 원래 index를 삭제하고 현재 받아온 base64인코딩 값으로 대체. (okay)
  * 이후 storage에 다시 저장. (okay)
  * 재생성 버튼을 클릭하면 선택한 가우시안이 전부 해제. 이후 해당 프롬포트를 가지고 다시 재생성. (okay)
- * mediapipe pythond에서 javascript로 변경 jsDeliver사용해서 cdn으로 서버에서 제공해주게끔 하는게 좋을거 같음.
+ * mediapipe pythond에서 javascript로 변경 jsDeliver사용해서 cdn으로 서버에서 제공해주게끔 하는게 좋을거 같음. (okay)
  * main에서 승인된 사진 보여주기. (okay)
  * 로그인 페이지를 만들어서 기존에 만들어 두었던 것들을 커뮤니티 형식으로 보여주는 기능도 좋겠다. 한명만 사용하는게 아닌 여러명이 사용한다고 가정한다면
+ * anime 오류 고치기 (okay)
+ * mediapipe 테스트 (okay)
+ * Toast library 적용(okay)
+ * 이미지 모델 한개만 선택하도록 구현 
+ * mediapipe 캔버스 영역 어떻게 할건지 구현 아이디어 생각하기.
  */
 
 const image_section = document.querySelectorAll(".check-image");

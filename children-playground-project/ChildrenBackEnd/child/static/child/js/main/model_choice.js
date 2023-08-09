@@ -47,7 +47,7 @@ for (let i = 0; i < slide.length; i++) {
 }
 
 getImagebulb.addEventListener("click", async () => {
- 
+  
   if (imageModel !== null) {
     
     let array = JSON.parse(localStorage.getItem("wordList"));
@@ -75,7 +75,19 @@ getImagebulb.addEventListener("click", async () => {
   } else {
     // 스타일을 선택하지 않았을때 알림.
     setTimeout(()=>{
-      alert("스타일을 선택해 주세요!");
+      Toastify({
+        text: "스타일을 선택하지 않았어요!",
+        duration: 3000,
+        newWindow: false,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, #DB9393, #F0CACA)",
+        },
+        onClick: function(){} // Callback after click
+      }).showToast();
     }, 1000);
     
   }

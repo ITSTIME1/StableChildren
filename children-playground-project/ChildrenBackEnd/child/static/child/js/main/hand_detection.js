@@ -1,3 +1,187 @@
+import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+
+let handLandmarker = undefined;
+let runningMode = "video";
+let enableWebcamButton;
+let webcamRunning = false;
+// getUsermedia parameters.
+let constraints = {
+  video: true,
+};
+
+// 손 인식 개수는 1개
+const createHandLandmarker = async () => {
+  const vision = await FilesetResolver.forVisionTasks(
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+  );
+  handLandmarker = await HandLandmarker.createFromOptions(vision, {
+    // GPU 사용
+    baseOptions: {
+      modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+      delegate: "GPU",
+    },
+    runningMode: runningMode,
+    numHands: 1,
+  });
+};
+
+createHandLandmarker();
+
+const video = document.getElementById("webcam");
+const canvasElement = document.getElementById("output_canvas");
+const canvasCtx = canvasElement.getContext("2d");
+
+// Check if webcam access is supported.
+const hasGetUserMedia = () => {
+  var _a;
+  return !!((_a = navigator.mediaDevices) === null || _a === void 0
+    ? void 0
+    : _a.getUserMedia);
+};
+
+// 웹캠을 가지고 있는지 가지고 있지 않은지를 검사하는거고
+if (hasGetUserMedia()) {
+  enableWebcamButton = document.getElementById("webcamButton");
+  enableWebcamButton.addEventListener("click", enableCam);
+} else {
+  console.warn("getUserMedia() is not supported by your browser");
+}
+
+// 여기서부터가 실제 웹캠이 켜지면서 동작하는 곳.
+// Enable the live webcam view and start detection.
+function enableCam() {
+  if (!handLandmarker) {
+    setTimeout(() => {
+      Toastify({
+        text: "아직 인식 준비중 입니다!",
+        duration: 3000,
+        newWindow: false,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+          background: "linear-gradient(to right, #DB9393, #F0CACA)",
+        },
+        onClick: function () {}, // Callback after click
+      }).showToast();
+    }, 1000);
+    console.log("Wait! objectDetector not loaded yet.");
+    return;
+  } else {
+    // 만약 webcam이 돌아가고 있는데 누르는건 이미 인식을 하고 있는데 누르는거니까
+    // 표시하지 않고
+    // 만약 webcam이 돌아가 있지 않은 상태라면 보여준다.
+    if (!webcamRunning) {
+      console.log(handLandmarker);
+      setTimeout(() => {
+        Toastify({
+          text: "인식 완료!",
+          duration: 1500,
+          newWindow: false,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "center", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, #DB9393, #F0CACA)",
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }, 1000);
+    } else {
+      // webcam이 돌아가고 있는 상태에서 취소를 누른 것이기 때문에 인식 종료
+      setTimeout(() => {
+        Toastify({
+          text: "인식 종료!",
+          duration: 1500,
+          newWindow: false,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "center", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "linear-gradient(to right, #DB9393, #F0CACA)",
+          },
+          onClick: function () {}, // Callback after click
+        }).showToast();
+      }, 1000);
+    }
+  }
+
+  // 웹캠 돌아가냐 안돌아가냐에 따라서 텍스트 변경.
+  if (webcamRunning === true) {
+    webcamRunning = false;
+    // 웹캠을 끄고 캠버스를 지움
+    enableWebcamButton.innerText = "인식";
+  } else {
+    webcamRunning = true;
+    enableWebcamButton.innerText = "해제";
+  }
+  // Activate the webcam stream.
+  // stream을 받으면 영상 출력.
+  navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+    video.srcObject = stream;
+    // 여기서 캠에서 예측하는게 함수가 실행되고
+    // 즉 카메라로부터 stream으로 데이터를 계속 받아오면 predictwebcam에서 인지하고
+    // 실행한다.
+    video.addEventListener("loadeddata", predictWebcam);
+  });
+}
+
+let lastVideoTime = -1;
+let results = undefined;
+
+async function predictWebcam() {
+  // 요소 자체를 video의 크기로 설정하는데
+  // 음
+  canvasElement.width = video.videoWidth;
+  canvasElement.height = video.videoHeight;
+
+  // 1920 , 1080
+  // console.log(canvasElement.width);
+  // console.log(canvasElement.height);
+  // Now let's start detecting the stream.
+  // 시작 시간을 체크
+  let startTimeMs = performance.now();
+  // 마지막시간이 현재 시작한 시간이 아니라면
+  if (lastVideoTime !== video.currentTime) {
+    // 마지막으로 비디오를 실행한 시점을 현재 시점으로 바꿔준다.
+    lastVideoTime = video.currentTime;
+    results = handLandmarker.detectForVideo(video, startTimeMs);
+  }
+  // 좌우 반전을 해결하는 코드.
+  canvasCtx.translate(video.videoWidth, 0);
+  canvasCtx.scale(-1, 1);
+  canvasCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+  canvasCtx.save();
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+  if (results.landmarks) {
+    for (const landmarks of results.landmarks) {
+      // 라인
+      drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+        color: "white",
+        lineWidth: 2,
+      });
+      // 서클
+      drawLandmarks(canvasCtx, landmarks, { color: "#FFCC33", lineWidth: 2 });
+    }
+  }
+  canvasCtx.restore();
+  // Call this function again to keep predicting when the browser is ready.
+  if (webcamRunning === true) {
+    window.requestAnimationFrame(predictWebcam);
+  } else {
+    // 웹캠이 돌아가고 있지 않다면 삭제하자.
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  }
+}
+
+// mediapie_code
+//##################################
+// animation_code
+
 const checkWord = document.querySelector(".third-content");
 const bulb = document.getElementById("bulb");
 
@@ -440,8 +624,9 @@ function circleAnimation(parent) {
     let animeCircle = parent.appendChild(wordCircleDiv);
     animeCircle.classList.add("anime-circle");
   }
+
   let circles = document.querySelectorAll(".anime-circle");
-  console.log(circles);
+
   // 서클 애니메이션
   anime({
     targets: circles,
@@ -528,5 +713,22 @@ checkWord.addEventListener("mouseleave", () => {
 
 // 클릭시 모델 선택 페이지 이동.
 bulb.addEventListener("click", () => {
-  window.location.href = "model_choice_page/";
+  console.log(prompt.length);
+  if (prompt.length === 0) {
+    Toastify({
+      text: "단어가 없어요!",
+      duration: 1500,
+      newWindow: false,
+      close: true,
+      gravity: "top", // `top` or `bottom`
+      position: "center", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "linear-gradient(to right, #DB9393, #F0CACA)",
+      },
+      onClick: function () {}, // Callback after click
+    }).showToast();
+  } else {
+    window.location.href = "model_choice_page/";
+  }
 });

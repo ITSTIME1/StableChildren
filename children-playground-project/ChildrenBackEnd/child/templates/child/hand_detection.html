@@ -6,6 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="{% static 'child/css/hand_detection.css'%}" />
     <title>Document</title>
 </head>
@@ -13,7 +15,11 @@
 <body>
     <header>
         <div class="hand-header-content">
-            <div class="first-content"></div>
+            <div class="first-content">
+                <button id="webcamButton">
+                    <span class="mdc-button__label">인식</span>
+                  </button>
+            </div>
             <div class="second-content">
                 <img id = "bulb" src="{% static 'child/images/lightOFF.png'%}" alt="bulb">
             </div>
@@ -24,6 +30,8 @@
     <main>
         <div class="hand-animation-content">
             <div class="hand-circle-content"></div>
+            <video id="webcam" style="position: abso" autoplay playsinline></video>
+            <canvas class="output_canvas" id="output_canvas"></canvas>
         </div>
     </main>
 
@@ -31,8 +39,10 @@
     <footer>
         <div class="hand-bear-content"></div>
     </footer>
-
-
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
     <script type="module" src="{% static 'child/js/main/hand_detection.js'%}"></script>
 </body>

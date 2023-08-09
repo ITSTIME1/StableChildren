@@ -38,6 +38,11 @@ header {
 }
 
 .first-content {
+    position: relative;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 10%;
     height: 100%;
     background-color: var(--animation-background-color);
@@ -166,4 +171,33 @@ footer{
 /* 프롬포트에 마우스를 올렸을때 */
 .prompt-object:hover {
     transform: scale(1.4);
+}
+/* 손 인식 캔버스 */
+.output_canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: transparent;
+}
+video {
+    visibility: hidden;
+    transform: rotateY(-180deg);
+    -webkit-transform: rotateY(-180deg);
+    -moz-transform: rotateY(-180deg);
+}
+#webcamButton {
+    position: absolute;
+    background-color: var(--prompt-background-color);
+    width: 70%;
+    height: 70%;
+    border: none;
+    color: white;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+#webcamButton:hover {
+    transform: scale(1.12);
 }
