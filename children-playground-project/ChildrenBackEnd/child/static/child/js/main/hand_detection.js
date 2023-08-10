@@ -1,6 +1,14 @@
-import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+import {
+  HandLandmarker,
+  FilesetResolver,
+  GestureRecognizer,
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
 
-let handLandmarker = undefined;
+// 절대좌표
+let aX, aY;
+let openPalm = false;
+let gestureRecognizer = undefined;
+// let handLandmarker = undefined;
 let runningMode = "video";
 let enableWebcamButton;
 let webcamRunning = false;
@@ -10,22 +18,40 @@ let constraints = {
 };
 
 // 손 인식 개수는 1개
-const createHandLandmarker = async () => {
+// 모델을 메모리에 로드하는 과정
+// 손 인식
+// const createHandLandmarker = async () => {
+//   const vision = await FilesetResolver.forVisionTasks(
+//     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+//   );
+//   handLandmarker = await HandLandmarker.createFromOptions(vision, {
+//     // 모델을 사용할때 옵션을 지정.
+//     baseOptions: {
+//       modelAssetPath:
+//         "https://storage.googleapis.com/mediapipe-tasks/hand_landmarker/hand_landmarker.task",
+//       delegate: "GPU",
+//     },
+//     runningMode: runningMode,
+//     numHands: 1,
+//   });
+// };
+
+// 제스처 인식
+const createGestureRecognizer = async () => {
   const vision = await FilesetResolver.forVisionTasks(
-    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
   );
-  handLandmarker = await HandLandmarker.createFromOptions(vision, {
-    // GPU 사용
+  gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
     baseOptions: {
-      modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+      modelAssetPath:
+        "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
       delegate: "GPU",
     },
     runningMode: runningMode,
-    numHands: 1,
   });
 };
-
-createHandLandmarker();
+createGestureRecognizer();
+// createHandLandmarker();
 
 const video = document.getElementById("webcam");
 const canvasElement = document.getElementById("output_canvas");
@@ -50,7 +76,7 @@ if (hasGetUserMedia()) {
 // 여기서부터가 실제 웹캠이 켜지면서 동작하는 곳.
 // Enable the live webcam view and start detection.
 function enableCam() {
-  if (!handLandmarker) {
+  if (!gestureRecognizer) {
     setTimeout(() => {
       Toastify({
         text: "아직 인식 준비중 입니다!",
@@ -63,7 +89,6 @@ function enableCam() {
         style: {
           background: "linear-gradient(to right, #DB9393, #F0CACA)",
         },
-        onClick: function () {}, // Callback after click
       }).showToast();
     }, 1000);
     console.log("Wait! objectDetector not loaded yet.");
@@ -73,7 +98,6 @@ function enableCam() {
     // 표시하지 않고
     // 만약 webcam이 돌아가 있지 않은 상태라면 보여준다.
     if (!webcamRunning) {
-      console.log(handLandmarker);
       setTimeout(() => {
         Toastify({
           text: "인식 완료!",
@@ -86,7 +110,6 @@ function enableCam() {
           style: {
             background: "linear-gradient(to right, #DB9393, #F0CACA)",
           },
-          onClick: function () {}, // Callback after click
         }).showToast();
       }, 1000);
     } else {
@@ -103,7 +126,6 @@ function enableCam() {
           style: {
             background: "linear-gradient(to right, #DB9393, #F0CACA)",
           },
-          onClick: function () {}, // Callback after click
         }).showToast();
       }, 1000);
     }
@@ -133,43 +155,63 @@ let lastVideoTime = -1;
 let results = undefined;
 
 async function predictWebcam() {
-  // 요소 자체를 video의 크기로 설정하는데
-  // 음
   canvasElement.width = video.videoWidth;
   canvasElement.height = video.videoHeight;
-
-  // 1920 , 1080
-  // console.log(canvasElement.width);
-  // console.log(canvasElement.height);
-  // Now let's start detecting the stream.
-  // 시작 시간을 체크
   let startTimeMs = performance.now();
   // 마지막시간이 현재 시작한 시간이 아니라면
   if (lastVideoTime !== video.currentTime) {
     // 마지막으로 비디오를 실행한 시점을 현재 시점으로 바꿔준다.
     lastVideoTime = video.currentTime;
-    results = handLandmarker.detectForVideo(video, startTimeMs);
+    // detectForVideo를 사용해서 비디오 프레임을 읽어들여서 감지한다.
+    // results = handLandmarker.detectForVideo(video, startTimeMs);
+    results = gestureRecognizer.recognizeForVideo(video, startTimeMs);
   }
-  // 좌우 반전을 해결하는 코드.
-  canvasCtx.translate(video.videoWidth, 0);
-  canvasCtx.scale(-1, 1);
-  canvasCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
   if (results.landmarks) {
-    for (const landmarks of results.landmarks) {
-      // 라인
-      drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-        color: "white",
-        lineWidth: 2,
-      });
-      // 서클
-      drawLandmarks(canvasCtx, landmarks, { color: "#FFCC33", lineWidth: 2 });
+    if (results.gestures.length > 0) {
+      const categoryName = results.gestures[0][0].categoryName;
+      const animationContent = document.querySelector(".hand-circle-content");
+      const targeted_word = document.getElementById(wordTarget);
+      // mouse tracker test
+      // 손바닥이 펴져 있고, 애니메이션 영역이 로드 되어졌으며, 워드가 선택되어진 경우만
+      if ( categoryName === "Open_Palm" && animationContent != null && targeted_word != null ) {
+        openPalm = true;
+        let animation_rect = animationContent.getBoundingClientRect();
+        // 0~1 사이로 좌표가 정규화 되어 있기 때문에
+        // 1에서 빼주면 왼쪽끝이 1이되고 오른쪽 끝이 0이 되니까
+        // 좌우로 반전된 값을 얻을 수 있다. 따라서 값도 반전된 값으로 얻게 된다.
+        aX = animation_rect.width * (1-results.landmarks[0][0].x);
+        aY = animation_rect.height * results.landmarks[0][0].y;
+
+        // 10px 만큼 보정해주었다. (해주지 않으면 생각보다 많이 이동하지 않음.)
+        targeted_word.style.left = (parseInt(aX) - startPosX) + 15 + "px";
+        targeted_word.style.top = (parseInt(aY) - startPosY) + "px";
+        // console.log("손 펴짐");
+        // console.log(`${aX}, ${aY}`);
+      
+      } else {
+        // test
+        // 손바닥을 피지 않거나, 로드되지 않았거나, 선택되지 않았다면 손바닥을 핀걸 해제한다.
+        openPalm = false;
+      }
+
+      for (const landmarks of results.landmarks) {
+        // 라인
+        drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+          color: "white",
+          lineWidth: 2,
+        });
+        // 서클
+        drawLandmarks(canvasCtx, landmarks, {
+          color: `${categoryName !== "Closed_Fist" ? "#FFCC33" : "#DC143C"}`,
+          lineWidth: 2,
+        });
+      }
     }
   }
   canvasCtx.restore();
-  // Call this function again to keep predicting when the browser is ready.
   if (webcamRunning === true) {
     window.requestAnimationFrame(predictWebcam);
   } else {
@@ -184,6 +226,7 @@ async function predictWebcam() {
 
 const checkWord = document.querySelector(".third-content");
 const bulb = document.getElementById("bulb");
+const handAnimationContent = document.querySelector(".hand-animation-content");
 
 let wordTarget = null,
   wordList = null,
@@ -200,10 +243,38 @@ if (localStorage.getItem("wordList")) {
 polarBear3D();
 circleSection();
 
-// 마우스가 움직일때마다 마우스 트랙킹.
+// 생각해보니까 마우스를 구지 움직이지 않고 손이 움직이게 되면 하면 될거 같은데
+// 이건 마우스가 움직여야 절대좌표로 변환해주는거니까
+// 마우스가 움직이지 않고 손이 펴진 상태라면 wordTarget이 이동할 수 있도록
 document.addEventListener("mousemove", (event) => {
+  // 단어를 선택했고 드래깅 중이면서 openPalm이면 절대좌표로 옮겨준다.
+  if (isDragging && wordTarget != null && openPalm) {
+    let targeted_word = document.getElementById(wordTarget);
+
+    let xPos = event.clientX - startPosX;
+    let yPos = event.clientY - startPosY;
+
+    // targeted_word.style.left = parsxPos + "px";
+    // targeted_word.style.top = parseInt(yPos) + "px";
+    targeted_word.style.left = parseInt(aX) - startPosX + "px";
+    targeted_word.style.top = parseInt(aY) - startPosY + "px";
+  }
   mouseTracker(event);
 });
+
+// 단어에서 드래깅이 풀렸을때.
+// 마우스가 떨어지게 된다면 즉 눌렀다 뗀다면
+// wordTarget이 지정되는 시점은 누른 시점 mousedown시점이고
+// 그럼 누른 상태이면 드래깅이 true가 되고 wordTarget이 null이 아니니까
+// mousemove함수에 의해서 타겟워드가 이동되게 되고
+// 떼게 되면 결국 isDragging도 false 그리고 단어도 null이 된다.
+// 그럼 결국 곰만 마우스를 트랙킹하게 됨.
+// document.addEventListener("mouseup", () => {
+//   if (isDragging == true) {
+//     isDragging = false;
+//     wordTarget = null;
+//   }
+// });
 
 // 위치 이동 함수.
 function translate(selector, x, y) {
@@ -665,27 +736,6 @@ function circleAnimation(parent) {
     easing: "easeInOutQuad",
   });
 }
-
-// 단어를 드래깅 할때.
-document.addEventListener("mousemove", (event) => {
-  if (isDragging && wordTarget != null) {
-    let targeted_word = document.getElementById(wordTarget);
-
-    let xPos = event.clientX - startPosX;
-    let yPos = event.clientY - startPosY;
-
-    targeted_word.style.left = xPos + "px";
-    targeted_word.style.top = parseInt(yPos) + "px";
-  }
-});
-
-// 단어에서 드래깅이 풀렸을때.
-document.addEventListener("mouseup", () => {
-  if (isDragging == true) {
-    isDragging = false;
-    wordTarget = null;
-  }
-});
 
 // 사용할 단어를 확인할때
 checkWord.addEventListener("mouseover", () => {
