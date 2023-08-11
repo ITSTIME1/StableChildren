@@ -18,7 +18,12 @@
             <div class="first-content">
                 <button id="webcamButton">
                     <span class="mdc-button__label">인식</span>
-                  </button>
+                </button>
+
+                <button id="handCancel">
+                    <span class="mdc-button__label">마우스만</span>
+                </button>
+
             </div>
             <div class="second-content">
                 <img id = "bulb" src="{% static 'child/images/lightOFF.png'%}" alt="bulb">
@@ -29,9 +34,11 @@
 
     <main>
         <div class="hand-animation-content">
-            <div class="hand-circle-content"></div>
-            <video id="webcam" style="position: abso" autoplay playsinline></video>
-            <canvas class="output_canvas" id="output_canvas"></canvas>
+            <video id="webcam" autoplay playsinline></video>
+            <div class="hand-circle-content">
+                <img id = "mouseCursor" src="{% static 'child/images/mouse_cursor.png'%}" alt="mouseCursor">
+            </div>
+            {% comment %} <canvas class="output_canvas" id="output_canvas"></canvas> {% endcomment %}
         </div>
     </main>
 

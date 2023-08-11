@@ -14,8 +14,9 @@ import { regenerate_image } from "../api/stablediffusion_api.js";
  * anime 오류 고치기 (okay)
  * mediapipe 테스트 (okay)
  * Toast library 적용(okay)
- * 이미지 모델 한개만 선택하도록 구현 
- * mediapipe 캔버스 영역 어떻게 할건지 구현 아이디어 생각하기.
+ * 이미지 모델 한개만 선택하도록 구현 manage페이지
+ * mediapipe 캔버스 영역 어떻게 할건지 구현 아이디어 생각하기. (okay)
+ * 
  */
 
 const image_section = document.querySelectorAll(".check-image");
