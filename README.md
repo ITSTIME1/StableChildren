@@ -42,15 +42,15 @@ python manage.py runserver(local)
 
 ## Screenshots
 MainPage
-- If you decide to use a mouse, you can see the original mouse cursor and if not, you can see the mouse image cursor.
+- If you decide to use a mouse, you can see the original mouse cursor and if not, you can see the mouse image cursor.<br>
 ![ezgif com-video-to-gif](https://github.com/ITSTIME1/children-playground/assets/88642524/d895646e-e37e-4676-90aa-0fd3126b7912) 
 
 LoadingPage
-- If you don't agree anything, children can't see generating images. so children can see this loading page until you agreed.
+- If you don't agree anything, children can't see generating images. so children can see this loading page until you agreed.<br>
 ![ezgif com-video-to-gif](https://github.com/ITSTIME1/children-playground/assets/88642524/2c870d48-d034-4cbd-a8fc-43ecae8c003c)
 
 ManagePage
-- Here, you select regenerate images or you can agree all images.
+- Here, you select regenerate images or you can agree all images.<br>
   <img src="https://github.com/ITSTIME1/children-playground/assets/88642524/ac70b967-44b9-4d60-a72d-9a3234a15c61" width="600" height="320">
 
 ## License
