@@ -28,7 +28,8 @@ pip install -r requirements.txt
 cd (your download path)
 python manage.py runserver(local)
 ```
-**[Important]** you have to had 'Google colab pro' or your GPU (**CPU is not recommended for your image. its very slow..**)
+**[Important]** you have to had 'Google colab pro' or your GPU (**CPU is not recommended for your image. its very slow..**)<br>
+**[Important]** you have a 'web cam' for recognize hand if you don't want that's fine.
 
 ## How to use (Very Important)
 - First run server and into http://localhost:8000/child/childPage/ (**This is main page for children**)
