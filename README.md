@@ -35,6 +35,8 @@ python manage.py runserver(local)
 - First run server and into http://localhost:8000/child/childPage/ (**This is main page for children**)
 
 - Second you must host into http://localhost:8000/manager/managePage/ (**This is manage page for teacher (or admin)**)
+- Third you must put translate api key for 'papago api'
+- Fourth you must put google colab server url to stablediffusion_auto_1111.py
 - When you finish reading books with children. The teacher types with the children what words or senetences come to mind. and then teahcer can decide. Whether to do it with a mouse or if the children will make their own gesture and move the words.
 - When you Finish above process. 'bulb button' press and choice image style. and then again 'bulb button' **After this process children can see 'loading page' and teacher was received four images first.**
 - Teacher must decide the image for children. The purpose of this process is to regenerate images that are sensational or have strange joints.
