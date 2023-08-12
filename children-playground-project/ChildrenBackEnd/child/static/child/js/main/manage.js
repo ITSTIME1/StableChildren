@@ -1,6 +1,6 @@
 import { regenerate_image } from "../api/stablediffusion_api.js";
 /**
- * @TODO 2023.8.8일
+ * @TODO 2023.8.12일
  * 관리자에서 승인시 이동 구현. (okay).
  * 이미지 4개 받아서 보여주는 기능 테스트 (okay).
  * 특정 이미지 재생성 함수 구현. (okay)
@@ -16,7 +16,10 @@ import { regenerate_image } from "../api/stablediffusion_api.js";
  * Toast library 적용(okay)
  * 이미지 모델 한개만 선택하도록 구현 manage페이지
  * mediapipe 캔버스 영역 어떻게 할건지 구현 아이디어 생각하기. (okay)
- * 
+ * mediapipe 필수 기능 구현 완료(Okay)
+ * mediapipe 곰 애니메이션 따라가게 만드는거 구현 + 단어 넣어지는 기능 구현 (okay)
+ * 로그인 페이지를 좀 만드는게 좋을거 같긴한데 일단 테스트부터 해보자.
+ * 수고했다. 다 만들었네. 결국 다 만들어 냈구만.
  */
 
 const image_section = document.querySelectorAll(".check-image");
@@ -26,7 +29,7 @@ const teacher_generated_box = document.querySelectorAll(
 const agreeBtn = document.getElementById("agree");
 const regenerateBtn = document.getElementById("regenerate");
 
-let re_generated_image = [];
+let reGeneratedImage = [];
 let isAnimation = false;
 let isProcessing = false;
 
@@ -59,62 +62,20 @@ function image_select() {
       let check = teacher_generated_box[i].querySelector(`#${checkScreenID}`);
 
       if (!check) {
-        // re_generated_image에 해당 인덱스 번호가 없다면 추가.(다시 생성할 인덱스 번호.)
-        if (!re_generated_image.includes(i + 1)) {
-          re_generated_image.push(i + 1);
+        // reGeneratedImage에 해당 인덱스 번호가 없다면 추가.(다시 생성할 인덱스 번호.)
+        if (!reGeneratedImage.includes(i + 1)) {
+          reGeneratedImage.push(i + 1);
         }
         teacher_generated_box[i].appendChild(checkScreen);
       } else {
         const getCheckScreen = document.getElementById(`check-screen-${i + 1}`);
-        let index = re_generated_image.indexOf(i + 1);
-        re_generated_image.splice(index, 1);
+        let index = reGeneratedImage.indexOf(i + 1);
+        reGeneratedImage.splice(index, 1);
 
         teacher_generated_box[i].removeChild(getCheckScreen);
       }
-      console.log(re_generated_image);
+      console.log(reGeneratedImage);
     });
-    // 이미지에 마우스를 가져다 대었을때
-    // teacher_generated_box[i].addEventListener("mouseover", (event) => {
-    //   const scaleTargetImage = document.getElementById(`t${i+1}`);
-    //   console.log(scaleTargetImage);
-    //   // 가우시안이 있는 상태에서는 이미지를 원본 크기대로 보여주지 않음.
-    //   if (event.target.id === `check-screen-${i + 1}`) {
-    //     console.log("이러한 경우들");
-    //     scaleTargetImage.style.transform = "";
-    //     return;
-
-    //   } else {
-    //     // 가우시안이 존재하지 않을경우에 마우스를 올렸을때 이미지를 본래 크기로 보여준다.
-    //     // 이 전체 window의 너비를 구해보자
-    //     let tb = scaleTargetImage.getBoundingClientRect();
-    //     // 중간지점에서부터 이미지의 top지점까지 빼고 절반으로 나눈거에 -만큼 이동하면되겠다.
-
-    //     //
-    //     // console.log(parent.innerWidth / 2);
-    //     // console.log(tb.x);
-    //     // console.log(tb.width);
-    //     // console.log((((parent.innerWidth / 2) - tb.x)) - tb.width / 2);
-    //     // console.log(parseInt(((parent.innerWidth / 2) - tb.top) / 2));
-
-    //     // 아 오케이 이게 왜 되는지 이해가 되었으.
-    //     // 애니메이션 중에는 변경되지 않게 함.
-    //     // 따라서 애니메이션 이라면 적용하지 않음.
-    //     // 뒤죽 박죽이구만 이것도 해결해야 겠다.
-    //     if (!isAnimation) {
-    //       scaleTargetImage.style.transitionDuration = "2s";
-    //       scaleTargetImage.style.transitionTimingFunction = "cubic-bezier(0, 0.76, 0.35, 0.73)";
-    //       scaleTargetImage.style.transform = `translateX(${(((parent.innerWidth / 2) - tb.x)) - (tb.width / 2)}px)`;
-    //       scaleTargetImage.style.zIndex = "1";
-    //       isAnimation = true;
-    //     }
-
-    //     // 마우스 업이라면 원래대로
-    //     teacher_generated_box[i].addEventListener("mouseleave", () => {
-    //       // scaleTargetImage.style.transform = "";
-    //       scaleTargetImage.style.zIndex = "";
-    //     });
-    //   }
-    // });
   }
 }
 
@@ -154,36 +115,33 @@ regenerateBtn.addEventListener("click", async () => {
     let imageModel = JSON.parse(localStorage.getItem("imageModel"));
     let base64ImageUrl = JSON.parse(localStorage.getItem("base64ImageUrl"));
 
-    await regenerate_image(prompt, imageModel, re_generated_image.length).then(
+    await regenerate_image(prompt, imageModel, reGeneratedImage.length).then(
       (response) => {
         console.log(response.data);
         alert("이미지가 도착했습니다!");
 
         // 이미지가 정상적으로 왔을때 isProcessing을 다시 돌려놔서 재생성이 가능하도록.
         isProcessing = false;
-        for (let i = 0; i < re_generated_image.length; i++) {
-          base64ImageUrl[re_generated_image[i] - 1] =
+        for (let i = 0; i < reGeneratedImage.length; i++) {
+          base64ImageUrl[reGeneratedImage[i] - 1] =
             response.data["regenerate_base64_image"][i];
           image_section[
-            re_generated_image[i] - 1
+            reGeneratedImage[i] - 1
           ].src = `data:image/png;base64,${response.data["regenerate_base64_image"][i]}`;
           // 적용후 해당 가우시안 스크린 해제
           const getCheckScreen = document.getElementById(
-            `check-screen-${re_generated_image[i]}`
+            `check-screen-${reGeneratedImage[i]}`
           );
-          teacher_generated_box[re_generated_image[i] - 1].removeChild(
+          teacher_generated_box[reGeneratedImage[i] - 1].removeChild(
             getCheckScreen
           );
         }
         localStorage.setItem("base64ImageUrl", JSON.stringify(base64ImageUrl));
-        re_generated_image = [];
-        // test
-        // const getCheckScreen = document.getElementById(`check-screen-3`);
-        // teacher_generated_box[2].removeChild(getCheckScreen);
+        reGeneratedImage = [];
       }
     );
     // isPro
-    console.log(`${re_generated_image.length} 만큼 체인지 할 것.`);
+    console.log(`${reGeneratedImage.length} 만큼 체인지 할 것.`);
   } else {
     // 프로세싱 중이면 기다려야 한다고 말해야됨
     alert("이미지를 만들고 있습니다. 기다려야 해요!");

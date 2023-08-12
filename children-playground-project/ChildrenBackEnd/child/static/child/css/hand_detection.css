@@ -18,6 +18,7 @@
     position: absolute;
     width: 50px;
     height: 50px;
+    z-index: 2;
 }
 
 body {
@@ -114,6 +115,7 @@ main{
 
 /* circle 나타나는 영역 */
 .hand-circle-content {
+    z-index: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -156,6 +158,7 @@ footer{
     font-size: 0.5rem;
     text-align: center;
     white-space: normal;
+    z-index: 2;
     /* cursor: pointer; */
 }
 

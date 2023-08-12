@@ -23,21 +23,28 @@ for (let i = 0; i < slide.length; i++) {
     gausianScreen.style.color = "cyan";
     gausianScreen.style.fontSize = "1.5rem";
 
-    if (event.target.id === "s1") {
-      gausianScreen.innerText =
-        "선택 ✓";
-    } else {
-      gausianScreen.innerText =
-      "선택 ✓";
-    }
-
-
     if (slide[i].hasChildNodes() === false) {
-      slide[i].appendChild(gausianScreen);
-      if (event.target.id === "s1") {
+      if (event.target.id === "s1" && !imageModel) {
+        slide[i].appendChild(gausianScreen);
+        gausianScreen.innerText = "선택 ✓";
         imageModel = "manMaru";
-      } else {
+      } else if (event.target.id === "s2" && !imageModel){
+        slide[i].appendChild(gausianScreen);
+        gausianScreen.innerText = "선택 ✓";
         imageModel = "anime";
+      } else {
+        Toastify({
+          text: "이미 스타일을 선택했어요!",
+          duration: 3000,
+          newWindow: false,
+          close: true,
+          gravity: "top", 
+          position: "center", 
+          stopOnFocus: true, 
+          style: {
+            background: "linear-gradient(to right, #DB9393, #F0CACA)",
+          },
+        }).showToast();
       }
     } else {
       slide[i].innerHTML = "";
