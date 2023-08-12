@@ -11,8 +11,8 @@ class TransLate():
         self._source = "ko"
         self._target = "en"
         self._data =  "source=ko&target=en&text="
-        self._clientID = "pIs5U9bxohzqse7rL4o8"
-        self._secretKey = "OC9oYBFI45"
+        self._clientID = "[your papago client id]"
+        self._secretKey = "[your secretkey]"
         
     
     def translator(self, prompt):

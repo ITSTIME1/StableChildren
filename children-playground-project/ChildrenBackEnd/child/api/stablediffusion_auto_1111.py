@@ -7,7 +7,7 @@ class StableDiffusionAuto1111:
         self._lora = lora
         self._model = model
         self._vae = vae
-        self._end_point = "https://7bc00fe7031f0ac18a.gradio.live"
+        self._end_point = "[Colab server address]"
         self._payload = {
             "restore_faces": True,
             "prompt": None,
