@@ -21,7 +21,7 @@ Hello, Welcome to my **'StableChildren'** repository which for childs. Nowdays '
 - Toastify opensource library (thank you for your dedication).
 
 ## Architecture
-pass
+![Children-playground-flow-image](https://github.com/ITSTIME1/children-playground/assets/88642524/e1a0b53a-9930-4191-9b42-f3e24d1c2225)
 ## Installation
 ```sh
 pip install -r requirements.txt
