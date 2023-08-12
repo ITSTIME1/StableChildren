@@ -1,41 +1,68 @@
 import {
-  HandLandmarker,
   FilesetResolver,
   GestureRecognizer,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
 
-let cursor = document.getElementById("mouseCursor");
-// 절대좌표
-let aX, aY;
+/** [MediaPipe]
+ * @video = 웹캠 변수.
+ * @gestureRecognizer = 손 인식을 준비하기 위한 변수.
+ * @runningMode = 비디오로부터 프레임 단위로 읽어오기 위해 실행할 종류를 명시.
+ * @enableWebcamButton = 웹캠 버튼을 허용하여 제스처 인식 시작.
+ * @constraints = getUserMedia로부터 전달되는 변수.
+ */
+const video = document.getElementById("webcam");
 let gestureRecognizer = undefined;
-// let handLandmarker = undefined;
 let runningMode = "video";
 let enableWebcamButton;
 let webcamRunning = false;
-// getUsermedia parameters.
-let constraints = {
-  video: true,
-};
+let constraints = { video: true };
+
+
+/** [MediaPipe]
+ * 
+ * @cursor = 제스처 인식을 위한 '마우스 이미지'
+ * @ax , @ay = 마우스 이미지의 상대좌표를 저장하기 위한 변수.
+ * @centerX , @centerY = 애니메이션 화면의 중앙 값 이후 마우스 이미지의 초기 좌표로 활용.
+ * @mouseX , @mouseY = 제스처 인식을 하지 않을때 마우스의 좌표를 저장하기 위한 변수.
+ * @wordTarget = 선택되어진 단어를 저장하는 변수.
+ * @wordTargetPosition = 선택되어진 단어가 리스트에서 어떤 위치에 있는지를 기억하기 위한 변수.
+ * @startPosX , @startPosY = 단어가 선택되어졌을때 마우스가 눌린 위치로부터 선택된 단어가 떨어진 거리를 측정하기 위한 변수.
+ * @isDragging = 선택되어진 단어를 드래그 하고 있는지를 감시하는 변수.
+ * @circleCoordinate = 단어 애니메이션들의 좌표값들을 저장하는 변수.
+ */
+
+let cursor = document.getElementById("mouseCursor");
+let aX =0, aY = 0, centerX = 0, centerY = 0, mouseX = 0, mouseY = 0;
+let wordTarget = null, startPosX = null, startPosY = null;
+let isDragging = false;
+let circleCoordinate = [];
+let wordTargetPosition = null;
+
+
+
+/** [Animation]
+ * @animationContent = 애니메이션 영역 변수.
+ * @checkWord = 추가한 단어들을 확인하기 위한 변수.
+ * @bulb = 다음 페이지로 넘어가기 위한 변수.
+ * @circles = 캠이 켜졌을때 최종적인 단어 애니메이션의 좌표값들을 알기 위한 변수.
+ * @prompt = 추가한 단어 목록.
+ */
+const animationContent = document.querySelector(".hand-animation-content");
+const animationRect = animationContent.getBoundingClientRect();
 const checkWord = document.querySelector(".third-content");
 const bulb = document.getElementById("bulb");
-// const handAnimationContent = document.querySelector(".hand-animation-content");
-
-let wordTarget = null, wordList = null, startPosX = null, startPosY = null;
-let isDragging = false;
+let circles = null;
+let wordList = null;
 let prompt = [];
-// 서클이 생성되는 시점에 이곳에다가 서클들의 좌표를 넣음.
-// left, top, id
-let circle_cordi_list = [];
-// 현재 마우스 이미지의 left, top위치
-let centerX = 0, centerY = 0;
-// 워드 타겟의 포지션(드래깅중일때 서클의 x, y값도 계속 바꾸기 위해서)
-let wordTargetPosition = null;
-let circles;
-
-let mouseX, mouseY;
 
 
+// 로컬 스토리지 저장된 단어를 가져옴.
+if (localStorage.getItem("wordList")) {
+  wordList = JSON.parse(localStorage.getItem("wordList"));
+}
 
+polarBear3D();
+circleSection();
 
 // 제스처 인식
 const createGestureRecognizer = async () => {
@@ -52,13 +79,12 @@ const createGestureRecognizer = async () => {
   });
 };
 createGestureRecognizer();
-// createHandLandmarker();
 
-const video = document.getElementById("webcam");
 // const canvasElement = document.getElementById("output_canvas");
 // const canvasCtx = canvasElement.getContext("2d");
 
-// Check if webcam access is supported.
+
+// 웹캠을 사용할 수 있는지 체크.
 const hasGetUserMedia = () => {
   var _a;
   return !!((_a = navigator.mediaDevices) === null || _a === void 0
@@ -66,7 +92,8 @@ const hasGetUserMedia = () => {
     : _a.getUserMedia);
 };
 
-// 웹캠을 가지고 있는지 가지고 있지 않은지를 검사하는거고
+
+// 웹캠을 사용할 수 있을때 웹캠 활성화.
 if (hasGetUserMedia()) {
   enableWebcamButton = document.getElementById("webcamButton");
   enableWebcamButton.addEventListener("click", enableCam);
@@ -74,8 +101,8 @@ if (hasGetUserMedia()) {
   console.warn("getUserMedia() is not supported by your browser");
 }
 
-// 여기서부터가 실제 웹캠이 켜지면서 동작하는 곳.
-// Enable the live webcam view and start detection.
+
+// 웹캠 버튼 클릭시 실행.
 function enableCam() {
   if (!gestureRecognizer) {
     setTimeout(() => {
@@ -84,9 +111,9 @@ function enableCam() {
         duration: 3000,
         newWindow: false,
         close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
+        gravity: "top", 
+        position: "center", 
+        stopOnFocus: true,
         style: {
           background: "linear-gradient(to right, #DB9393, #F0CACA)",
         },
@@ -105,9 +132,9 @@ function enableCam() {
           duration: 1500,
           newWindow: false,
           close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          stopOnFocus: true, // Prevents dismissing of toast on hover
+          gravity: "top", 
+          position: "center", 
+          stopOnFocus: true, 
           style: {
             background: "linear-gradient(to right, #DB9393, #F0CACA)",
           },
@@ -121,9 +148,9 @@ function enableCam() {
           duration: 1500,
           newWindow: false,
           close: true,
-          gravity: "top", // `top` or `bottom`
-          position: "center", // `left`, `center` or `right`
-          stopOnFocus: true, // Prevents dismissing of toast on hover
+          gravity: "top", 
+          position: "center", 
+          stopOnFocus: true, 
           style: {
             background: "linear-gradient(to right, #DB9393, #F0CACA)",
           },
@@ -132,47 +159,33 @@ function enableCam() {
     }
   }
 
-  // 웹캠 돌아가냐 안돌아가냐에 따라서 텍스트 변경.
+  
+  // 웹캠이 현재 실행되고 있는지 확인.
   if (webcamRunning === true) {
     webcamRunning = false;
-    // 웹캠을 끄고 캠버스를 지움
     enableWebcamButton.innerText = "인식";
-    circle_cordi_list = [];
+    circleCoordinate = []; // 단어 애니메이션의 좌표가 중첩되지 않도록 초기화.
   } else {
     webcamRunning = true;
     enableWebcamButton.innerText = "해제";
-
-    // 웹캠이 돌아가 있지 않으니 클릭했을때 돌아갈거니까
-    // 해당 값들을 저장해둠.
-    const animeContent = document.querySelector(".hand-animation-content");
-    const animeRect = animeContent.getBoundingClientRect();
     
-    centerX = parseInt(animeRect.width / 2);
-    centerY = parseInt(animeRect.height / 2);
+    centerX = parseInt(animationRect.width / 2);
+    centerY = parseInt(animationRect.height / 2);
 
     for (let i = 0; i < circles.length; i++) {
-      // console.log(circles[i])
       const circleObject = document.getElementById(`wordCircle-${i}`);
-      let circleRect = circleObject.getBoundingClientRect();
+      const circleRect = circleObject.getBoundingClientRect();
   
       let left = parseInt(circleRect.left);
       let top =  parseInt(circleRect.top);
       let right = left + parseInt(circleRect.width);
       let bottom = top + parseInt(circleRect.height);
-      console.log(`${left}, ${top}, ${right}, ${bottom}`);
-      circle_cordi_list.push([left, top, right-40, bottom-40, `wordCircle-${i}`]);
-      // // circle_list에 잘 들어가나 확인.
-      // console.log(circle_cordi_list);
+      circleCoordinate.push([left, top, right-40, bottom-40, `wordCircle-${i}`]);
     }
-    // console.log(circle_cordi_list);
   }
-  // Activate the webcam stream.
-  // stream을 받으면 영상 출력.
+
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
     video.srcObject = stream;
-    // 여기서 캠에서 예측하는게 함수가 실행되고
-    // 즉 카메라로부터 stream으로 데이터를 계속 받아오면 predictwebcam에서 인지하고
-    // 실행한다.
     video.addEventListener("loadeddata", predictWebcam);
   });
 }
@@ -202,7 +215,7 @@ async function predictWebcam() {
     if (results.gestures.length > 0) {
       const categoryName = results.gestures[0][0].categoryName;
       // 마우스 트랙킹 검사.
-      hand_mouse_tracking(categoryName);
+      hand_tracking(categoryName);
       // 손 모양 그리는 코드.
       // for (const landmarks of results.landmarks) {
       //   // 라인
@@ -229,38 +242,39 @@ async function predictWebcam() {
   // }
 }
 
-// mediapie_code
-//##################################
-// animation_code
 
 
-function hand_mouse_tracking (categoryName) { 
+/**
+ * @param {string} categoryName = 어떤 제스처인지를 인식하고 파라미터로 받아 처리.
+ */
 
-  // 만약에 핸드 트랙킹을 하는데 wordTarget이 정하재지 않았다면
+function hand_tracking (categoryName) { 
+  const target = document.getElementById(wordTarget);
+  let targetRect;
+
+  if (target !== null) {
+    targetRect = target.getBoundingClientRect();
+  }
+  
+  // 드래깅 중이 아니라면
   if (!isDragging) {
-    const animeContent = document.querySelector(".hand-animation-content");
-    const animeRect = animeContent.getBoundingClientRect();
-    // aX = parseInt(document.documentElement.clientWidth * (1-results.landmarks[0][12].x));
-    // aY = parseInt(document.documentElement.clientHeight * results.landmarks[0][12].y) + 90;
 
-    // 마우스의 상대 좌표 계산
-    aX = parseInt(animeRect.width * (1 - results.landmarks[0][12].x)) - parseInt(50/2);
-    aY = parseInt(animeRect.height * results.landmarks[0][12].y) - parseInt(50/2);
+    // 애니메이션 영역에 대한 이미지의 상대 좌표 계산
+    aX = parseInt(animationRect.width * (1 - results.landmarks[0][12].x)) - parseInt(50/2);
+    aY = parseInt(animationRect.height * results.landmarks[0][12].y) - parseInt(50/2);
     
-    console.log(`${aX}, ${aY}`);
-
     cursor.style.left = aX + "px";
     cursor.style.top = aY + "px";    
  
-    // 드래깅 중이아니면서 이동하면서 충돌이 되나보고
-    // 충돌이 되면 드래깅을 시킴.
-    for (let i = 0; i < circle_cordi_list.length; i++) {
+    // 마우스 이미지와 단어 애니메이션간 충돌검사
+    for (let i = 0; i < circleCoordinate.length; i++) {
 
-      if (aX >= circle_cordi_list[i][0] && aX <= circle_cordi_list[i][2] 
-        && aY  >= circle_cordi_list[i][1] && aY  <= circle_cordi_list[i][3]) {
-        // console.log(`${circle_cordi_list[i][0]} ${circle_cordi_list[i][1]} ${circle_cordi_list[i][2]} ${circle_cordi_list[i][3]}`);
-        console.log(`${circle_cordi_list[i][4]} 와 충돌했습니다.`);
-        wordTarget = circle_cordi_list[i][4];
+      let check_X = (aX >= circleCoordinate[i][0] && aX <= circleCoordinate[i][2]);
+      let check_Y = (aY  >= circleCoordinate[i][1] && aY  <= circleCoordinate[i][3]);
+
+      if ( check_X && check_Y) {
+        console.log(`${circleCoordinate[i][4]} 와 충돌했습니다.`);
+        wordTarget = circleCoordinate[i][4];
         wordTargetPosition = i;
         isDragging = true;
         break;
@@ -268,84 +282,58 @@ function hand_mouse_tracking (categoryName) {
     }
 
   } else {
-    // 드래깅 중이면
+    
+    // 드래깅 중이라면
     if (wordTarget !== null && isDragging && categoryName !== "Closed_Fist") {
-      const target = document.getElementById(wordTarget);
-      const animeContent = document.querySelector(".hand-animation-content");
-      const animeRect = animeContent.getBoundingClientRect()
-      // aX = parseInt(document.documentElement.clientWidth * (1-results.landmarks[0][12].x));
-      // aY = parseInt(document.documentElement.clientHeight * results.landmarks[0][12].y) + 90;
-      // 마우스의 상대 좌표 계산
-      aX = parseInt(animeRect.width * (1 - results.landmarks[0][12].x)) - parseInt(50/2);
-      aY = parseInt(animeRect.height * results.landmarks[0][12].y) - parseInt(50/2)
+      const style = window.getComputedStyle(target);
+      const matrix = new WebKitCSSMatrix(style.transform);
 
 
-      /**
-       * @TODO 8.13 내일 코드좀 정리하고 매끄럽게 다듬자.
-       */
-      // target을 좀 자연스럽게 옮길 수는 없을까
-      // target 엘리먼트의 상대 좌표 설정
-      // 이거였네 한번에 left, top이 바뀌니까 이상하게 보이지.
-      let style = window.getComputedStyle(target);
-      let matrix = new WebKitCSSMatrix(style.transform);
-      target.style.left = aX - (matrix.m41)  + "px";
+      aX = parseInt(animationRect.width * (1 - results.landmarks[0][12].x)) - parseInt(50/2);
+      aY = parseInt(animationRect.height * results.landmarks[0][12].y) - parseInt(50/2);
+      
+
+      // 단어 & 마우스 같이 이동
+      target.style.left = aX - (matrix.m41) + "px";
       target.style.top = aY - (matrix.m42) + "px";
-      // 마우스 커서도 같이 움직여주면 될거 같고
+
       cursor.style.left = aX  + "px";
       cursor.style.top = aY  + "px";    
 
     } else if(wordTarget !== null && isDragging && categoryName === "Closed_Fist") {
-      // 워드타겟은 정해졌는데 드래깅중이 아니라면
-      // 초기화.
-      const target = document.getElementById(wordTarget);
-      const targetRect = target.getBoundingClientRect();
-      // console.log(`${targetRect.left}, ${targetRect.top}`);
-      circle_cordi_list[wordTargetPosition][0] = parseInt(targetRect.left);
-      circle_cordi_list[wordTargetPosition][1] = parseInt(targetRect.top);
-      circle_cordi_list[wordTargetPosition][2] = (circle_cordi_list[wordTargetPosition][0] + targetRect.width) - 40;
-      circle_cordi_list[wordTargetPosition][3] = (circle_cordi_list[wordTargetPosition][1] + targetRect.height) - 40;
 
+      // 좌표수정
+      circleCoordinate[wordTargetPosition][0] = parseInt(targetRect.left);
+      circleCoordinate[wordTargetPosition][1] = parseInt(targetRect.top);
+      circleCoordinate[wordTargetPosition][2] = (circleCoordinate[wordTargetPosition][0] + targetRect.width) - 40;
+      circleCoordinate[wordTargetPosition][3] = (circleCoordinate[wordTargetPosition][1] + targetRect.height) - 40;
       isDragging = false;
       wordTarget = null;
-      // cursor.style.left = centerX + "px";
-      // cursor.style.left = centerY + "px";
-      console.log(circle_cordi_list);
     }
   }
 }
 
-
-// 처음 시작할때 곰을 그려준다.
-if (localStorage.getItem("wordList")) {
-  wordList = JSON.parse(localStorage.getItem("wordList"));
-}
-
-polarBear3D();
-circleSection();
-
-
-
+// '제스처 인식을 하지 않을때' 마우스 이벤트.
 document.addEventListener("mousemove", (event) => {
   if (!webcamRunning) {
     cursor.style.visibility = "hidden";
-    const animationContent = document.querySelector(".hand-animation-content");
-    let rect = animationContent.getBoundingClientRect();
 
-    mouseX = event.clientX - rect.left - parseInt(50/2);
-    mouseY = event.clientY - rect.top - parseInt(50/2);
+    mouseX = event.clientX - animationRect.left - parseInt(50/2);
+    mouseY = event.clientY - animationRect.top - parseInt(50/2);
     cursor.style.left = mouseX + "px";
     cursor.style.top = mouseY + "px";
     
     if (isDragging && wordTarget != null) {
-      let targeted_word = document.getElementById(wordTarget);
+      let target = document.getElementById(wordTarget);
     
-      let xPos = event.clientX - startPosX;
-      let yPos = event.clientY - startPosY;
+      let wordRelativeX = event.clientX - startPosX;
+      let wordRelativeY = event.clientY - startPosY;
     
-      targeted_word.style.left = parseInt(xPos) + "px";
-      targeted_word.style.top = parseInt(yPos) + "px";
+      target.style.left = parseInt(wordRelativeX) + "px";
+      target.style.top = parseInt(wordRelativeY) + "px";
     }
-    mouseTracker(event);
+
+    mouse_tracker(event);
   } else {
     cursor.style.visibility = "visible";
     cursor.style.left = centerX + "px";
@@ -355,6 +343,7 @@ document.addEventListener("mousemove", (event) => {
 
 });
 
+// '제서처 인식을 하지 않을때'
 document.addEventListener("mouseup", () => {
   if (isDragging == true) {
     isDragging = false;
@@ -373,14 +362,13 @@ function scale(selector, scale) {
 }
 
 // 마우스 트랙킹 함수.
-function mouseTracker(event) {
-  const parent = document.querySelector(".hand-animation-content");
+function mouse_tracker(event) {
   // mouse의 초기좌표
   let mouse = { x: 0, y: 0 };
   // mouse의 가운데 지점 좌표
   let mouseCenter = {
-    x: parseInt(parent.offsetWidth / 2),
-    y: parseInt(parent.offsetHeight   / 2),
+    x: parseInt(animationContent.offsetWidth / 2),
+    y: parseInt(animationContent.offsetHeight  / 2),
   };
   // console.log(mouseCenter);
 
@@ -398,17 +386,12 @@ function interact(e, mouse, mouseCenter) {
   const bearMouse = document.getElementById("mouse");
   const hands = document.querySelectorAll(".hand");
 
-  const noseMoveRate = 2.5,
-    earMoveRate = 5.5,
-    handMoveRate = 5.5,
-    faceMoveRate = 10;
+  const earMoveRate = 5.5, handMoveRate = 5.5, faceMoveRate = 10.0;
 
   // 첫번째 터치지점의 x, y좌표를 만약에 touch이벤트가 존재할 경우에
-
   mouse.x = e.clientX;
   mouse.y = e.clientY;
-  // console.log(mouse.x);
-  // console.log(mouse.x);
+
   // 얼굴 이동비율에 대해서 얼마나 떨어져 있는가를 나타내는것
   let dx = (mouse.x - mouseCenter.x) / faceMoveRate;
   let dy = (mouse.y - mouseCenter.y) / faceMoveRate;
@@ -622,7 +605,7 @@ function polarBear3D() {
   faceContainer.appendChild(eyeContainer);
 
   // 코 음영
-  let phizContainer = document.createElement("div");
+  const phizContainer = document.createElement("div");
   const phizContainerCSS = phizContainer.style;
   phizContainer.classList.add("phizContainer");
   phizContainer.setAttribute("id", "phizContainer");
@@ -679,7 +662,7 @@ function polarBear3D() {
   mouseCSS.backgroundColor = "black";
 
   phizContainer.appendChild(mouse);
-  // console.log(phizContainerDiv);
+
 
   // bear영역에 단어를 끌어 왔다면
   bear.addEventListener("mouseover", () => {
@@ -745,8 +728,8 @@ function polarBear3D() {
 
 // 서클
 function circleSection() {
-  const animationContent = document.querySelector(".hand-circle-content");
-  circleAnimation(animationContent);
+  const handCircleContent = document.querySelector(".hand-circle-content");
+  circleAnimation(handCircleContent);
 }
 
 // 단어 애니메이션 지정 함수.
@@ -842,7 +825,6 @@ checkWord.addEventListener("mouseover", () => {
 });
 
 // 사용할 단어를 확인하는 곳에서 마우스가 벗어났을때
-
 checkWord.addEventListener("mouseleave", () => {
   if (checkWord.children.length != 0) {
     for (let i = 0; i < checkWord.children.length; i++) {
@@ -862,13 +844,12 @@ bulb.addEventListener("click", () => {
       duration: 1500,
       newWindow: false,
       close: true,
-      gravity: "top", // `top` or `bottom`
-      position: "center", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
+      gravity: "top", 
+      position: "center", 
+      stopOnFocus: true, 
       style: {
         background: "linear-gradient(to right, #DB9393, #F0CACA)",
       },
-      onClick: function () {}, // Callback after click
     }).showToast();
   } else {
     window.location.href = "model_choice_page/";

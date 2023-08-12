@@ -220,15 +220,3 @@ video {
 #webcamButton:hover {
     transform: scale(1.12);
 }
-#handCancel{
-    position: relative;
-    background-color: yellow;
-    width: 70%;
-    height: 80%;
-    border: none;
-    color: white;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    color: black;
-}
