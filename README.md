@@ -39,6 +39,20 @@ python manage.py runserver(local)
 - Teacher must decide the image for children. The purpose of this process is to regenerate images that are sensational or have strange joints.
 - **If you intentionally enter a word related to an adult, it will automatically detect it and receive a black image. this means that It rarely comes out if you don't type if intentionally. Approximately 80 to 90% of then are blocked, and the teacher checks them first, so they go through the filter again. Also, since the criterion of sensationalism is subjective, you can decide whether to regenerate or not.**
 - Feel free enjoy my program :)
+
+## Screenshots
+MainPage
+- If you decide to use a mouse, you can see the original mouse cursor and if not, you can see the mouse image cursor.
+![ezgif com-video-to-gif](https://github.com/ITSTIME1/children-playground/assets/88642524/d895646e-e37e-4676-90aa-0fd3126b7912) 
+
+LoadingPage
+- If you don't agree anything, children can't see generating images. so children can see this loading page until you agreed.
+![ezgif com-video-to-gif](https://github.com/ITSTIME1/children-playground/assets/88642524/2c870d48-d034-4cbd-a8fc-43ecae8c003c)
+
+ManagePage
+- Here, you select regenerate images or you can agree all images.
+  <img src="https://github.com/ITSTIME1/children-playground/assets/88642524/ac70b967-44b9-4d60-a72d-9a3234a15c61" width="600" height="320">
+
 ## License
 MIT License
 
