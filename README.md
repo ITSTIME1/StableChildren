@@ -56,6 +56,11 @@ ManagePage
 - Here, you select regenerate images or you can agree all images.<br>
   <img src="https://github.com/ITSTIME1/children-playground/assets/88642524/ac70b967-44b9-4d60-a72d-9a3234a15c61" width="600" height="320">
 
+Mediapipe Gesture Recognition
+- This is mediapipe gesture recognition. If your current gesture is not "ClosedFist", you can dargging and drop if not<br>
+  dragging will be false and target will be initialized.<br>
+  <img src="https://github.com/ITSTIME1/StableChildren/assets/88642524/48591f6d-2758-4cdb-ae7a-3d1f2b19ad74" width="300" height="320">
+  
 ## License
 MIT License
 
