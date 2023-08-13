@@ -35,6 +35,8 @@ python manage.py runserver(local)
 - First run server and into http://localhost:8000/child/childPage/ (**This is main page for children**)
 
 - Second you must host into http://localhost:8000/manager/managePage/ (**This is manage page for teacher (or admin)**)
+- Third you must put translate api key for 'papago api'
+- Fourth you must put google colab server url to stablediffusion_auto_1111.py
 - When you finish reading books with children. The teacher types with the children what words or senetences come to mind. and then teahcer can decide. Whether to do it with a mouse or if the children will make their own gesture and move the words.
 - When you Finish above process. 'bulb button' press and choice image style. and then again 'bulb button' **After this process children can see 'loading page' and teacher was received four images first.**
 - Teacher must decide the image for children. The purpose of this process is to regenerate images that are sensational or have strange joints.
@@ -54,6 +56,11 @@ ManagePage
 - Here, you select regenerate images or you can agree all images.<br>
   <img src="https://github.com/ITSTIME1/children-playground/assets/88642524/ac70b967-44b9-4d60-a72d-9a3234a15c61" width="600" height="320">
 
+Mediapipe Gesture Recognition
+- This is mediapipe gesture recognition. If your current gesture is not "ClosedFist", you can dargging and drop if not<br>
+  dragging will be false and target will be initialized.<br>
+  <img src="https://github.com/ITSTIME1/StableChildren/assets/88642524/48591f6d-2758-4cdb-ae7a-3d1f2b19ad74" width="300" height="320">
+  
 ## License
 MIT License
 
