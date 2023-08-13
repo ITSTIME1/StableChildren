@@ -60,7 +60,7 @@ getImagebulb.addEventListener("click", async () => {
     let array = JSON.parse(localStorage.getItem("wordList"));
 
     await generate_image(array, imageModel).then((response) => {
-
+      console.log(response);
       let base64Encoding = response.data["imagesByteString"];
       // 이미지들이 4장이 되었을때
       if (base64Encoding.length === 4) {

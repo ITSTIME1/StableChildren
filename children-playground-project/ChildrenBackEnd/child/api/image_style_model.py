@@ -26,6 +26,8 @@ class ImageStyleModel:
 
     # Manmaru mix SD1.5
     def civitai_manmaru_mix_style(self):  
+        print("요기오나?")
+        print(self._prompt)
         generated_image = None
         
         positive_prompts = f'<lora:brighter-eye1:1>, {", ".join(self._prompt)}, smile, {random.sample(self._random_angle, 1)[0]}, masterpiece, best quality'

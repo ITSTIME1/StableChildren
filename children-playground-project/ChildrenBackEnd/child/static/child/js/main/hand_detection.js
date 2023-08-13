@@ -320,7 +320,7 @@ function hand_tracking (categoryName) {
         const check_X = (targetRect.left > bearRect.left && targetRect.left < bearRect.left + bearRect.width);
         const check_Y = (targetRect.top > bearRect.top && targetRect.top < bearRect.top + bearRect.height);
 
-        // bear 영역에 왔다면 단어를 추가할지 말지를 결정.
+
         if (check_X && check_Y) {
           if (wordTarget != null && isDragging) {
             console.log(wordTarget);
@@ -334,6 +334,22 @@ function hand_tracking (categoryName) {
               }
               const textContent = document.createElement("div");
               textContent.setAttribute("id", `${targetDiv.innerText}`);
+
+              textContent.addEventListener("dblclick", () => {
+                // console.log(typeof textContent.innerHTML.replace(", ", ""));
+                // 여기서 삭제를 해주어야 하는데
+                // slice를 이렇게 하면 안되는건가 그럼 특정 개체를 어떻게 삭제하지
+                let removeIndex = null;
+                for (let i = 0; i < prompt.length; i++) {
+                  if (prompt[i] === textContent.innerHTML.replace(", ", "")) {
+                    removeIndex = i;
+                    break;
+                  }
+                }
+                prompt.splice(removeIndex, 1);
+                textContent.parentNode.removeChild(textContent);
+              });
+
               textContent.style.cursor = "pointer";
               textContent.style.textAlign = "center";
               textContent.style.display = "flex";
@@ -352,9 +368,8 @@ function hand_tracking (categoryName) {
               // 정규식을 통해서 문자열에 콤마만 삭제하고 prompt로 넣어준다.
               const text = textContent.innerHTML.replace(", ", "");
               prompt.push(text);
-              console.log(prompt);
               // prompt.push(targetDiv.innerText);
-              // console.log(prompt);
+              console.log(prompt);
             }
           
             targetParent.removeChild(targetDiv);
@@ -457,7 +472,7 @@ function mouse_tracker(event=null) {
 
 
 // 곰과 마우스간 상호작용 하는 애니메이션 계산 함수.
-function interact(e=null, mouse, mouseCenter) {
+function interact(e, mouse, mouseCenter) {
   
   const bearContainer = document.getElementById("bear");
   const faceContainer = document.getElementById("faceContainer");
@@ -939,6 +954,7 @@ bulb.addEventListener("click", () => {
       },
     }).showToast();
   } else {
+    localStorage.setItem("wordList", JSON.stringify(prompt));
     window.location.href = "model_choice_page/";
   }
 });
