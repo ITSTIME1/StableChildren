@@ -1,94 +1,47 @@
 /* 가상클래스로 변수를 관리하는데 리팩토링할때 정리하자 */
 :root {
     --main-background-color: #a0e1ff;
+    --textarea-color: #4dbdf1;
 }
 
 /* init */
 * {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
 }
 
 body {
     overflow: hidden;
-    background-color: #a0e1ff;
 }
 /* 메인 영역 */
 .main-content {
     position:relative;
-    background-color: #a0e1ff;
+    background-color: var(--main-background-color);
     width: 100vw;
     height: 100vh;
 }
 
-/* 로딩화면 */
-.loading-page {
-    opacity: 0;
-    text-align: center;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(255, 255, 255);
-    display: none;
-    animation-name: loading-anime;
-    animation-duration: 3s;
-    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.272);
-    animation-fill-mode: forwards;
-    font-size: 20px;
-}
-
-#idea-image {
-    position: absolute;
-    width: 10%;
-    height: 20vh;
-    top: 14%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#loading-image {
-    position: absolute;
-    width: 50%;
-    height: 70vh;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-@keyframes loading-anime {
-    from {
-        opacity: 0;
-    } to {
-        opacity: 100;
-    }
-}
 
 /* 네비게이션 영역 */
 .nav-section {
     width: 100%;
     height: 10vh;
-    position: relative;
+    padding: 10px;
     display:flex;
-    justify-content: center;
-    margin:10px;
+    justify-content: space-between;
     align-items: center;
     background-color: #a0e1ff;
 }
 
 /* i 영역 */
 .item-section {
-    position: absolute;
+    position: relative;
     display: flex;
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    width: 50%;
+    width: 30%;
     height: 100%;
     color:white;
     /* background-color: rgb(109, 115, 115); */
@@ -100,30 +53,71 @@ body {
     align-items: center;
     position: absolute;
     background-color: #31a6dc;
-    width: 100;
+    width: 100%;
     height: 100%;
     border-radius: 30px;
     font-size: 1.2rem;
     transition-duration: 2s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    cursor: pointer;
 }
 
 /* 책 타이틀을 호버 했을때 */
 .book-title:hover {
-    width : 70%;
+    transform: scale(1.12);
 }
 
-
-
-/* title */
-div[class="item-section"] > div[class="book-title"]:hover{
-    width: 45%;
+/* 책 타이틀 */
+.move {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: #31a6dc;
+    width: 100%;
     height: 100%;
-    border-radius: 30px 30px 30px 30px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    transition-duration: 2s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.scatch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: #31a6dc;
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    transition-duration: 2s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+#scatch-btn {
+    width: 80px;
+    height: 50px;
     cursor: pointer;
+    position: absolute;
+}
+
+#scatch-btn:hover {
+    transform:scale(1.12);
 }
 
 
+#complete-btn {
+    width: 80px;
+    height: 50px;
+    cursor: pointer;
+    position: absolute;
+}
+
+#complete-btn:hover {
+    transform:scale(1.12);
+}
 
 /* 이미지 영역 */
 div[class=image-section] {
@@ -226,66 +220,65 @@ div[class="gausian"] h2{
 }
 
 
-/* 푸터영역 */
-div[class="main-content"] > div[class="footer-section"] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 20vh;
-    background-color: #a0e1ff;
-    position: relative;
-}
-
-/* complete-section */
-div[class="form-section"] > div[class="complete-button-section"] {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 40%;
-    border-radius: 50px;
-    background-color: #a0e1ff;
-}
-
-/* 버튼영역 */
-div[class="complete-button-section"] > button{
-    visibility: hidden;
-    width: 50px;
-    height: 50px;
-    margin-bottom: 20px;
-    background-color: rgb(235, 247, 176);
-    border-radius: 50px;
-    cursor: pointer;
-}
-
-
-
-/* text-area-section */
-div[class="form-section"] > div[class="text-area-section"] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 40%;
-    background-color: #a0e1ff;;
-    position: relative;
-}
-
-
-/* textArea */
-div[class="text-area-section"] > textarea {
-    position: absolute;
-    text-align: center;
-    width: 50%;
-    height: 90%;
-    resize: none;
-    font-size: 1.5rem;
-    border-radius: 5px;
-    border: 2px solid #31a6dc;
-}
-
 .generate-image {
     border-radius: 10px;
     width: 100%;
+}
+
+.footer-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 10vh; 
+    position: relative;   
+}
+
+
+.form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+    position: relative; 
+}
+
+
+.text-area-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    border: #31a6dc;
+    text-align: center;
+    outline: none;
+    border-radius: 10px;
+    background-color: white;
+    width: 100%;
+    height: 50px;
+    resize: none;
+}
+textarea:hover {
+    border-radius: 10px;
+    border: 2px solid var(--textarea-color);
+}
+
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+.imageContainer {
+    position: relative;
+    width: 512px;
+    height: 768px;
 }

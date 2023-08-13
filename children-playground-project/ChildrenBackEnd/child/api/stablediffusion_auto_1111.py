@@ -34,10 +34,6 @@ class StableDiffusionAuto1111:
         
         if image_model_id == None: 
             return None
-        
-        # 배치 사이즈를 None이 아니라는건
-        # 생성할 이미지의 개수를 파라미터로 받았다는 것.
-        # 만약 받지 않았다면 None이니까 그럴때는 4장을 생성.
         if batch_size is not None:
             print("여기")
             self._payload["batch_size"] = batch_size
@@ -66,18 +62,6 @@ class StableDiffusionAuto1111:
                     r = response.json()
                     byte_path = [i.split(",")[0] for i in r["images"]]
                     return byte_path
-                    # image = None
-                    # 이미지가 담긴 리스트를 가지고 있으니까
-                    # for i in r['images']:
-                        # base64로 디코드 하기전 base64문자열을 전달해서 클라이언트에서 처리.
-                        # byte_path.append(i[:10])
-                        # byte_path.append(i.split(",")[0])
-                        # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-                        # image.show()   
-                    # base64로 디코드 하지 않은걸 그대로 보내보자 
-                    # batch_size만큼 byte_path에 넣어졌고
-                    # print(byte_path[0][-20:-1], byte_path[1][-20:-1])
-                    # print(r['images'][0][-20:-1], r['images'][1][-20:-1])
                 
             except Exception as e:
                 return e
@@ -86,9 +70,7 @@ class StableDiffusionAuto1111:
         
     
 
-    # model 변경
     def change_model(self):
-        # 모델을 바꾸는건 성공적으로 되네
         self._option_payload["sd_model_checkpoint"] = self._model
         self._option_payload["sd_lora"] = self._lora
         self._option_payload["sd_vae"] = self._vae
@@ -107,8 +89,7 @@ class StableDiffusionAuto1111:
 
         
         
-        
-    # 옵션들 보기
+
     def get_options(self):
         try:
             response = requests.get(url=f'{self._end_point}/sdapi/v1/options')
@@ -150,101 +131,3 @@ class StableDiffusionAuto1111:
         r = response.json()
         print(r)
         
-        
-    # def test_image(self):
-    #     result = None
-    #     self._payload = {
-    #         "restore_faces": True,
-    #         "prompt": "<lora:brighter-eye1:1>, (1girl), (smile), masterpiece, best quality, high quality",
-    #         "negative_prompt": "ugly, lowres, (bad fingers:1.2), (bad anatomy:1.1), bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, nsfw",
-    #         "batch_size": 1,
-    #         "steps": 22,
-    #         "cfg_scale": 11,
-    #         "width": 512,
-    #         "height": 768,
-    #         "sampler_index": "DPM++ 2M"
-    #     }
-    #     try:
-            
-    #         response = requests.post(
-    #         url=f'{self._end_point}/sdapi/v1/txt2img', json=self._payload)
-
-    #         r = response.json()
-
-    #         for i in r['images']:
-    #             image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-
-    #             png_payload = {
-    #                 "image": "data:image/png;base64," + i
-    #             }
-    #             response2 = requests.post(url=f'{self._end_point}/sdapi/v1/png-info', json=png_payload)
-
-    #             # png 정보를 성공적으로 받아 왔을때만 이미지를 저장한다.
-    #             # 이미지를 줄지 아니면 음... 이미지 path를 주는게 가장 현명하지 않을까
-    #             # 그 해당 이미지의 path만 찾아서 준다면
-    #             # 웹 상에서는 그 이미지 path만 img src로 보여주면 되니까
-    #             # 그러면 가능할거 같은데
-    #             # 이미지에 랜덤 번호를 부여하는건 어떨까
-    #             # 그러면 겹칠일도 없고  
-    #             if response2.status_code == 200:
-    #                 pnginfo = PngImagePlugin.PngInfo()
-    #                 pnginfo.add_text("parameters", response2.json().get("info"))
-    #                 # 1~부터 9999까지의 랜덤 정수를 사용해서 저장
-    #                 # 이건 나중에 데이터베이스에다가 저장하는거랑 다르게 하면됨.
-    #                 random_number = random.randrange(1, 10000)
-    #                 result = random_number
-    #                 image.save(f'{random_number}.png', pnginfo=pnginfo)
-
-    #             else:
-    #                 result = -1
-                
-    #     except Exception as e:
-    #         print(e)
-
-    #     return result
-    # # 이미지를 한번씩 초기화 하자
-    
-    # def test_change_model(self):
-    #     # option choice
-    #     # manMaru + brighter-eye1, none
-    #     # anime + none + orangeMix
-    #     # counterfeit + ghibli + clear vae
-    #     # counterfeit + chesedays + clear vae
-    #     option_payload = {
-    #         "sd_model_checkpoint": "manMaru.safetensors [aeb953ac1a]",
-    #         "CLIP_stop_at_last_layers": 2,
-    #         "sd_lora": "brighter-eye1",
-    #         "sd_vae" : "orangemix.vae.pt",
-    #     }
-    #     # 모델을 바꾸는건 성공적으로 되네
-    #     try: 
-    #         response = requests.post(url=f'{self._end_point}/sdapi/v1/options', json=option_payload)
-    #     except Exception as e:
-    #         print(e)
-        
-    #     # 만약 response 응답 코드가 정상적이라면( 모델이 정상적으로 적용 되었다면 200을 리턴)
-    #     if response.status_code == 200:
-    #         print(response.status_code)
-    #         return response.status_code
-    #     # 만약 response 응답 코드가 그 외에 것이라면 (422) 제대로 바뀌지 않았다는 걸 알려줌 
-    #     else:
-    #         return 422
-
-# stable = StableDiffusionAuto1111()
-# a = stable.generate_image("manMaru", "girl", "nsfw")
-# print(a)
-
-# stable.get_sampler()
-# 테스트하기 위해서
-# Ghibli를 선택하기 위해서
-# Counterfeit 모델변경
-# VAE 적용
-# 로라 None
-# stable.test_change_model()
-
-# stable.get_model_name()
-# stable.get_vae()
-# stable.change_model()
-# stable.get_LoRa()
-# stable.get_options()
-

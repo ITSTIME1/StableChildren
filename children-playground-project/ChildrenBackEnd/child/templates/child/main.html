@@ -7,21 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">   
     {% comment %} 정적파일을 로드하게 되는데 이때 static 태그는 absolute path staticfile의 정적 주소를 생성한다. {% endcomment %}
     <link rel="stylesheet" href="{% static 'child/css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <title>Children-PlayGround</title>
 
 </head>
 
 <body>
-    <div class="main-content" id="main">
-        <div class="loading-page" id="loading">
-            <img src="{% static 'child/images/idea.gif'%}" alt="idea-gif" id="idea-image">
-            <img src="{% static 'child/images/teddy-bear.gif'%}" alt="loading-gif" id="loading-image">
+    <div id="overlay" class="hidden">
+        <div class="imageContainer">
+            <img id="image-show" src="" alt = "이미지"/>
         </div>
+    </div>
+    <div class="main-content" id="main">
         <div class="nav-section" id="nav-id">
+            <div class="item-section" id="scatch">
+                <div id ="scatch-btn" class="scatch">
+                    스케치
+                </div>
+            </div>
             <!-- itemsection -->
             <div class="item-section" id="title">
                 <div class="book-title">
                     오늘 읽을 책을 알려줘!
+                </div>
+            </div>
+            <div class="item-section" id="move">
+                <div id ="complete-btn" class="move">
+                    이동!
                 </div>
             </div>
 
@@ -71,14 +83,9 @@
         <!-- 채팅창 영역-->
         <div class="footer-section">
             <div class="form-section">
-                <div class="complete-button-section">
-                    <button id="complete-btn" type="submit">GO!</button>
-                </div>
-
                 <div class="text-area-section">
-                    <textarea id="word-area" name="word" rows="5" cols="40" placeholder="원하는 단어를 입력해봐!"></textarea>
+                    <textarea id="word-area" name="word" rows="5" cols="40" placeholder="나에게 알려주세요!"></textarea>
                 </div>
-
             </div>
         </div>
     </div>
@@ -87,6 +94,7 @@
     <audio id="hover-sound">
         <source src="{% static 'child/sounds/generate_image_btn_sound.mp3'%}" type="audio/mpeg">
     </audio>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script async type="module" src="{% static 'child/js/main/index.js'%}"></script>
     <script async type="module" src="{% static 'child/js/constants/constant.js'%}"></script>

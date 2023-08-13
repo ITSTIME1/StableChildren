@@ -12,8 +12,8 @@ import {
 
 const generateImageContainer = document.querySelectorAll(".generate-image");
 let wordList = [];
-
-
+let checkStaticImage = false;
+let showImage = false;
 // 제목을 입력하기 위한 함수.
 title.addEventListener("click", (event) => {
   let str = event.target.innerText;
@@ -82,11 +82,44 @@ completeBtn.addEventListener("click", async () => {
 // 가우시안 스크린에 마우스가 올라갔을시 곰 아이콘이 보이지 않게.
 for (let i = 0; i < gausianScreen.length; i++) {
   const bearImageIcon = document.getElementById(`bear-image-${i + 1}`);
-  gausianScreen[i].addEventListener("mouseover", () => {
+  // 마우스가 올라갔을때 generate-image를 좀 보면 좋을거 같다.
+  gausianScreen[i].addEventListener("mouseover", (event) => {
     bearImageIcon.style.visibility = "hidden";
+    const targetGenerateImage = document.getElementById(`generate${i+1}`);
+
+    if(!targetGenerateImage.src.includes("/static/")) {
+      // 정적 이미지가 아니면서 클릭했을때 무언가 나올 수 있도록.
+      console.log("정적이미지가 아니라면");
+      checkStaticImage = true;
+    } else {
+      console.log("정적이미지라면");
+      checkStaticImage = false;
+    }
   });
+
+
   gausianScreen[i].addEventListener("mouseleave", () => {
     bearImageIcon.style.visibility = "visible";
+  });
+
+  // 이미지 클릭해서 크게보기 추가.
+  gausianScreen[i].addEventListener("click", ()=>{
+    if (checkStaticImage === true) {
+
+      const overlay = document.getElementById("overlay");
+      if(overlay.style.visibility === "hidden") {
+        overlay.style.visibility="visible";
+      }
+      const base64UrlString = JSON.parse(localStorage.getItem("base64ImageUrl"));
+      const image = document.getElementById("image-show");
+      image.src = `data:image/png;base64,${base64UrlString[i]}`;
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener("click", ()=>{
+        overlay.style.visibility = "hidden";
+      });
+    }
+    
   });
 }
 
@@ -103,9 +136,18 @@ function checkbase64() {
       generateImageContainer[i].src = `data:image/png;base64,${base64UrlString[i]}`;
     }
     localStorage.setItem("confirm", JSON.stringify(false));
-    setTimeout(()=>{
-      alert("그림이 도착했어요!");
-    }, 1000);
+    Toastify({
+      text: "그림이 도착 했어요!",
+      duration: 2000,
+      newWindow: false,
+      close: true,
+      gravity: "top", 
+      position: "center", 
+      stopOnFocus: true, 
+      style: {
+        background: "linear-gradient(to right, #DB9393, #F0CACA)",
+      },
+    }).showToast();
   } 
 
 }
