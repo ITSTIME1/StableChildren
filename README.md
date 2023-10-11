@@ -2,7 +2,7 @@
 ## Introduce 👋
 Hello, Welcome to my **'StableChildren'** repository which for childs. Nowdays 'thinking' is very important better than whatever we thought. so i've been thinking about what programs can help children improve their thinking way.
 
-**I wanted children to think broadly through paintings.** when we are thinking about difficult problem or easy or whatever it is we imagine that. we can imagine related to that To help understand when we are reading books "Kongjwi and Patjwi (콩쥐팥쥐)" **which a traditional Korean romance story from the Joseon Dynasty with a kindergarten teacher** children can think that 'what is that?', 'i wonder that word.' and then teacher is answerd(teaching) that it is. **So far, what I've been saying is 'curiousity that children have'** Because of such curiosity, it becomes associated with various thoughts and imagines them, thereby learning creativity and how to think. so i decided to build this program(StableChildren) which to help a little bit in this process.
+**I wanted children to think broadly through paintings.** when we are thinking about difficult problem or easy or whatever it is we imagine that. we can imagine related to that To help understand when we are reading books "Kongjwi and Patjwi (콩쥐팥쥐)" **which a traditional Korean romance story from the Joseon Dynasty** with a kindergarten teacher children can think that 'what is that?', 'i wonder that word.' and then teacher is answerd(teaching) that it is. **So far, what I've been saying is 'curiousity that children have'** Because of such curiosity, it becomes associated with various thoughts and imagines them, thereby learning creativity and how to think. so i decided to build this program(StableChildren) which to help a little bit in this process.
 
 ## Features
 - Through gesture recognition, children move words or sentences themselves by using their hands.
@@ -11,7 +11,7 @@ Hello, Welcome to my **'StableChildren'** repository which for childs. Nowdays '
 
 ## Tech
 - **Mediapipe gesture recognition**
-- **Stablediffusion webui(automatic1111)**
+- **Stablediffusion webui(automatic1111)*
 - Django v4.2.2
 - Python v3.10.1
 - Vanila javascript, html, css
