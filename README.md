@@ -1,8 +1,10 @@
 # StableChildren (AI program for children)
 ## Introduce 👋
-Hello, Welcome to my **'StableChildren'** repository which for childs. Nowdays 'thinking' is very important better than whatever we thought. so i've been thinking about what programs can help children improve their thinking way.
+"Hello! Welcome to my 'StableChildren' repository, dedicated to children. Nowadays, the way we think is incredibly important. Consequently, I've been contemplating what programs could enhance children's thinking processes.
 
-**I wanted children to think broadly through paintings.** when we are thinking about difficult problem or easy or whatever it is we imagine that. we can imagine related to that To help understand when we are reading books "Kongjwi and Patjwi (콩쥐팥쥐)" **which a traditional Korean romance story from the Joseon Dynasty** with a kindergarten teacher children can think that 'what is that?', 'i wonder that word.' and then teacher is answerd(teaching) that it is. **So far, what I've been saying is 'curiousity that children have'** Because of such curiosity, it becomes associated with various thoughts and imagines them, thereby learning creativity and how to think. so i decided to build this program(StableChildren) which to help a little bit in this process.
+I aspire for children to broaden their thinking through art. Regardless of whether it's a complex or simple problem, we tend to imagine it. Similarly, when we read books, our imagination comes into play. For instance, exploring 'Kongjwi and Patjwi,' a traditional Korean romance story from the Joseon Dynasty, prompts children to ponder, 'What is that?' or 'I wonder about that word.' Subsequently, when a teacher provides an explanation, children acquire new knowledge.
+
+Everything I've mentioned so far revolves around 'the curiosity children possess.' Through such curiosity, they associate various thoughts and engage in imaginative thinking, thereby fostering creativity and learning how to think critically. Consequently, I've decided to create the 'StableChildren' program to contribute, even if just a bit, to this process."
 
 ## Features
 - Through gesture recognition, children move words or sentences themselves by using their hands.
